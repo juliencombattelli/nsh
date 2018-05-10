@@ -7,6 +7,7 @@
 
 #include "shell_cmd_builtins.h"
 #include "shell_common_defs.h"
+#include <stdio.h>
 
 int cmd_builtin_help(int argc, char **argv)
 {
