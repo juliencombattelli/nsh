@@ -40,7 +40,7 @@ int main(void)
 	setvbuf(stdin,NULL,_IONBF,0);
 	setvbuf(stdout,NULL,_IONBF,0);
 
-	putchar(" ");
+	putchar(' ');
 	int c = getchar();
 	printf("Starting shell %i\r\n", c);
 	run_shell();
