@@ -1,20 +1,26 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 
 #include "shell.h"
+#include "shell_io.h"
 #include "shell_cmd.h"
+#include "shell_line_buffer.h"
 #include "shell_history.h"
 #include "shell_common_defs.h"
 #include "shell_cmd_builtins.h"
+
+///////////////////////////////////////////////////////////////////////////////
+//// Shell structure/instance declaration
+///////////////////////////////////////////////////////////////////////////////
 
 typedef struct shell
 {
 	shell_cmd_t cmds[SHELL_CMD_MAX_COUNT];
 	int cmd_count;
 	shell_history_t history;
+	shell_line_buffer_t line;
 
 } shell_t;
 
@@ -22,6 +28,7 @@ static shell_t shell;
 
 int shell_init()
 {
+    shell_line_buffer_reset(&shell.line);
 	shell_history_reset(&shell.history);
 	shell_register_command("help", cmd_builtin_help);
 	shell_register_command("held", cmd_builtin_help);
@@ -56,11 +63,6 @@ static shell_cmd_t* shell_find_cmd(const char *name)
     return shell_find_matching_cmd(name, strlen(name));
 }
 
-static void shell_print_prompt(void)
-{
-    printf(SHELL_DEFAULT_PROMPT);
-}
-
 static int shell_execute(int argc, char **argv)
 {
     if (argv[0] == NULL)
@@ -88,17 +90,14 @@ static void shell_lexicographic_cmd_sort(shell_cmd_t **cmds, int cmd_count)
                 shell_cmdswap(cmds[i], cmds[j]);
 }
 
-static int shell_autocomplete(const char *buffer, int size)
+static void shell_autocomplete()
 {
-    if (!buffer)
-        return SHELL_STATUS_WRONG_ARG;
-
     shell_cmd_t *match[shell.cmd_count];
     int match_count = 0;
 
     // Find all commands name matching the actual buffer
     for (int i = 0; i < shell.cmd_count; i++)
-        if (memcmp(buffer, shell.cmds[i].name, size) == 0)
+        if (memcmp(shell.line.buffer, shell.cmds[i].name, shell.line.size) == 0)
             match[match_count++] = &shell.cmds[i];
 
     if (match_count > 0)
@@ -107,124 +106,117 @@ static int shell_autocomplete(const char *buffer, int size)
         shell_lexicographic_cmd_sort(match, match_count);
 
         // Display the commands name
-        printf("\r\n");
+        shell_put_newline();
         for (int i = 0; i < match_count; i++)
-            printf("%s ", match[i]->name);
+        {
+            shell_put_string(match[i]->name);
+            shell_put_char(' ');
+        }
     }
 
     // Print the prompt again
-    printf("\r\n");
+    shell_put_newline();
     shell_print_prompt();
 
     // Reprint the current buffer
-    //   (at this step, the string [buffer, buffer+position] IS NOT null terminated)
-    char current_buffer_str[size + 1];
-    memcpy(current_buffer_str, buffer, size);
-    current_buffer_str[size] = '\0';
-    printf("%s", current_buffer_str);
+    shell_put_buffer(shell.line.buffer, shell.line.size);
 
-    return SHELL_STATUS_OK;
+    /*//   (at this step, the string [buffer, buffer+position] IS NOT null terminated)
+    char current_buffer_str[shell.line.size + 1];
+    memcpy(current_buffer_str, shell.line.buffer, shell.line.size);
+    current_buffer_str[shell.line.size] = '\0';
+    printf("%s", current_buffer_str);*/
 }
 
-static void shell_print_backspace(void)
+static void shell_handle_escape_sequence(void)
 {
-    // go back to one character
-    putchar('\b');
-    // overwrite the char with whitespace
-    putchar(' ');
-    // go back to the now removed char position
-    putchar('\b');
-}
-
-static int shell_read_line(char *buffer)
-{
-    int position = 0;
-    char c;
-
-    int hist_index = 0;
-
-    if (!buffer)
-        return SHELL_STATUS_WRONG_ARG;
-
-    while (position < SHELL_LINE_BUFFER_SIZE)
+    // Ignore '['
+    shell_get_char();
+    // Handle escaped code
+    char c = shell_get_char();
+    switch (c)
     {
-        c = getchar();
-
-        // Handle return key
-        if (c == '\r' || c == '\n')
+    case 'A': // Arrow up
+        /*if (!shell_history_is_empty(&shell.history))
         {
-            buffer[position] = '\0';
-            shell_history_add_entry(&shell.history, buffer);
-            printf("\r\n");
+            shell_history_get_entry(&shell.history, hist_index, shell.line.buffer);
+
+            hist_index++;
+            if(hist_index > SHELL_CMD_HISTORY_SIZE)
+                hist_index = SHELL_CMD_HISTORY_SIZE-1;
+
+            shell_erase_line_until_cursor(shell.line.size);
+            printf("%s", buffer);
+            position = strlen(buffer);
+        }*/
+        break;
+
+    case 'B': // Arrow down
+        /*if (!shell_history_is_empty(&shell.history))
+        {
+            hist_index--;
+            if(hist_index < 0)
+                hist_index = 0;
+
+            shell_history_get_entry(&shell.history, hist_index, buffer);
+
+            shell_erase_line_until_cursor(position);
+            printf("%s", buffer);
+            position = strlen(buffer);
+        }*/
+        break;
+
+    case 'C': // Arrow right
+    case 'D': // Arrow left
+        //printf("\x1b[%c", c);
+        break;
+    default:
+        break;
+    }
+}
+
+static void shell_validate_entry(void)
+{
+    // ensure the line buffer is null-terminated
+    shell_line_buffer_append_null(&shell.line);
+    // add this validated entry into history
+    shell_history_add_entry(&shell.history, shell.line.buffer);
+    // print newline
+    shell_put_newline();
+}
+
+static int shell_read_line(void)
+{
+    char c;
+    //int hist_index = -1;
+
+    shell_line_buffer_reset(&shell.line);
+
+    while (!shell_line_buffer_is_full(&shell.line))
+    {
+        c = shell_get_char();
+        switch(c)
+        {
+        case '\r':
+        case '\n':
+            shell_validate_entry();
             return SHELL_STATUS_OK;
-        }
-        // Handle tabulation
-        else if (c == '\t')
-        {
-            shell_autocomplete(buffer, position);
-        }
-        // Handle backspace
-        else if (c == '\b')
-        {
-            if (position > 0)
+        case '\t':
+            shell_autocomplete();
+            continue;
+        case '\b':
+            if (!shell_line_buffer_is_empty(&shell.line))
             {
-                position--;
-                shell_print_backspace();
+                shell_erase_last_char();
+                shell_line_buffer_erase_last_char(&shell.line);
             }
-        }
-        // Handle escape sequence
-        else if (c == '\x1b')
-        {
-            // Ignore '['
-            getchar();
-            // Handle escaped code
-            switch (getchar())
-            {
-            case 'A': // Arrow up
-                if (!shell_history_is_empty(&shell.history))
-                {
-                    shell_history_get_entry(&shell.history, hist_index, buffer);
-
-                    hist_index++;
-                    if(hist_index > SHELL_CMD_HISTORY_SIZE)
-                        hist_index = SHELL_CMD_HISTORY_SIZE-1;
-
-                    for(int i = 0; i < position; i++)
-                        shell_print_backspace();
-                    printf("%s", buffer);
-                    position = strlen(buffer);
-                }
-                break;
-
-            case 'B': // Arrow down
-                if (!shell_history_is_empty(&shell.history))
-                {
-                    hist_index--;
-                    if(hist_index < 0)
-                        hist_index = 0;
-
-                    shell_history_get_entry(&shell.history, hist_index, buffer);
-
-                    for(int i = 0; i < position; i++)
-                        shell_print_backspace();
-                    printf("%s", buffer);
-                    position = strlen(buffer);
-                }
-                break;
-
-            case 'C': // Arrow right
-            case 'D': // Arrow left
-                putchar(c);
-                break;
-            default:
-                break;
-            }
-        }
-        // Echo all others and append them to buffer
-        else
-        {
-            putchar(c);
-            buffer[position++] = c;
+            continue;
+        case '\x1b':
+            shell_handle_escape_sequence();
+            continue;
+        default:
+            shell_put_char(c);
+            shell_line_buffer_append_char(&shell.line, c);
         }
     }
 
@@ -250,14 +242,12 @@ void run_shell(void)
 {
     shell_status_t status = SHELL_STATUS_OK;
 
-    char buf[SHELL_LINE_BUFFER_SIZE];
-
     shell_init();
 
     while (status == SHELL_STATUS_OK)
     {
         shell_print_prompt();
-        status = shell_read_line(buf);
+        status = shell_read_line();
         //printf("buf='%s'\r\n", buf);
     }
 }
