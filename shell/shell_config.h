@@ -8,7 +8,7 @@
 #ifndef SHELL_CONFIG_H_
 #define SHELL_CONFIG_H_
 
-#define SHELL_LINE_BUFFER_SIZE 		1024u
+#define SHELL_LINE_BUFFER_SIZE 		64u
 
 #define SHELL_CMD_NAME_SIZE 		32u
 #define SHELL_CMD_MAX_COUNT 		32u
