@@ -50,7 +50,7 @@ int shell_history_add_entry(shell_history_t *hist, const char *entry)
 
 int shell_history_get_entry(shell_history_t *hist, int age, char *entry)
 {
-    if (!hist || !entry || age >= shell_history_entry_count(hist))
+    if (!hist || !entry || age < 0 || age >= shell_history_entry_count(hist))
         return SHELL_STATUS_WRONG_ARG;
 
     int most_recent_entry = hist->head-1; // head points to the element just after the most recent entry
