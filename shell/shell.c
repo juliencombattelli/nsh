@@ -88,6 +88,30 @@ static void shell_autocomplete(void)
     shell_io_put_buffer(shell.line.buffer, shell.line.size);
 }
 
+static void shell_display_previous_entry(int *current_entry)
+{
+	/*int status = shell_history_get_entry(&shell.history, *current_entry, shell.line.buffer);
+	if (status == SHELL_STATUS_OK)
+	{
+		shell_erase_line_until_cursor(shell.line.size);
+		printf("%s", buffer);
+		position = strlen(buffer);
+	}
+
+		hist_index++;
+		if(hist_index > SHELL_CMD_HISTORY_SIZE)
+			hist_index = SHELL_CMD_HISTORY_SIZE-1;
+
+		shell_erase_line_until_cursor(shell.line.size);
+		printf("%s", buffer);
+		position = strlen(buffer);*/
+}
+
+static void shell_display_next_entry(void)
+{
+
+}
+
 static void shell_handle_escape_sequence(void)
 {
     // Ignore '['
@@ -177,7 +201,10 @@ static int shell_read_line(void)
         	shell_erase_last_char();
             continue;
         case '\x1b':
-            shell_handle_escape_sequence();
+        	getchar();
+        	getchar();
+        	shell_io_erase_line();
+            //shell_handle_escape_sequence();
             continue;
         default:
             shell_io_put_char(c);
