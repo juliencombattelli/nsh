@@ -6,7 +6,7 @@
 #define SHELL_IO_ESC 				"\e"
 #define SHELL_IO_CSI 				SHELL_IO_ESC "["
 #define SHELL_IO_ERASE_LINE 		SHELL_IO_CSI "2K"
-#define SHELL_IO_MOVE_BEGIN_LINE 	SHELL_IO_CSI "G"
+#define SHELL_IO_MOVE_BEGIN_LINE 	"\r"
 
 char shell_io_get_char(void)
 {
@@ -52,10 +52,6 @@ void shell_io_erase_last_char(void)
 
 void shell_io_erase_line(void)
 {
-    // TODO: use escape sequence
 	printf(SHELL_IO_ERASE_LINE);
 	printf(SHELL_IO_MOVE_BEGIN_LINE);
-	//putchar('[');
-	//putchar('2');
-	//putchar('B');
 }

@@ -17,9 +17,10 @@
 
 typedef struct shell
 {
+    shell_line_buffer_t line;
 	shell_cmd_array_t cmds;
 	shell_history_t history;
-	shell_line_buffer_t line;
+	int current_history_entry;
 
 } shell_t;
 
@@ -28,6 +29,7 @@ static shell_t shell;
 int shell_init(void)
 {
 	shell.cmds.count = 0;
+	shell.current_history_entry = -1;
     shell_line_buffer_reset(&shell.line);
 	shell_history_reset(&shell.history);
 	shell_cmd_register(&shell.cmds, "help", cmd_builtin_help);
@@ -88,23 +90,20 @@ static void shell_autocomplete(void)
     shell_io_put_buffer(shell.line.buffer, shell.line.size);
 }
 
-static void shell_display_previous_entry(int *current_entry)
+static void shell_display_previous_entry(void)
 {
-	/*int status = shell_history_get_entry(&shell.history, *current_entry, shell.line.buffer);
+    shell.current_history_entry++;
+    if(shell.current_history_entry > SHELL_CMD_HISTORY_SIZE)
+        shell.current_history_entry = SHELL_CMD_HISTORY_SIZE-1;
+
+	int status = shell_history_get_entry(&shell.history, shell.current_history_entry, shell.line.buffer);
 	if (status == SHELL_STATUS_OK)
 	{
-		shell_erase_line_until_cursor(shell.line.size);
-		printf("%s", buffer);
-		position = strlen(buffer);
+	    shell_io_erase_line();
+	    shell_io_print_prompt();
+		shell_io_put_string(shell.line.buffer);
+		shell.line.size = strlen(shell.line.buffer);
 	}
-
-		hist_index++;
-		if(hist_index > SHELL_CMD_HISTORY_SIZE)
-			hist_index = SHELL_CMD_HISTORY_SIZE-1;
-
-		shell_erase_line_until_cursor(shell.line.size);
-		printf("%s", buffer);
-		position = strlen(buffer);*/
 }
 
 static void shell_display_next_entry(void)
@@ -121,18 +120,7 @@ static void shell_handle_escape_sequence(void)
     switch (c)
     {
     case 'A': // Arrow up
-        /*if (!shell_history_is_empty(&shell.history))
-        {
-            shell_history_get_entry(&shell.history, hist_index, shell.line.buffer);
-
-            hist_index++;
-            if(hist_index > SHELL_CMD_HISTORY_SIZE)
-                hist_index = SHELL_CMD_HISTORY_SIZE-1;
-
-            shell_erase_line_until_cursor(shell.line.size);
-            printf("%s", buffer);
-            position = strlen(buffer);
-        }*/
+        shell_display_previous_entry();
         break;
 
     case 'B': // Arrow down
@@ -182,6 +170,7 @@ static int shell_read_line(void)
 {
     char c;
     //int hist_index = -1;
+    shell.current_history_entry = -1;
 
     shell_line_buffer_reset(&shell.line);
 
@@ -201,10 +190,7 @@ static int shell_read_line(void)
         	shell_erase_last_char();
             continue;
         case '\x1b':
-        	getchar();
-        	getchar();
-        	shell_io_erase_line();
-            //shell_handle_escape_sequence();
+            shell_handle_escape_sequence();
             continue;
         default:
             shell_io_put_char(c);
