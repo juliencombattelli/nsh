@@ -40,9 +40,6 @@ int main(void)
 	setvbuf(stdin,NULL,_IONBF,0);
 	setvbuf(stdout,NULL,_IONBF,0);
 
-	putchar(' ');
-	int c = getchar();
-	printf("Starting shell %i\r\n", c);
 	run_shell();
 
 	while (1)
@@ -107,5 +104,5 @@ static void SystemClock_Config(void)
 static void Error_Handler(void)
 {
 	while(1)
-		asm volatile("nop");
+		__asm__ volatile("nop");
 }
