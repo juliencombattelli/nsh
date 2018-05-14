@@ -37,5 +37,5 @@ bool shell_line_buffer_is_full(shell_line_buffer_t *linebuf)
 
 bool shell_line_buffer_is_empty(shell_line_buffer_t *linebuf)
 {
-    return (linebuf->size == 0);
+    return (linebuf->size == 0) || (linebuf->buffer[0] == '\0');
 }
