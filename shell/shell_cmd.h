@@ -11,8 +11,8 @@
 #include "shell_common_defs.h"
 #include "shell_config.h"
 
-typedef char shell_cmd_name_t[SHELL_CMD_NAME_SIZE];
-typedef int (*shell_cmd_handler_t)(int, char*[]);
+typedef char shell_cmd_name_t[SHELL_MAX_STRING_SIZE];
+typedef int (*shell_cmd_handler_t)(int, char**);
 
 typedef struct shell_cmd
 {
