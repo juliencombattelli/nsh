@@ -212,17 +212,15 @@ static void shell_erase_last_char(void)
 
 static int shell_read_line(void)
 {
-    char c;
-
 #if SHELL_FEATURE_USE_HISTORY == 1
     shell.current_history_entry = -1;
 #endif
 
     shell_line_buffer_reset(&shell.line);
 
-    while (!shell_line_buffer_is_full(&shell.line))
+    while (true)
     {
-        c = shell_io_get_char();
+        char c = shell_io_get_char();
         switch(c)
         {
         case '\r':
@@ -242,39 +240,98 @@ static int shell_read_line(void)
             shell_io_put_char(c);
             shell_line_buffer_append_char(&shell.line, c);
         }
+
+        if (shell_line_buffer_is_full(&shell.line))
+        {
+            shell_io_put_newline();
+            shell_io_put_string("WARNING: line buffer reach its maximum capacity\r\n");
+            break;
+        }
     }
 
     return SHELL_STATUS_BUFFER_OVERFLOW;
 }
 
-/*void shell_split(const char *input, char **output)
- void split(const char *str, char sep, split_fn fun, void *data)
- {
- unsigned int start = 0, stop;
- for (stop = 0; str[stop]; stop++)
- {
- if (str[stop] == sep)
- {
- fun(str + start, stop - start, data);
- start = stop + 1;
- }
- }
- fun(str + start, stop - start, data);
- }*/
+static int shell_copy_token(const char *str, char output[][SHELL_MAX_STRING_SIZE], int *token_count, int token_size)
+{
+    if (token_size > SHELL_MAX_STRING_SIZE-1) // Keep one char for '\0'
+    {
+        shell_io_put_string("WARNING: too long argument\r\n");
+        return SHELL_STATUS_BUFFER_OVERFLOW;
+    }
+    memcpy(output[*token_count], str, token_size);
+    output[*token_count][token_size] = '\0';
+    (*token_count)++;
+    if (*token_count > SHELL_CMD_ARGS_MAX_COUNT)
+    {
+        shell_io_put_string("WARNING: too many arguments\r\n");
+        return SHELL_STATUS_MAX_ARGS_NB_REACH;
+    }
+    return SHELL_STATUS_OK;
+}
+
+static int shell_split_command_line(const char *str, char sep, char output[][SHELL_MAX_STRING_SIZE], int *token_count)
+{
+    int beg = 0;
+    int end = 0;
+    int input_size = strlen(str);
+
+    *token_count = 0;
+
+    for (int i = 0; i < input_size; i++)
+    {
+        if (str[i] == sep)
+        {
+            end = i;
+            int ret = shell_copy_token(&str[beg], output, token_count, end-beg);
+            if (ret != SHELL_STATUS_OK)
+                // If an error is detected during copy, abort split and return the error code
+                return ret;
+            end++;
+            beg = end;
+        }
+    }
+
+    // Parse the last token and return the status of the copy
+    return shell_copy_token(&str[beg], output, token_count, input_size-beg);
+}
 
 void run_shell(void)
 {
-    shell_status_t status = SHELL_STATUS_OK;
+    // Local storage for command line after split
+    char args[SHELL_CMD_ARGS_MAX_COUNT][SHELL_MAX_STRING_SIZE];
+
+    // Array of pointers that point to the string contained by 'args'
+    // In C/C++, an array decays to a pointer in most circumstances,
+    // but this isn't recursive. So a T[] decays to a T*, but a T[][]
+    // doesn't decay to a T**. Then we are forced to an extra step:
+    // char[][] -> char*[] -> char**
+    char *argv[SHELL_CMD_ARGS_MAX_COUNT];
 
     shell_init();
 
-    while (status == SHELL_STATUS_OK)
+    while (true)
     {
+        int argc = 0;
+
         shell_io_print_prompt();
-        status = shell_read_line();
-        char *tmp[20] = {shell.line.buffer};
+
+        // Read a command line and store it into 'shell.line.buffer'
+        shell_status_t status = shell_read_line();
+
         if (status == SHELL_STATUS_OK)
-            shell_execute(1, tmp);
-        //printf("buf='%s'\r\n", buf);
+        {
+            // Split the command line into argument tokens
+            if (shell_split_command_line(shell.line.buffer, ' ', args, &argc) != SHELL_STATUS_OK)
+                // Ignore this command since there was an error
+                continue;
+
+            // Copy the address of all tokens into 'argv'
+            for (int i = 0; i < argc; i++)
+                argv[i] = args[i];
+
+            // Execute the command with 'argc' number of argument stored in 'argv'
+            shell_execute(argc, argv);
+        }
     }
 }
