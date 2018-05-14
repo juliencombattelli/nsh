@@ -45,6 +45,10 @@ shell_cmd_t* shell_cmd_find(shell_cmd_array_t *cmds, const char *name)
 
 int shell_cmd_register(shell_cmd_array_t *cmds, const char *name, shell_cmd_handler_t handler)
 {
+    if (cmds->count >= SHELL_CMD_MAX_COUNT)
+        // If we have reached the max cmd count, ignore all registration request
+        return SHELL_STATUS_MAX_CMD_NB_REACH;
+
     size_t name_len = strlen(name);
     if (name_len == 0 || name_len > SHELL_CMD_NAME_SIZE || !handler)
         return SHELL_STATUS_WRONG_ARG;
