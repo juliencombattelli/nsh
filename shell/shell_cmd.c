@@ -50,7 +50,7 @@ int shell_cmd_register(shell_cmd_array_t *cmds, const char *name, shell_cmd_hand
         return SHELL_STATUS_MAX_CMD_NB_REACH;
 
     size_t name_len = strlen(name);
-    if (name_len == 0 || name_len > SHELL_CMD_NAME_SIZE || !handler)
+    if (name_len == 0 || name_len > SHELL_MAX_STRING_SIZE || !handler)
         return SHELL_STATUS_WRONG_ARG;
 
     strcpy(cmds->array[cmds->count].name, name);
