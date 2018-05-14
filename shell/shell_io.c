@@ -2,6 +2,9 @@
 #include "shell_io.h"
 #include <stdio.h>
 #include <string.h>
+#if SHELL_FEATURE_USE_PRINTF == 1
+#include <stdarg.h>
+#endif
 
 #define SHELL_IO_ESC 				"\e"
 #define SHELL_IO_CSI 				SHELL_IO_ESC "["
@@ -55,3 +58,14 @@ void shell_io_erase_line(void)
 	printf(SHELL_IO_ERASE_LINE);
 	printf(SHELL_IO_MOVE_BEGIN_LINE);
 }
+
+#if SHELL_FEATURE_USE_PRINTF == 1
+int shell_io_printf(const char *restrict format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    int ret = vprintf(format, args);
+    va_end(args);
+    return ret;
+}
+#endif

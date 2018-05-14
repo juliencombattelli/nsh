@@ -5,6 +5,10 @@
  *      Author: jucom
  */
 
+#include "shell_config.h"
+
+#if SHELL_FEATURE_USE_HISTORY == 1
+
 #include "shell_history.h"
 #include "shell_common_defs.h"
 #include <string.h>
@@ -62,3 +66,5 @@ int shell_history_get_entry(shell_history_t *hist, int age, char *entry)
 
     return SHELL_STATUS_OK;
 }
+
+#endif
