@@ -19,8 +19,10 @@ typedef struct shell
 {
     shell_line_buffer_t line;
 	shell_cmd_array_t cmds;
+#if SHELL_FEATURE_USE_HISTORY == 1
 	shell_history_t history;
 	int current_history_entry;
+#endif
 
 } shell_t;
 
@@ -29,18 +31,24 @@ static shell_t shell;
 int shell_init(void)
 {
 	shell.cmds.count = 0;
-	shell.current_history_entry = -1;
+
     shell_line_buffer_reset(&shell.line);
-	shell_history_reset(&shell.history);
+
+#if SHELL_FEATURE_USE_HISTORY == 1
+    shell_history_reset(&shell.history);
+	shell.current_history_entry = -1;
+#endif
+
 	shell_cmd_register(&shell.cmds, "help", cmd_builtin_help);
 	shell_cmd_register(&shell.cmds, "held", cmd_builtin_help);
 	shell_cmd_register(&shell.cmds, "hold", cmd_builtin_help);
+
 	return SHELL_STATUS_OK;
 }
 
 static int shell_execute(int argc, char **argv)
 {
-    if (argv[0] == NULL)
+    if (argv[0] == NULL || argv[0][0] == '\0')
         // An empty command was entered.
         return SHELL_STATUS_EMPTY_CMD;
 
@@ -54,12 +62,21 @@ static int shell_execute(int argc, char **argv)
     	// If handler is null, return an error
     	return SHELL_STATUS_EMPTY_CMD;
     else
+    {
         // Else execute matching command
-    	return matching_cmd->handler(argc, argv);
+    	int ret = matching_cmd->handler(argc, argv);
+#if SHELL_FEATURE_USE_RETURN_CODE_PRINTING == 1
+    	shell_io_printf("command '%s' return %d\r\n", argv[0], ret);
+#endif
+    	return SHELL_STATUS_OK;
+    }
 }
 
-static void shell_autocomplete(void)
+static int shell_autocomplete(void)
 {
+#if SHELL_FEATURE_USE_AUTOCOMPLETION == 0
+    return SHELL_STATUS_UNSUPPORTED;
+#else
     shell_cmd_t match[shell.cmds.count];
     int match_count = 0;
 
@@ -88,62 +105,84 @@ static void shell_autocomplete(void)
 
     // Reprint the current buffer
     shell_io_put_buffer(shell.line.buffer, shell.line.size);
+
+    return SHELL_STATUS_OK;
+#endif
 }
 
-static void shell_display_previous_entry(void)
+#if SHELL_FEATURE_USE_HISTORY == 1
+static void shell_display_history_entry(int age)
 {
+    if (age == -1)
+    {
+        shell_io_erase_line();
+        shell_io_print_prompt();
+    }
+    else
+    {
+        int status = shell_history_get_entry(&shell.history, age, shell.line.buffer);
+        if (status == SHELL_STATUS_OK)
+        {
+            shell_io_erase_line();
+            shell_io_print_prompt();
+            shell_io_put_string(shell.line.buffer);
+            shell.line.size = strlen(shell.line.buffer);
+        }
+    }
+}
+#endif
+
+static int shell_display_previous_entry(void)
+{
+#if SHELL_FEATURE_USE_HISTORY == 0
+    return SHELL_STATUS_UNSUPPORTED;
+#else
     shell.current_history_entry++;
-    if(shell.current_history_entry > SHELL_CMD_HISTORY_SIZE)
-        shell.current_history_entry = SHELL_CMD_HISTORY_SIZE-1;
+    int entry_count = shell_history_entry_count(&shell.history);
+    if(shell.current_history_entry >= entry_count)
+        shell.current_history_entry = entry_count-1;
 
-	int status = shell_history_get_entry(&shell.history, shell.current_history_entry, shell.line.buffer);
-	if (status == SHELL_STATUS_OK)
-	{
-	    shell_io_erase_line();
-	    shell_io_print_prompt();
-		shell_io_put_string(shell.line.buffer);
-		shell.line.size = strlen(shell.line.buffer);
-	}
+    shell_display_history_entry(shell.current_history_entry);
+
+    return SHELL_STATUS_OK;
+#endif
 }
 
-static void shell_display_next_entry(void)
+static int shell_display_next_entry(void)
 {
+#if SHELL_FEATURE_USE_HISTORY == 0
+    return SHELL_STATUS_UNSUPPORTED;
+#else
+    if (shell.current_history_entry >= 0)
+        shell.current_history_entry--;
+    
+   shell_display_history_entry(shell.current_history_entry);
 
+   return SHELL_STATUS_OK;
+#endif
 }
 
-static void shell_handle_escape_sequence(void)
+static int shell_handle_escape_sequence(void)
 {
-    // Ignore '['
+    // Only VT100 escape sequences with the form "\e[<code>" are supported
+
+    // We assume '\e' has been handled already, so we just ignore '['
     shell_io_get_char();
+
     // Handle escaped code
     char c = shell_io_get_char();
     switch (c)
     {
     case 'A': // Arrow up
-        shell_display_previous_entry();
-        break;
+        return shell_display_previous_entry();
 
     case 'B': // Arrow down
-        /*if (!shell_history_is_empty(&shell.history))
-        {
-            hist_index--;
-            if(hist_index < 0)
-                hist_index = 0;
-
-            shell_history_get_entry(&shell.history, hist_index, buffer);
-
-            shell_erase_line_until_cursor(position);
-            printf("%s", buffer);
-            position = strlen(buffer);
-        }*/
-        break;
+        return shell_display_next_entry();
 
     case 'C': // Arrow right
     case 'D': // Arrow left
-        //printf("\x1b[%c", c);
-        break;
     default:
-        break;
+        return SHELL_STATUS_UNSUPPORTED;
     }
 }
 
@@ -151,8 +190,13 @@ static void shell_validate_entry(void)
 {
     // ensure the line buffer is null-terminated
     shell_line_buffer_append_null(&shell.line);
-    // add this validated entry into history
-    shell_history_add_entry(&shell.history, shell.line.buffer);
+
+#if SHELL_FEATURE_USE_HISTORY == 1
+    // if the entry is not empty, add it into history
+    if (!shell_line_buffer_is_empty(&shell.line))
+        shell_history_add_entry(&shell.history, shell.line.buffer);
+#endif
+
     // print newline
     shell_io_put_newline();
 }
@@ -169,8 +213,10 @@ static void shell_erase_last_char(void)
 static int shell_read_line(void)
 {
     char c;
-    //int hist_index = -1;
+
+#if SHELL_FEATURE_USE_HISTORY == 1
     shell.current_history_entry = -1;
+#endif
 
     shell_line_buffer_reset(&shell.line);
 
@@ -226,6 +272,9 @@ void run_shell(void)
     {
         shell_io_print_prompt();
         status = shell_read_line();
+        char *tmp[20] = {shell.line.buffer};
+        if (status == SHELL_STATUS_OK)
+            shell_execute(1, tmp);
         //printf("buf='%s'\r\n", buf);
     }
 }
