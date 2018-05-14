@@ -20,6 +20,7 @@ typedef enum shell_status
     SHELL_STATUS_EMPTY_CMD,
     SHELL_STATUS_CMD_NOT_FOUND,
     SHELL_STATUS_MAX_CMD_NB_REACH,
+    SHELL_STATUS_MAX_ARGS_NB_REACH,
 
 } shell_status_t;
 
