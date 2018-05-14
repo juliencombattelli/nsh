@@ -16,7 +16,7 @@
 
 typedef struct shell_history
 {
-    char entries[SHELL_CMD_HISTORY_SIZE][SHELL_CMD_NAME_SIZE];
+    char entries[SHELL_CMD_HISTORY_SIZE][SHELL_LINE_BUFFER_SIZE];
     int head;
     int tail;
     int size;
