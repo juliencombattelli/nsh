@@ -11,9 +11,9 @@
 
 int cmd_builtin_help(int argc, char **argv)
 {
-    SHELL_UNUSED(argc);
-    SHELL_UNUSED(argv);
-    puts("This is an helpful help message !");
-    return SHELL_STATUS_FAILURE;
+	SHELL_UNUSED(argc);
+	SHELL_UNUSED(argv);
+	puts("This is an helpful help message !");
+	return SHELL_STATUS_FAILURE;
 }
 
