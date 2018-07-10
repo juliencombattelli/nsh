@@ -14,18 +14,16 @@
 typedef char shell_cmd_name_t[SHELL_MAX_STRING_SIZE];
 typedef int (*shell_cmd_handler_t)(int, char**);
 
-typedef struct shell_cmd
+typedef struct shell_cmd 
 {
-    shell_cmd_handler_t handler;
-    shell_cmd_name_t name;
-
+	shell_cmd_handler_t handler;
+	shell_cmd_name_t name;
 } shell_cmd_t;
 
 typedef struct shell_cmd_array
 {
 	shell_cmd_t array[SHELL_CMD_MAX_COUNT];
 	int count;
-
 } shell_cmd_array_t;
 
 void shell_cmd_copy(shell_cmd_t *dst, const shell_cmd_t *src);

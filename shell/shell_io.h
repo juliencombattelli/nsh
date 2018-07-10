@@ -21,6 +21,6 @@ void shell_io_erase_line(void);
 
 #if SHELL_FEATURE_USE_PRINTF == 1
 int shell_io_printf(const char *restrict format, ...);
-#endif
+#endif /* SHELL_FEATURE_USE_PRINTF == 1 */
 
 #endif /* SHELL_IO_H_ */
