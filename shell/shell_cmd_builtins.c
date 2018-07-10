@@ -16,3 +16,4 @@ int cmd_builtin_help(int argc, char **argv)
     puts("This is an helpful help message !");
     return SHELL_STATUS_FAILURE;
 }
+
