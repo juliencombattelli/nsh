@@ -296,6 +296,14 @@ static int shell_split_command_line(const char *str, char sep, char output[][SHE
     return shell_copy_token(&str[beg], output, token_count, input_size-beg);
 }
 
+
+int shell_register_command(const char *name, shell_cmd_handler_t handler)
+{
+	shell_status_t status = shell_cmd_register(&shell.cmds, name, handler);
+	return status;
+}
+
+
 void run_shell(void)
 {
     // Local storage for command line after split
@@ -308,7 +316,6 @@ void run_shell(void)
     // char[][] -> char*[] -> char**
     char *argv[SHELL_CMD_ARGS_MAX_COUNT];
 
-    shell_init();
 
     while (true)
     {
