@@ -338,7 +338,8 @@ void run_shell(void)
                 argv[i] = args[i];
 
             // Execute the command with 'argc' number of argument stored in 'argv'
-            shell_execute(argc, argv);
+            if (shell_execute(argc, argv) == SHELL_STATUS_CMD_NOT_FOUND)
+            	shell_io_printf("ERROR: command '%s' not found\r\n", argv[0]);
         }
     }
 }
