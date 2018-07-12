@@ -7,9 +7,8 @@
 
 typedef struct shell_line_buffer
 {
-    char buffer[SHELL_LINE_BUFFER_SIZE];
-    int size;
-
+	char buffer[SHELL_LINE_BUFFER_SIZE];
+	int size;
 } shell_line_buffer_t;
 
 void shell_line_buffer_reset(shell_line_buffer_t *linebuf);
