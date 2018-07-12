@@ -77,24 +77,24 @@ static int shell_autocomplete(void)
 #if SHELL_FEATURE_USE_AUTOCOMPLETION == 0
     return SHELL_STATUS_UNSUPPORTED;
 #else
-    shell_cmd_t match[shell.cmds.count];
-    int match_count = 0;
+    shell_cmd_array_t match;
+    match.count = 0;
 
     // Find all commands name matching the actual buffer
     for (int i = 0; i < shell.cmds.count; i++)
         if (memcmp(shell.line.buffer, shell.cmds.array[i].name, shell.line.size) == 0)
-            shell_cmd_copy(&match[match_count++], &shell.cmds.array[i]);
+            shell_cmd_copy(&match.array[match.count++], &shell.cmds.array[i]);
 
-    if (match_count > 0)
+    if (match.count > 0)
     {
         // Sort the matching commands in lexicographical order
-        shell_cmd_lexicographic_sort(&shell.cmds);
+        shell_cmd_lexicographic_sort(&match);
 
         // Display the commands name
         shell_io_put_newline();
-        for (int i = 0; i < match_count; i++)
+        for (int i = 0; i < match.count; i++)
         {
-            shell_io_put_string(match[i].name);
+            shell_io_put_string(match.array[i].name);
             shell_io_put_char(' ');
         }
     }
