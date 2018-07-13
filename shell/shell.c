@@ -40,8 +40,7 @@ int shell_init(void)
 #endif
 
 	shell_cmd_register(&shell.cmds, "help", cmd_builtin_help);
-	shell_cmd_register(&shell.cmds, "held", cmd_builtin_help);
-	shell_cmd_register(&shell.cmds, "hold", cmd_builtin_help);
+	shell_cmd_register(&shell.cmds, "exit", cmd_builtin_exit);
 
 	return SHELL_STATUS_OK;
 }
@@ -68,7 +67,7 @@ static int shell_execute(int argc, char **argv)
 #if SHELL_FEATURE_USE_RETURN_CODE_PRINTING == 1
 		shell_io_printf("command '%s' return %d\r\n", argv[0], ret);
 #endif
-		return SHELL_STATUS_OK;
+		return ret;
 	}
 }
 
@@ -339,8 +338,11 @@ void run_shell(void)
 				argv[i] = args[i];
 
 			// Execute the command with 'argc' number of argument stored in 'argv'
-			if (shell_execute(argc, argv) == SHELL_STATUS_CMD_NOT_FOUND)
+			int cmd_result = shell_execute(argc, argv);
+			if (cmd_result == SHELL_STATUS_CMD_NOT_FOUND)
 				shell_io_printf("ERROR: command '%s' not found\r\n", argv[0]);
+			else if (cmd_result == SHELL_STATUS_QUIT)
+				break;
 		}
 	}
 }

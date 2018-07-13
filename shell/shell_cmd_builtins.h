@@ -9,5 +9,6 @@
 #define SHELL_CMD_BUILTINS_H_
 
 int cmd_builtin_help(int argc, char **argv);
+int cmd_builtin_exit(int argc, char **argv);
 
 #endif /* SHELL_CMD_BUILTINS_H_ */
