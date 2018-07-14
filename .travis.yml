@@ -12,6 +12,13 @@ compiler:
   - gcc
   - clang
 
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - lcov
+
 before_script:
   # init coverage to 0 (optional)
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cd ${TRAVIS_BUILD_DIR} && lcov --directory . --zerocounters ; fi
