@@ -24,6 +24,8 @@ target_include_directories (${NSH_LIBRARY_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/${NSH_SOURCE_DIR}
 )
 
+target_compile_features (${NSH_LIBRARY_NAME} PUBLIC c_restrict)
+
 add_executable (simple_shell test/simple_shell.c)
 target_link_libraries (simple_shell ${NSH_LIBRARY_NAME})
 
