@@ -1,0 +1,18 @@
+sudo: required
+
+os:
+  - linux
+
+compiler:
+  - gcc
+  - clang
+
+before_script:
+  # init coverage to 0 (optional)
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cd ${TRAVIS_BUILD_DIR} && lcov --directory . --zerocounters ; fi
+  - mkdir build
+  - cd build
+  - cmake ..
+
+script:
+  - make && make test
