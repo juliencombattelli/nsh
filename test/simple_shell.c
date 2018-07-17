@@ -1,4 +1,4 @@
-#include <shell.h>
+#include <nsh/shell.h>
 #include <stdio.h>
 
 int main(void)
