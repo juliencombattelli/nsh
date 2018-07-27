@@ -1,0 +1,71 @@
+
+Report without optimizations, with newlibc
+
+Compiler flags: -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=c11 -O0 -g3 -Wall -fmessage-length=0 -ffunction-sections -fdata-sections
+Linker flags:   -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wl,-Map=output.map -Wl,--gc-sections -lm
+
+#define SHELL_LINE_BUFFER_SIZE 		            128u
+#define SHELL_CMD_NAME_SIZE 		            16u
+#define SHELL_CMD_MAX_COUNT 		            32u
+#define SHELL_CMD_HISTORY_SIZE                  64u
+
+Program without nsh: 
+   text	   data	    bss	    dec	    hex	filename
+  13628	   2136	   1732	  17496	   4458	shellf4.elf
+
+nsh base (all extra features = 0):
+   text	   data	    bss	    dec	    hex	filename
+  18240	   2136	   2508	  22884	   5964	shellf4.elf
+
+nsh base + autocompletion:
+   text	   data	    bss	    dec	    hex	filename
+  19620	   2136	   2508	  24264	   5ec8	shellf4.elf
+
+nsh base + history:
+   text	   data	    bss	    dec	    hex	filename
+  33852	   2500	   3544	  39896	   9bd8	shellf4.elf
+
+nsh base + return code printing (printf):
+   text	   data	    bss	    dec	    hex	filename
+  33188	   2500	   2504	  38192	   9530	shellf4.elf
+
+nsh base + all extra features
+   text	   data	    bss	    dec	    hex	filename
+  35340	   2500	   3544	  41384	   a1a8	shellf4.elf
+
+
+
+
+Report without optimizations, with nano-libc
+
+Compiler flags: -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -std=c11 -O0 -g3 -Wall -fmessage-length=0 -ffunction-sections -fdata-sections
+Linker flags:   -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nano.specs -Wl,-Map=output.map -Wl,--gc-sections -lm
+
+#define SHELL_LINE_BUFFER_SIZE 		            128u
+#define SHELL_CMD_NAME_SIZE 		            16u
+#define SHELL_CMD_MAX_COUNT 		            32u
+#define SHELL_CMD_HISTORY_SIZE                  64u
+
+Program without nsh: 
+   text	   data	    bss	    dec	    hex	filename
+  11372	    120	   1648	  13140	   3354	shellf4.elf
+
+nsh base (all extra features = 0):
+   text	   data	    bss	    dec	    hex	filename
+  13296	    120	   2424	  15840	   3de0	shellf4.elf
+
+nsh base + autocompletion:
+   text	   data	    bss	    dec	    hex	filename
+  13928	    120	   2424	  16472	   4058	shellf4.elf
+
+nsh base + history:
+   text	   data	    bss	    dec	    hex	filename
+  15760	    120	   3464	  19344	   4b90	shellf4.elf
+
+nsh base + return code printing (printf):
+   text	   data	    bss	    dec	    hex	filename
+  15092	    120	   2424	  17636	   44e4	shellf4.elf
+
+nsh base + all extra features
+   text	   data	    bss	    dec	    hex	filename
+  16516	    120	   3464	  20100	   4e84	shellf4.elf
