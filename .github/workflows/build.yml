@@ -23,10 +23,6 @@ jobs:
             artifact: macos-clang
             compiler: clang
           - os: windows-latest
-            name: Windows MSVC
-            artifact: windows-msvc
-            compiler: cl
-          - os: windows-latest
             name: Windows MinGW
             artifact: windows-mingw
             compiler: gcc
