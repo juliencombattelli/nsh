@@ -1,0 +1,73 @@
+name: CI workflow
+
+on: [push, pull_request]
+
+jobs:
+
+  build:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - os: ubuntu-latest
+            name: Ubuntu GCC
+            artifact: ubuntu-gcc
+            compiler: gcc
+          - os: ubuntu-latest
+            name: Ubuntu Clang
+            artifact: ubuntu-clang
+            compiler: clang
+          - os: macos-latest
+            name: MacOS Clang
+            artifact: macos-clang
+            compiler: clang
+          - os: windows-latest
+            name: Windows MinGW
+            artifact: windows-mingw
+            compiler: gcc
+            extra_cmake_args: -G "MSYS Makefiles"
+        build_type: [Release, Debug]
+
+    name: ${{ matrix.config.name }} - ${{ matrix.build_type }}
+    runs-on: ${{ matrix.config.os }}
+
+    steps:
+      
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install cmake
+
+      - name: Configure
+        env:
+          CC: ${{ matrix.config.compiler }}
+          CXX: ${{ matrix.config.compiler }}
+        run: |
+          cmake ${{ matrix.config.extra_cmake_args }} -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+      
+      - name: Build
+        run: |
+          cmake --build build --config ${{ matrix.build_type }}
+      
+      - name: Run tests
+        working-directory: build
+        run: ctest
+
+      - name: Install Strip
+        run: |
+          cmake --install build --prefix instdir --strip
+      
+      - name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          path: ./instdir
+          name: ${{ matrix.config.artifact }}-${{ matrix.build_type }}
