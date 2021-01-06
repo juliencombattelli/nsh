@@ -48,8 +48,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install cmake
+          pip install --upgrade pip
+          pip install cmake
 
       - name: Configure
         env:
