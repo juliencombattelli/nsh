@@ -1,4 +1,5 @@
 #include <nsh/shell.h>
+
 #include <stdio.h>
 
 int main(void)
@@ -9,4 +10,3 @@ int main(void)
     run_shell();
     return 0;
 }
-

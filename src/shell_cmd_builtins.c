@@ -7,20 +7,21 @@
 
 #include <nsh/shell_cmd_builtins.h>
 #include <nsh/shell_common_defs.h>
+
 #include <stdio.h>
 
-int cmd_builtin_help(int argc, char **argv)
+int cmd_builtin_help(int argc, char** argv)
 {
-	SHELL_UNUSED(argc);
-	SHELL_UNUSED(argv);
-	puts("This is an helpful help message !");
-	return SHELL_STATUS_OK;
+    SHELL_UNUSED(argc);
+    SHELL_UNUSED(argv);
+    puts("This is an helpful help message !");
+    return SHELL_STATUS_OK;
 }
 
-int cmd_builtin_exit(int argc, char **argv)
+int cmd_builtin_exit(int argc, char** argv)
 {
-	SHELL_UNUSED(argc);
-	SHELL_UNUSED(argv);
-	puts("exit");
-	return SHELL_STATUS_QUIT;
+    SHELL_UNUSED(argc);
+    SHELL_UNUSED(argv);
+    puts("exit");
+    return SHELL_STATUS_QUIT;
 }

@@ -1,0 +1,7 @@
+BasedOnStyle: WebKit
+
+AlignTrailingComments: true
+AlignConsecutiveMacros: true
+AllowShortFunctionsOnASingleLine: None
+FixNamespaceComments: true
+NamespaceIndentation: None

@@ -12,7 +12,7 @@
 
 int shell_init();
 
-int shell_register_command(const char *name, shell_cmd_handler_t handler);
+int shell_register_command(const char* name, shell_cmd_handler_t handler);
 
 void run_shell(void);
 
