@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.17)
 project(nsh LANGUAGES C)
 
+include(cmake/StaticAnalyzers.cmake)
+
 add_library(nsh 
     src/shell.c
     src/shell_cmd.c
