@@ -30,6 +30,8 @@ void nsh_io_put_newline(void)
 
 void nsh_io_put_string(const char* str)
 {
+    // TODO This implementation is suboptimal and two loops are executed
+    // One by strlen, one by nsh_io_put_buffer...
     nsh_io_put_buffer(str, strlen(str));
 }
 
@@ -56,8 +58,8 @@ void nsh_io_erase_last_char(void)
 
 void nsh_io_erase_line(void)
 {
-    printf(NSH_IO_ERASE_LINE);
-    printf(NSH_IO_MOVE_BEGIN_LINE);
+    nsh_io_put_string(NSH_IO_ERASE_LINE);
+    nsh_io_put_string(NSH_IO_MOVE_BEGIN_LINE);
 }
 
 #if NSH_FEATURE_USE_PRINTF == 1

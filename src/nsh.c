@@ -318,9 +318,11 @@ void nsh_run(void)
 
             // Execute the command with 'argc' number of argument stored in 'argv'
             int cmd_result = nsh_execute(argc, argv);
-            if (cmd_result == NSH_STATUS_CMD_NOT_FOUND)
-                nsh_io_printf("ERROR: command '%s' not found\r\n", argv[0]);
-            else if (cmd_result == NSH_STATUS_QUIT)
+            if (cmd_result == NSH_STATUS_CMD_NOT_FOUND) {
+                nsh_io_put_string("ERROR: command '");
+                nsh_io_put_string(argv[0]);
+                nsh_io_put_string("' not found\r\n");
+            } else if (cmd_result == NSH_STATUS_QUIT)
                 break;
         }
     }
