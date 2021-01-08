@@ -4,12 +4,12 @@ project(nsh LANGUAGES C)
 include(cmake/StaticAnalyzers.cmake)
 
 add_library(nsh 
-    src/shell.c
-    src/shell_cmd.c
-    src/shell_io.c
-    src/shell_cmd_builtins.c
-    src/shell_history.c
-    src/shell_line_buffer.c
+    src/nsh.c
+    src/nsh_cmd.c
+    src/nsh_io.c
+    src/nsh_cmd_builtins.c
+    src/nsh_history.c
+    src/nsh_line_buffer.c
 )
 target_include_directories(nsh
     PUBLIC
