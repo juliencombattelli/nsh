@@ -1,27 +1,27 @@
 /*
- * shell_cmd_builtins.c
+ * nsh_cmd_builtins.c
  *
  *  Created on: May 10, 2018
  *      Author: jucom
  */
 
-#include <nsh/shell_cmd_builtins.h>
-#include <nsh/shell_common_defs.h>
+#include <nsh/nsh_cmd_builtins.h>
+#include <nsh/nsh_common_defs.h>
 
 #include <stdio.h>
 
 int cmd_builtin_help(int argc, char** argv)
 {
-    SHELL_UNUSED(argc);
-    SHELL_UNUSED(argv);
+    NSH_UNUSED(argc);
+    NSH_UNUSED(argv);
     puts("This is an helpful help message !");
-    return SHELL_STATUS_OK;
+    return NSH_STATUS_OK;
 }
 
 int cmd_builtin_exit(int argc, char** argv)
 {
-    SHELL_UNUSED(argc);
-    SHELL_UNUSED(argv);
+    NSH_UNUSED(argc);
+    NSH_UNUSED(argv);
     puts("exit");
-    return SHELL_STATUS_QUIT;
+    return NSH_STATUS_QUIT;
 }
