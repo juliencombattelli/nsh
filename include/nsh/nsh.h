@@ -14,6 +14,6 @@ int nsh_init();
 
 int nsh_register_command(const char* name, nsh_cmd_handler_t handler);
 
-void run_nsh(void);
+void nsh_run(void);
 
 #endif /* NSH_H_ */
