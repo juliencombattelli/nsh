@@ -286,7 +286,7 @@ int nsh_register_command(const char* name, nsh_cmd_handler_t handler)
     return status;
 }
 
-void run_nsh(void)
+void nsh_run(void)
 {
     // Local storage for command line after spliting
     char args[NSH_CMD_ARGS_MAX_COUNT][NSH_MAX_STRING_SIZE];
