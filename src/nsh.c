@@ -46,20 +46,21 @@ int nsh_init(void)
 
 static int nsh_execute(int argc, char** argv)
 {
-    if (argv[0] == NULL || argv[0][0] == '\0')
+    if (argv[0] == NULL || argv[0][0] == '\0') {
         // An empty command was entered.
         return NSH_STATUS_EMPTY_CMD;
+    }
 
     // Find matching command
     nsh_cmd_t* matching_cmd = nsh_cmd_find(&nsh.cmds, argv[0]);
 
-    if (!matching_cmd)
+    if (!matching_cmd) {
         // If there is no match, return an error
         return NSH_STATUS_CMD_NOT_FOUND;
-    else if (!matching_cmd->handler)
+    } else if (!matching_cmd->handler) {
         // If handler is null, return an error
         return NSH_STATUS_EMPTY_CMD;
-    else {
+    } else {
         // Else execute matching command
         int ret = matching_cmd->handler(argc, argv);
 #if NSH_FEATURE_USE_RETURN_CODE_PRINTING == 1
@@ -79,9 +80,11 @@ static int nsh_autocomplete(void)
     match.count = 0;
 
     // Find all commands name matching the actual buffer
-    for (int i = 0; i < nsh.cmds.count; i++)
-        if (memcmp(nsh.line.buffer, nsh.cmds.array[i].name, nsh.line.size) == 0)
+    for (int i = 0; i < nsh.cmds.count; i++) {
+        if (memcmp(nsh.line.buffer, nsh.cmds.array[i].name, nsh.line.size) == 0) {
             nsh_cmd_copy(&match.array[match.count++], &nsh.cmds.array[i]);
+        }
+    }
 
     if (match.count > 0) {
         // Sort the matching commands in lexicographical order
@@ -131,8 +134,9 @@ static int nsh_display_previous_entry(void)
 #else
     nsh.current_history_entry++;
     int entry_count = nsh_history_entry_count(&nsh.history);
-    if (nsh.current_history_entry >= entry_count)
+    if (nsh.current_history_entry >= entry_count) {
         nsh.current_history_entry = entry_count - 1;
+    }
 
     nsh_display_history_entry(nsh.current_history_entry);
 
@@ -145,8 +149,9 @@ static int nsh_display_next_entry(void)
 #if NSH_FEATURE_USE_HISTORY == 0
     return NSH_STATUS_UNSUPPORTED;
 #else
-    if (nsh.current_history_entry >= 0)
+    if (nsh.current_history_entry >= 0) {
         nsh.current_history_entry--;
+    }
 
     nsh_display_history_entry(nsh.current_history_entry);
 
@@ -184,8 +189,9 @@ static void nsh_validate_entry(void)
 
 #if NSH_FEATURE_USE_HISTORY == 1
     // if the entry is not empty, add it into history
-    if (!nsh_line_buffer_is_empty(&nsh.line))
+    if (!nsh_line_buffer_is_empty(&nsh.line)) {
         nsh_history_add_entry(&nsh.history, nsh.line.buffer);
+    }
 #endif
 
     // print newline
@@ -268,9 +274,9 @@ static int nsh_split_command_line(const char* str, char sep, char output[][NSH_M
         if (str[i] == sep) {
             end = i;
             int ret = nsh_copy_token(&str[beg], output, token_count, end - beg);
-            if (ret != NSH_STATUS_OK)
-                // If an error is detected during copy, abort split and return the error code
+            if (ret != NSH_STATUS_OK) { // If an error is detected during copy, abort split and return the error code
                 return ret;
+            }
             end++;
             beg = end;
         }
@@ -308,13 +314,15 @@ void nsh_run(void)
 
         if (status == NSH_STATUS_OK) {
             // Split the command line into argument tokens
-            if (nsh_split_command_line(nsh.line.buffer, ' ', args, &argc) != NSH_STATUS_OK)
+            if (nsh_split_command_line(nsh.line.buffer, ' ', args, &argc) != NSH_STATUS_OK) {
                 // Ignore this command since there was an error
                 continue;
+            }
 
             // Copy the address of all tokens into 'argv'
-            for (int i = 0; i < argc; i++)
+            for (int i = 0; i < argc; i++) {
                 argv[i] = args[i];
+            }
 
             // Execute the command with 'argc' number of argument stored in 'argv'
             int cmd_result = nsh_execute(argc, argv);
@@ -322,8 +330,9 @@ void nsh_run(void)
                 nsh_io_put_string("ERROR: command '");
                 nsh_io_put_string(argv[0]);
                 nsh_io_put_string("' not found\r\n");
-            } else if (cmd_result == NSH_STATUS_QUIT)
+            } else if (cmd_result == NSH_STATUS_QUIT) {
                 break;
+            }
         }
     }
 }

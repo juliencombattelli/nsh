@@ -15,8 +15,9 @@ int main(int argc, char** argv)
         };
 
         int c = getopt_long(argc, argv, "d:", long_options, &option_index);
-        if (c == -1)
+        if (c == -1) {
             break;
+        }
 
         switch (c) {
         case 'd':

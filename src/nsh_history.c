@@ -37,30 +37,34 @@ bool nsh_history_is_empty(const nsh_history_t* hist)
 
 int nsh_history_add_entry(nsh_history_t* hist, const char* entry)
 {
-    if (!hist)
+    if (!hist) {
         return NSH_STATUS_WRONG_ARG;
+    }
 
     strcpy(hist->entries[hist->head], entry);
 
     hist->head = (hist->head + 1) % NSH_CMD_HISTORY_SIZE;
 
-    if (nsh_history_is_full(hist))
+    if (nsh_history_is_full(hist)) {
         hist->tail = (hist->tail + 1) % NSH_CMD_HISTORY_SIZE;
-    else
+    } else {
         hist->size++;
+    }
 
     return NSH_STATUS_OK;
 }
 
 int nsh_history_get_entry(nsh_history_t* hist, int age, char* entry)
 {
-    if (!hist || !entry || age < 0 || age >= nsh_history_entry_count(hist))
+    if (!hist || !entry || age < 0 || age >= nsh_history_entry_count(hist)) {
         return NSH_STATUS_WRONG_ARG;
+    }
 
     int most_recent_entry = hist->head - 1; // head points to the element just after the most recent entry
     int entry_index = most_recent_entry - age;
-    if (entry_index < 0)
+    if (entry_index < 0) {
         entry_index += NSH_CMD_HISTORY_SIZE;
+    }
 
     strcpy(entry, hist->entries[entry_index]);
 
