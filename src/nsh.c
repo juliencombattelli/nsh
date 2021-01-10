@@ -122,7 +122,7 @@ static void nsh_display_history_entry(int age)
             nsh_io_erase_line();
             nsh_io_print_prompt();
             nsh_io_put_string(nsh.line.buffer);
-            nsh.line.size = strlen(nsh.line.buffer);
+            nsh.line.size = (int)strlen(nsh.line.buffer);
         }
     }
 }
