@@ -57,17 +57,18 @@ static int nsh_execute(int argc, char** argv)
     if (!matching_cmd) {
         // If there is no match, return an error
         return NSH_STATUS_CMD_NOT_FOUND;
-    } else if (!matching_cmd->handler) {
+    }
+    if (!matching_cmd->handler) {
         // If handler is null, return an error
         return NSH_STATUS_EMPTY_CMD;
-    } else {
-        // Else execute matching command
-        int ret = matching_cmd->handler(argc, argv);
-#if NSH_FEATURE_USE_RETURN_CODE_PRINTING == 1
-        nsh_io_printf("command '%s' return %d\r\n", argv[0], ret);
-#endif
-        return ret;
     }
+
+    // Execute matching command
+    int ret = matching_cmd->handler(argc, argv);
+#if NSH_FEATURE_USE_RETURN_CODE_PRINTING == 1
+    nsh_io_printf("command '%s' return %d\r\n", argv[0], ret);
+#endif
+    return ret;
 }
 
 static int nsh_autocomplete(void)
