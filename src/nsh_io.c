@@ -37,8 +37,9 @@ void nsh_io_put_string(const char* str)
 
 void nsh_io_put_buffer(const char* str, int size)
 {
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < size; i++) {
         nsh_io_put_char(str[i]);
+    }
 }
 
 void nsh_io_print_prompt(void)
