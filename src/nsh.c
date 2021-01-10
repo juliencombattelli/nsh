@@ -267,7 +267,7 @@ static int nsh_split_command_line(const char* str, char sep, char output[][NSH_M
 {
     int beg = 0;
     int end = 0;
-    int input_size = strlen(str);
+    int input_size = (int)strlen(str);
 
     *token_count = 0;
 

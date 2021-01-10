@@ -32,7 +32,7 @@ void nsh_io_put_string(const char* str)
 {
     // TODO This implementation is suboptimal and two loops are executed
     // One by strlen, one by nsh_io_put_buffer...
-    nsh_io_put_buffer(str, strlen(str));
+    nsh_io_put_buffer(str, (int)strlen(str));
 }
 
 void nsh_io_put_buffer(const char* str, int size)
