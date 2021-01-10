@@ -1,11 +1,27 @@
+#include <errno.h>
 #include <getopt.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
+static long stol(const char* str)
+{
+    errno = 0;
+    char* end = NULL;
+    const long l = strtol(str, &end, 0);
+    if (errno == ERANGE || *end != '\0' || str == end) {
+        printf("strtol: Error when parsing string\n");
+        exit(-1);
+    }
+    return l;
+}
+
+#define USEC_IN_MSEC 1000u
+
 int main(int argc, char** argv)
 {
-    int delay_ms = 0;
+    long delay_ms = 0;
 
     while (1) {
         int option_index = 0;
@@ -21,7 +37,7 @@ int main(int argc, char** argv)
 
         switch (c) {
         case 'd':
-            delay_ms = atoi(optarg);
+            delay_ms = stol(optarg);
             break;
 
         case '?':
@@ -34,7 +50,7 @@ int main(int argc, char** argv)
 
     if (optind < argc) {
         while (optind < argc) {
-            usleep(delay_ms * 1000);
+            usleep(delay_ms * USEC_IN_MSEC);
             puts(argv[optind++]);
         }
     }
