@@ -303,7 +303,7 @@ void nsh_run(void)
     // but this isn't recursive. So a T[] decays to a T*, but a T[][]
     // doesn't decay to a T**. Then we are forced to add an extra step:
     // char[][] -> char*[] -> char**
-    char* argv[NSH_CMD_ARGS_MAX_COUNT];
+    char* argv[NSH_CMD_ARGS_MAX_COUNT] = { NULL };
 
     while (true) {
         int argc = 0;
