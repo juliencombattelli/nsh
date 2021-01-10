@@ -12,7 +12,7 @@
 void nsh_cmd_copy(nsh_cmd_t* dst, const nsh_cmd_t* src)
 {
     dst->handler = src->handler;
-    strcpy(dst->name, src->name);
+    strncpy(dst->name, src->name, sizeof(dst->name));
 }
 
 void nsh_cmd_swap(nsh_cmd_t* cmd1, nsh_cmd_t* cmd2)
@@ -61,7 +61,7 @@ int nsh_cmd_register(nsh_cmd_array_t* cmds, const char* name, nsh_cmd_handler_t 
         return NSH_STATUS_WRONG_ARG;
     }
 
-    strcpy(cmds->array[cmds->count].name, name);
+    strncpy(cmds->array[cmds->count].name, name, NSH_CMD_MAX_COUNT);
     cmds->array[cmds->count].handler = handler;
 
     cmds->count++;
