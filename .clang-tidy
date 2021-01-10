@@ -1,5 +1,18 @@
 ---
-Checks: '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trailing-return-type,-llvm*'
+# Enable everything and blacklist unwanted checks
+#    *,
+# Disable project specific checks
+#    -fuchsia-*,-google-*,-zircon-*,-abseil-*,-llvm*,
+# Disable unwanted C++ modernize checks
+#    -modernize-use-trailing-return-type,
+# Disable insecure APIs checks (GCC's libstdc++ does not implement C11 annexe K with *_s functions...)
+#    -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling
+Checks: '
+    *,
+    -fuchsia-*,-google-*,-zircon-*,-abseil-*,-llvm*,
+    -modernize-use-trailing-return-type,
+    -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling
+'
 WarningsAsErrors: '0'
 HeaderFilterRegex: ''
 FormatStyle:     none
