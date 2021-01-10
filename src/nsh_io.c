@@ -14,7 +14,7 @@
 
 char nsh_io_get_char(void)
 {
-    return getchar();
+    return (char)getchar();
 }
 
 void nsh_io_put_char(char c)
