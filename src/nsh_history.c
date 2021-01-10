@@ -41,7 +41,7 @@ int nsh_history_add_entry(nsh_history_t* hist, const char* entry)
         return NSH_STATUS_WRONG_ARG;
     }
 
-    strcpy(hist->entries[hist->head], entry);
+    strncpy(hist->entries[hist->head], entry, sizeof(hist->entries[hist->head]));
 
     hist->head = (hist->head + 1) % NSH_CMD_HISTORY_SIZE;
 
@@ -66,7 +66,7 @@ int nsh_history_get_entry(nsh_history_t* hist, int age, char* entry)
         entry_index += NSH_CMD_HISTORY_SIZE;
     }
 
-    strcpy(entry, hist->entries[entry_index]);
+    strncpy(entry, hist->entries[entry_index], NSH_LINE_BUFFER_SIZE);
 
     return NSH_STATUS_OK;
 }
