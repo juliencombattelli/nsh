@@ -1,5 +1,5 @@
 # nsh
-![travis build stattus](https://travis-ci.org/juliencombattelli/nsh.svg?branch=ci/travis) | *coveralls coverity status*
+![build status](https://github.com/juliencombattelli/nsh/workflows/CI%20workflow/badge.svg)
 
 Lightwheight shell (Nano-SHell) targeting embedded systems
 
