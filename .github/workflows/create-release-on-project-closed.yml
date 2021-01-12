@@ -1,0 +1,10 @@
+on:
+  project:
+    types: closed
+    
+jobs:
+  publish-release:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Project ${{ github.event.project.name }} closed"
