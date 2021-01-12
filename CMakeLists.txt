@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 project(nsh LANGUAGES C)
 
-include(cmake/StaticAnalyzers.cmake)
+include(cmake/Scripts/NshSetup.cmake)
 
 add_library(nsh 
     src/nsh.c
@@ -23,7 +23,7 @@ target_compile_features(nsh
         c_restrict
 )
 
-add_executable(simple_shell test/simple_shell.c)
+nsh_add_executable(simple_shell test/simple_shell.c)
 target_link_libraries(simple_shell PRIVATE nsh)
 
 install(
@@ -33,8 +33,8 @@ install(
     ARCHIVE DESTINATION lib
 )
 
-add_executable(send_cmds test/send_cmds.c)
-
-enable_testing()
-
-add_test(NAME simple_shell_test COMMAND bash -c "$<TARGET_FILE:send_cmds> -d1000 help exit | $<TARGET_FILE:simple_shell>")
+if(NSH_NATIVE)
+    add_executable(send_cmds test/send_cmds.c)
+    enable_testing()
+    add_test(NAME simple_shell_test COMMAND bash -c "$<TARGET_FILE:send_cmds> -d1000 help exit | $<TARGET_FILE:simple_shell>")
+endif()
