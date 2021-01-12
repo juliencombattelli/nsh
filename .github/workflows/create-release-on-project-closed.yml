@@ -19,8 +19,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.run_tests.outputs.release_name_extracting.release_name }}
-          release_name: Release ${{ steps.run_tests.outputs.release_name_extracting.release_name }}
+          tag_name: ${{ steps.release_name_extracting.outputs.release_name }}
+          release_name: Release ${{ steps.release_name_extracting.outputs.release_name }}
           body: |
             Changes in this Release
             - First Change
