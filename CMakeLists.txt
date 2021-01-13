@@ -40,7 +40,7 @@ install(
     ARCHIVE DESTINATION lib
 )
 
-if(NSH_PLATFORM STREQUAL Native)
+if(UNIX)
     add_executable(send_cmds test/send_cmds.c)
     enable_testing()
     add_test(NAME simple_shell_test COMMAND bash -c "$<TARGET_FILE:send_cmds> -d1000 help exit | $<TARGET_FILE:simple_shell>")
