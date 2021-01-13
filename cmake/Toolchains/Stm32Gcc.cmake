@@ -24,6 +24,10 @@ set(CMAKE_EXECUTABLE_SUFFIX_C ".elf")
 set(CMAKE_EXECUTABLE_SUFFIX_CXX ".elf")
 set(CMAKE_EXECUTABLE_SUFFIX_ASM ".elf")
 
+include(${CMAKE_CURRENT_LIST_DIR}/../Scripts/NshCommon.cmake)
+
+nsh_set_platform(STM32)
+
 function(stm32_target_add_size TARGET)
     add_custom_target(${TARGET}-size ALL
         COMMAND ${CMAKE_SIZE} --format=berkeley $<TARGET_FILE:${TARGET}>

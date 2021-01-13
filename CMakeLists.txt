@@ -30,7 +30,7 @@ nsh_add_executable(simple_shell test/simple_shell.c)
 target_link_libraries(simple_shell
     PRIVATE
         nsh
-        $<$<BOOL:"NOT ${NSH_NATIVE}">:STM32::NoSys>
+        $<$<STREQUAL:${NSH_PLATFORM},STM32>:STM32::NoSys>
 )
 
 install(
@@ -40,7 +40,7 @@ install(
     ARCHIVE DESTINATION lib
 )
 
-if(NSH_NATIVE)
+if(NSH_PLATFORM STREQUAL Native)
     add_executable(send_cmds test/send_cmds.c)
     enable_testing()
     add_test(NAME simple_shell_test COMMAND bash -c "$<TARGET_FILE:send_cmds> -d1000 help exit | $<TARGET_FILE:simple_shell>")
