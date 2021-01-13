@@ -27,7 +27,11 @@ target_compile_features(nsh
 )
 
 nsh_add_executable(simple_shell test/simple_shell.c)
-target_link_libraries(simple_shell PRIVATE nsh)
+target_link_libraries(simple_shell
+    PRIVATE
+        nsh
+        $<$<BOOL:"NOT ${NSH_NATIVE}">:STM32::NoSys>
+)
 
 install(
     TARGETS simple_shell

@@ -56,7 +56,6 @@ endfunction()
 
 function(nsh_add_executable TARGET)
     add_executable(${TARGET} ${ARGN})
-    target_link_libraries(${TARGET} PRIVATE STM32::NoSys)
     stm32_target_add_size(${TARGET})
     stm32_target_add_bin(${TARGET})
     stm32_target_add_flash(${TARGET})
