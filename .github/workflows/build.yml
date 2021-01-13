@@ -31,7 +31,7 @@ jobs:
             name: STM32 GCC
             artifact: stm32-gcc
             compiler: gcc
-            extra_cmake_args: -DCMAKE_TOOLCHAIN_FILE=cmake/Toolchains/Stm32Gcc.cmake
+            extra_cmake_args: -DCMAKE_TOOLCHAIN_FILE=cmake/Toolchains/Stm32Gcc.cmake -DSTM32_TOOLCHAIN_PATH=/tmp/gcc-arm-none-eabi
         build_type: [Release, Debug]
 
     name: ${{ matrix.config.name }} - ${{ matrix.build_type }}
@@ -48,12 +48,16 @@ jobs:
           python-version: "3.x"
 
       - name: Install dependencies
-        uses: fiam/arm-none-eabi-gcc@v1
-        with:
-          release: "9-2019-q4"
         run: |
           pip install --upgrade pip
           pip install cmake
+
+      - name: Install arm-none-eabi-gcc
+        if: ${{ matrix.config.name == 'STM32 GCC' }}
+        uses: fiam/arm-none-eabi-gcc@v1
+        with:
+          release: "9-2019-q4"
+          directory: /tmp/gcc-arm-none-eabi
 
       - name: Configure
         env:
