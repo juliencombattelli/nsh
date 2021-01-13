@@ -43,6 +43,9 @@ jobs:
           python-version: "3.x"
 
       - name: Install dependencies
+        uses: fiam/arm-none-eabi-gcc@v1
+        with:
+          release: "9-2019-q4"
         run: |
           pip install --upgrade pip
           pip install cmake
