@@ -3,6 +3,9 @@ project(nsh LANGUAGES C)
 
 include(cmake/Scripts/NshSetup.cmake)
 
+set(OPENOCD_CONF_FILE board/st_nucleo_f4.cfg)
+set(OPENOCD_COMMAND "init\;reset halt\;flash write_image erase @binary@ 0x08000000\;reset\;shutdown")
+
 add_library(nsh 
     src/nsh.c
     src/nsh_cmd.c

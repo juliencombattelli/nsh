@@ -33,9 +33,23 @@ function(stm32_target_add_size TARGET)
 endfunction()
 
 function(stm32_target_add_bin TARGET)
+    add_custom_command(
+        OUTPUT ${TARGET}.bin
+        COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${TARGET}> ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}.bin
+        DEPENDS ${TARGET}-size
+        VERBATIM
+    )
     add_custom_target(${TARGET}-bin ALL 
-        COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${TARGET}> ${TARGET}.bin
-        DEPENDS ${TARGET}-size 
+        DEPENDS ${TARGET}.bin
+    )
+endfunction()
+
+function(stm32_target_add_flash TARGET)
+    find_program(OPENOCD NAMES openocd PATHS ${TOOLCHAIN_BIN_PATH} REQUIRED)
+    string(REPLACE "@binary@" "\"${CMAKE_CURRENT_BINARY_DIR}/${TARGET}.bin\"" OPENOCD_COMMAND ${OPENOCD_COMMAND})
+    add_custom_target(${TARGET}-flash
+        COMMAND echo "${OPENOCD} -f '${OPENOCD_CONF_FILE}' -c '${OPENOCD_COMMAND}'"
+        DEPENDS ${TARGET}-bin
         VERBATIM
     )
 endfunction()
@@ -45,4 +59,5 @@ function(nsh_add_executable TARGET)
     target_link_libraries(${TARGET} PRIVATE STM32::NoSys)
     stm32_target_add_size(${TARGET})
     stm32_target_add_bin(${TARGET})
+    stm32_target_add_flash(${TARGET})
 endfunction()
