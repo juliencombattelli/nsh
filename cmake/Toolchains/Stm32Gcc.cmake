@@ -49,13 +49,17 @@ function(stm32_target_add_bin TARGET)
 endfunction()
 
 function(stm32_target_add_flash TARGET)
-    find_program(OPENOCD NAMES openocd PATHS ${TOOLCHAIN_BIN_PATH} REQUIRED)
-    string(REPLACE "@binary@" "\"${CMAKE_CURRENT_BINARY_DIR}/${TARGET}.bin\"" OPENOCD_COMMAND ${OPENOCD_COMMAND})
-    add_custom_target(${TARGET}-flash
-        COMMAND echo "${OPENOCD} -f '${OPENOCD_CONF_FILE}' -c '${OPENOCD_COMMAND}'"
-        DEPENDS ${TARGET}-bin
-        VERBATIM
-    )
+    find_program(OPENOCD NAMES openocd PATHS ${TOOLCHAIN_BIN_PATH})
+    if(OPENOCD STREQUAL OPENOCD-NOTFOUND)
+        message(WARNING "openocd not found. Flash targets will not be generated.")
+    else()
+        string(REPLACE "@binary@" "\"${CMAKE_CURRENT_BINARY_DIR}/${TARGET}.bin\"" OPENOCD_COMMAND ${OPENOCD_COMMAND})
+        add_custom_target(${TARGET}-flash
+            COMMAND echo "${OPENOCD} -f '${OPENOCD_CONF_FILE}' -c '${OPENOCD_COMMAND}'"
+            DEPENDS ${TARGET}-bin
+            VERBATIM
+        )
+    endif()
 endfunction()
 
 function(nsh_add_executable TARGET)
