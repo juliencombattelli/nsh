@@ -1,4 +1,4 @@
-name: CI workflow
+name: Build & Tests
 
 on: [push, pull_request]
 
@@ -27,6 +27,11 @@ jobs:
             artifact: windows-mingw
             compiler: gcc
             extra_cmake_args: -G "MSYS Makefiles"
+          - os: ubuntu-latest
+            name: STM32 GCC
+            artifact: stm32-gcc
+            compiler: gcc
+            extra_cmake_args: -DCMAKE_TOOLCHAIN_FILE=cmake/Toolchains/Stm32Gcc.cmake
         build_type: [Release, Debug]
 
     name: ${{ matrix.config.name }} - ${{ matrix.build_type }}
