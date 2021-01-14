@@ -3,9 +3,6 @@ project(nsh LANGUAGES C)
 
 include(cmake/Scripts/NshSetup.cmake)
 
-set(OPENOCD_CONF_FILE board/st_nucleo_f4.cfg)
-set(OPENOCD_COMMAND "init\;reset halt\;flash write_image erase @binary@ 0x08000000\;reset\;shutdown")
-
 add_library(nsh 
     src/nsh.c
     src/nsh_cmd.c
@@ -39,6 +36,10 @@ install(
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
+
+if(NSH_PLATFORM STREQUAL STM32)
+    stm32_target_flash_file(${CMAKE_CURRENT_LIST_DIR}/bin/Nucleo_blink_led.NUCLEO_F411RE.bin)
+endif()
 
 if(UNIX)
     add_executable(send_cmds test/send_cmds.c)
