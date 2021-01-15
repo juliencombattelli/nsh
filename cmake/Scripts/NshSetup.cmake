@@ -10,4 +10,4 @@ if (NOT CMAKE_CROSSCOMPILING)
 
 endif()
 
-include(${CMAKE_CURRENT_LIST_DIR}/StaticAnalyzers.cmake)
+include(StaticAnalyzers)
