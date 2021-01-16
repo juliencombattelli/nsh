@@ -31,7 +31,7 @@ jobs:
             name: STM32 GCC
             artifact: stm32-gcc
             compiler: gcc
-            extra_cmake_args: -DCMAKE_TOOLCHAIN_FILE=cmake/Toolchains/Stm32Gcc.cmake -DSTM32_TOOLCHAIN_PATH=/tmp/gcc-arm-none-eabi
+            extra_cmake_args: -DCMAKE_TOOLCHAIN_FILE=cmake/Toolchains/Stm32Gcc.cmake -DSTM32_TOOLCHAIN_PATH=/tmp/gcc-arm-none-eabi -DNSH_PLATFORM_NAME=Stm32NucleoF411RE
         build_type: [Release, Debug]
 
     name: ${{ matrix.config.name }} - ${{ matrix.build_type }}
