@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.17)
-project(nsh LANGUAGES C)
+project(nsh LANGUAGES C CXX ASM)
 
 include(cmake/Scripts/NshSetup.cmake)
 
-add_library(nsh 
+nsh_add_library(nsh
     src/nsh.c
     src/nsh_cmd.c
     src/nsh_io.c
@@ -27,7 +27,6 @@ nsh_add_executable(simple_shell test/simple_shell.c)
 target_link_libraries(simple_shell
     PRIVATE
         nsh
-        $<$<STREQUAL:${NSH_PLATFORM},STM32>:STM32::NoSys>
 )
 
 install(
@@ -37,12 +36,11 @@ install(
     ARCHIVE DESTINATION lib
 )
 
-if(NSH_PLATFORM STREQUAL STM32)
-    stm32_target_flash_file(${CMAKE_CURRENT_LIST_DIR}/bin/Nucleo_blink_led.NUCLEO_F411RE.bin)
+if(ENABLE_TESTS)
+    add_subdirectory(test)
 endif()
 
 if(UNIX)
     add_executable(send_cmds test/send_cmds.c)
-    enable_testing()
     add_test(NAME simple_shell_test COMMAND bash -c "$<TARGET_FILE:send_cmds> -d1000 help exit | $<TARGET_FILE:simple_shell>")
 endif()
