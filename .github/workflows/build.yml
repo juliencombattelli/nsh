@@ -13,24 +13,29 @@ jobs:
           - os: ubuntu-latest
             name: Ubuntu GCC
             artifact: ubuntu-gcc
-            compiler: gcc
+            compiler-c: gcc
+            compiler-cxx: g++
           - os: ubuntu-latest
             name: Ubuntu Clang
             artifact: ubuntu-clang
-            compiler: clang
+            compiler-c: clang
+            compiler-cxx: clang++
           - os: macos-latest
             name: MacOS Clang
             artifact: macos-clang
-            compiler: clang
+            compiler-c: clang
+            compiler-cxx: clang++
           - os: windows-latest
             name: Windows MinGW
             artifact: windows-mingw
-            compiler: gcc
-            extra_cmake_args: -G "MSYS Makefiles" -DCMAKE_VERBOSE_MAKEFILE=ON
+            compiler-c: gcc
+            compiler-cxx: g++
+            extra_cmake_args: -G "MSYS Makefiles"
           - os: ubuntu-latest
             name: STM32 GCC
             artifact: stm32-gcc
-            compiler: gcc
+            compiler-c: gcc
+            compiler-cxx: g++
             extra_cmake_args: -DCMAKE_TOOLCHAIN_FILE=cmake/Toolchains/Stm32Gcc.cmake -DSTM32_TOOLCHAIN_PATH=/tmp/gcc-arm-none-eabi -DNSH_PLATFORM_NAME=Stm32NucleoF411RE
         build_type: [Release, Debug]
 
@@ -61,8 +66,8 @@ jobs:
 
       - name: Configure
         env:
-          CC: ${{ matrix.config.compiler }}
-          CXX: ${{ matrix.config.compiler }}
+          CC: ${{ matrix.config.compiler-c }}
+          CXX: ${{ matrix.config.compiler-cxx }}
         run: |
           cmake ${{ matrix.config.extra_cmake_args }} -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
       
