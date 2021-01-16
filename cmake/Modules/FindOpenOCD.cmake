@@ -2,7 +2,7 @@
 
 #[=======================================================================[.rst:
 FindOpenOCD
-----------------
+-----------
 
 This module finds if OpenOCD debugger is installed and determines where the
 executables are. The caller may set ``OPENOCD_HOME`` to specify a OpenOCD
