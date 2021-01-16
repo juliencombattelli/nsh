@@ -26,7 +26,7 @@ jobs:
             name: Windows MinGW
             artifact: windows-mingw
             compiler: gcc
-            extra_cmake_args: -G "MSYS Makefiles"
+            extra_cmake_args: -G "MSYS Makefiles" -DCMAKE_VERBOSE_MAKEFILE=ON
           - os: ubuntu-latest
             name: STM32 GCC
             artifact: stm32-gcc
