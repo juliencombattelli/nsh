@@ -32,7 +32,7 @@ function(stm32_target_add_flash TARGET)
 endfunction()
 
 function(stm32_target_add_start_debug_server)
-    add_custom_target(${TARGET}-debug ALL 
+    add_custom_target(${TARGET}-debug
         DEPENDS $<TARGET_FILE:${TARGET}>
         # TODO check for gdb-multiarch availability
         COMMAND gdb-multiarch -ex "target extended-remote | openocd -f board/st_nucleo_f4.cfg -c \"gdb_port pipe; log_output openocd.log\"" $<TARGET_FILE:${TARGET}>
