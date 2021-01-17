@@ -1,6 +1,8 @@
 stm32_fetch_cmsis(F4)
+stm32_fetch_hal(F4)
 
 find_package(CMSIS COMPONENTS STM32F4 REQUIRED)
+find_package(HAL COMPONENTS STM32F4 REQUIRED)
 find_package(OpenOCD 0.10.0)
 
 set(OPENOCD_CONF_FILE board/st_nucleo_f4.cfg)
