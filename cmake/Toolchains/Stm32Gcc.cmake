@@ -11,6 +11,17 @@ FetchContent_MakeAvailable(stm32-cmake)
 
 include(${stm32-cmake_SOURCE_DIR}/cmake/stm32_gcc.cmake)
 
+# Add newlib-nano target (from: https://github.com/ObKo/stm32-cmake/pull/179)
+if(NOT (TARGET STM32::Nano))
+    add_library(STM32::Nano INTERFACE IMPORTED)
+    target_compile_options(STM32::Nano INTERFACE $<$<C_COMPILER_ID:GNU>:--specs=nano.specs>)
+    target_link_options(STM32::Nano INTERFACE $<$<C_COMPILER_ID:GNU>:--specs=nano.specs>)
+    #This custom property is used to check that specs is not set yet on a target linking to this one
+    set_property(TARGET STM32::Nano PROPERTY INTERFACE_CUSTOM_GCC_SPECS "NANO")
+    set_property(TARGET STM32::Nano APPEND PROPERTY
+        COMPATIBLE_INTERFACE_STRING CUSTOM_GCC_SPECS)
+endif()
+
 # Repeat find_program with REQUIRED option (missing in stm32_gcc.cmake...)
 find_program(CMAKE_C_COMPILER NAMES ${STM32_TARGET_TRIPLET}-gcc PATHS ${TOOLCHAIN_BIN_PATH} REQUIRED)
 find_program(CMAKE_CXX_COMPILER NAMES ${STM32_TARGET_TRIPLET}-g++ PATHS ${TOOLCHAIN_BIN_PATH} REQUIRED)
