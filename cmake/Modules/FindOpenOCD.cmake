@@ -4,8 +4,8 @@
 FindOpenOCD
 -----------
 
-This module finds if OpenOCD debugger is installed and determines where the
-executables are. The caller may set ``OPENOCD_HOME`` to specify a OpenOCD
+This module checks if OpenOCD debugger is installed and determines where the
+executable is. The caller may set ``OPENOCD_HOME`` to specify a OpenOCD
 installation prefix explicitly.
 
 The module defines the following ``IMPORTED`` targets:
