@@ -4,15 +4,23 @@ stm32_fetch_hal(F4)
 find_package(CMSIS COMPONENTS STM32F4 REQUIRED)
 find_package(HAL COMPONENTS STM32F4 REQUIRED)
 find_package(OpenOCD 0.10.0)
+find_package(GDB COMPONENTS armv7e-m i386)
 
 set(OPENOCD_CONF_FILE board/st_nucleo_f4.cfg)
-set(OPENOCD_COMMAND "program @binary@ preverify verify reset exit 0x08000000")
+set(OPENOCD_COMMAND "program @binary@ verify reset exit 0x08000000")
 
 if(OPENOCD_FOUND)
     set(NSH_FLASH_TARGET ON)
+    if(GDB_FOUND)
+        set(NSH_DEBUG_TARGET ON)
+    else()
+        set(NSH_DEBUG_TARGET OFF)
+        message(WARNING "GDB not found. Debug targets will not be generated.")
+    endif()
 else()
     set(NSH_FLASH_TARGET OFF)
-    message(WARNING "OpenOCD not found. Flash targets will not be generated.")
+    set(NSH_DEBUG_TARGET OFF)
+    message(WARNING "OpenOCD not found. Flash & Debug targets will not be generated.")
 endif()
 
 function(stm32_target_flash_file FILEPATH)
@@ -32,12 +40,13 @@ function(stm32_target_add_flash TARGET)
 endfunction()
 
 function(stm32_target_add_start_debug_server)
-    add_custom_target(${TARGET}-debug
-        DEPENDS $<TARGET_FILE:${TARGET}>
-        # TODO check for gdb-multiarch availability
-        COMMAND gdb-multiarch -ex "target extended-remote | openocd -f board/st_nucleo_f4.cfg -c \"gdb_port pipe; log_output openocd.log\"" $<TARGET_FILE:${TARGET}>
-        VERBATIM USES_TERMINAL
-    )
+    if(NSH_DEBUG_TARGET)
+        add_custom_target(${TARGET}-debug
+            DEPENDS $<TARGET_FILE:${TARGET}>
+            COMMAND ${GDB_EXECUTABLE} -ex "target extended-remote | ${OPENOCD_EXECUTABLE} -f board/st_nucleo_f4.cfg -c \"gdb_port pipe; log_output openocd.log\"" $<TARGET_FILE:${TARGET}>
+            VERBATIM USES_TERMINAL
+        )
+    endif()
 endfunction()
 
 set(NSH_GTEST_PATCH_COMMAND "")
