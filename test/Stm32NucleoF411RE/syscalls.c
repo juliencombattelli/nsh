@@ -1,7 +1,3 @@
-/* Support files for GNU libc.  Files in the system namespace go here.
-   Files in the C namespace (ie those that do not start with an
-   underscore) go in .c.  */
-
 #include <_ansi.h>
 #include <reent.h>
 #include <stdio.h>
@@ -16,37 +12,25 @@
 #include <time.h>
 #include <unistd.h>
 
-#define FreeRTOS
-#define MAX_STACK_SIZE 0x200
+#include "stm32f4xx_hal.h"
 
 extern int __io_putchar(int ch) __attribute__((weak));
 extern int __io_getchar(void) __attribute__((weak));
 
-#ifndef FreeRTOS
 register char* stack_ptr asm("sp");
-#endif
 
 caddr_t _sbrk(int incr)
 {
     extern char end asm("end");
     static char* heap_end;
-    char *prev_heap_end, *min_stack_ptr;
+    char *prev_heap_end;
 
     if (heap_end == 0)
         heap_end = &end;
 
     prev_heap_end = heap_end;
 
-#ifdef FreeRTOS
-    /* Use the NVIC offset register to locate the main stack pointer. */
-    min_stack_ptr = (char*)(*(unsigned int*)*(unsigned int*)0xE000ED08);
-    /* Locate the STACK bottom address */
-    min_stack_ptr -= MAX_STACK_SIZE;
-
-    if (heap_end + incr > min_stack_ptr)
-#else
     if (heap_end + incr > stack_ptr)
-#endif
     {
         //		write(1, "Heap and stack collision\n", 25);
         //		abort();
@@ -68,6 +52,10 @@ int _gettimeofday(struct timeval* tp, struct timezone* tzp)
     if (tzp) {
         tzp->tz_minuteswest = 0;
         tzp->tz_dsttime = 0;
+    }
+    if (tp) {
+        tp->tv_sec = 0;
+        tp->tv_usec = HAL_GetTick() * 1000;
     }
 
     return 0;
@@ -180,4 +168,19 @@ int _execve(char* name, char** argv, char** env)
 {
     errno = ENOMEM;
     return -1;
+}
+
+char* getcwd(char* buf, size_t size)
+{
+    const char cwd[] = "./";
+    if (sizeof(cwd) > size) {
+        return NULL;
+    }
+    strncpy(buf, "./", size);
+    return buf;
+}
+
+int mkdir(const char* path, mode_t mode)
+{
+    return 0;
 }

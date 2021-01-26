@@ -1,115 +1,79 @@
-/**
-  ******************************************************************************
-  * @file    UART/UART_Printf/Src/main.c 
-  * @author  MCD Application Team
-  * @brief   This example shows how to retarget the C library printf function 
-  *          to the UART.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
-  *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
-  ******************************************************************************
-  */
+#include "stdio.h"
+#include "stm32f4xx_hal.h"
 
-/* Includes ------------------------------------------------------------------*/
-#include "main.h"
+#include "gtest/gtest.h"
 
-/** @addtogroup STM32F4xx_HAL_Examples
-  * @{
-  */
+int add(int op1, int op2)
+{
+    return op1 + op2;
+}
 
-/** @addtogroup UART_Printf
-  * @{
-  */
+int sub(int op1, int op2)
+{
+    return op1 - op2;
+}
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* UART handler declaration */
-UART_HandleTypeDef UartHandle;
+TEST(CalcTest, Add)
+{
+    ASSERT_EQ(2, add(1, 1));
+    ASSERT_EQ(5, add(3, 2));
+    ASSERT_EQ(10, add(7, 3));
+}
 
-/* Private function prototypes -----------------------------------------------*/
-#ifdef __GNUC__
-/* With GCC, small printf (option LD Linker->Libraries->Small printf
-     set to 'Yes') calls __io_putchar() */
-#define PUTCHAR_PROTOTYPE extern "C" int __io_putchar(int ch)
-#else
-#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE* f)
-#endif /* __GNUC__ */
+TEST(CalcTest, Sub)
+{
+    ASSERT_EQ(3, sub(5, 2));
+    ASSERT_EQ(-10, sub(5, 15));
+}
+
+TEST(CalcTest, Hello)
+{
+    ASSERT_EQ(true, true);
+}
+
+static UART_HandleTypeDef UartHandle;
+
+static void BSP_LED2_Init();
+static void BSP_LED2_DeInit();
+static void BSP_LED2_On();
+static void BSP_LED2_Off();
+
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 
-/* Private functions ---------------------------------------------------------*/
-
-/**
-  * @brief  Main program
-  * @param  None
-  * @retval None
-  */
 int main(void)
 {
-    /* STM32F4xx HAL library initialization:
-       - Configure the Flash prefetch, instruction and Data caches
-       - Configure the Systick to generate an interrupt each 1 msec
-       - Set NVIC Group Priority to 4
-       - Global MSP (MCU Support Package) initialization
-     */
     HAL_Init();
-
-    /* Configure the system clock to 100 MHz */
     SystemClock_Config();
+    BSP_LED2_Init();
 
-    /*##-1- Configure the UART peripheral ######################################*/
-    /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
-    /* UART1 configured as follow:
-      - Word Length = 8 Bits
-      - Stop Bit = One Stop bit
-      - Parity = ODD parity
-      - BaudRate = 9600 baud
-      - Hardware flow control disabled (RTS and CTS signals) */
-    UartHandle.Instance = USARTx;
-
+    UartHandle.Instance = USART2;
     UartHandle.Init.BaudRate = 115200;
     UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
     UartHandle.Init.StopBits = UART_STOPBITS_1;
     UartHandle.Init.Parity = UART_PARITY_NONE;
     UartHandle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
     UartHandle.Init.Mode = UART_MODE_TX_RX;
-    //UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
+    UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
 
     if (HAL_UART_Init(&UartHandle) != HAL_OK) {
-        /* Initialization Error */
         Error_Handler();
     }
 
-    /* Output a message on Hyperterminal using printf function */
-    printf("\n\r UART Printf Example: retarget the C library printf function to the UART\n\r");
+    int argc = 1;
+    char arg0[] = "gtest_main_on_nucleo";
+    char* argv[] = { arg0, NULL };
 
-    /* Infinite loop */
+    puts("\r\n\r\n");
+    testing::InitGoogleTest(&argc, argv);
+    auto error = RUN_ALL_TESTS();
+
+    if (error) {
+        Error_Handler();
+    }
+
+    BSP_LED2_DeInit();
+
     while (1) {
     }
 }
@@ -119,13 +83,106 @@ int main(void)
   * @param  None
   * @retval None
   */
-PUTCHAR_PROTOTYPE
+extern "C" int __io_putchar(int ch)
 {
     /* Place your implementation of fputc here */
     /* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
     HAL_UART_Transmit(&UartHandle, (uint8_t*)&ch, 1, 0xFFFF);
 
     return ch;
+}
+
+/**
+  * @brief UART MSP Initialization 
+  *        This function configures the hardware resources used in this example: 
+  *           - Peripheral's clock enable
+  *           - Peripheral's GPIO Configuration  
+  * @param huart: UART handle pointer
+  * @retval None
+  */
+extern "C" void HAL_UART_MspInit(UART_HandleTypeDef* huart)
+{
+    GPIO_InitTypeDef GPIO_InitStruct;
+
+    /*##-1- Enable peripherals and GPIO Clocks #################################*/
+    /* Enable GPIO TX/RX clock */
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+
+    /* Enable USARTx clock */
+    __HAL_RCC_USART2_CLK_ENABLE();
+
+    /*##-2- Configure peripheral GPIO ##########################################*/
+    /* UART TX GPIO pin configuration  */
+    GPIO_InitStruct.Pin = GPIO_PIN_2;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    /* UART RX GPIO pin configuration  */
+    GPIO_InitStruct.Pin = GPIO_PIN_3;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+}
+
+/**
+  * @brief UART MSP De-Initialization 
+  *        This function frees the hardware resources used in this example:
+  *          - Disable the Peripheral's clock
+  *          - Revert GPIO and NVIC configuration to their default state
+  * @param huart: UART handle pointer
+  * @retval None
+  */
+extern "C" void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
+{
+    /*##-1- Reset peripherals ##################################################*/
+    __HAL_RCC_USART2_FORCE_RESET();
+    __HAL_RCC_USART2_RELEASE_RESET();
+
+    /*##-2- Disable peripherals and GPIO Clocks #################################*/
+    /* Configure UART Tx as alternate function  */
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2);
+    /* Configure UART Rx as alternate function  */
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_3);
+}
+
+/**
+  * @brief  Configure LED2 GPIO.
+  */
+static void BSP_LED2_Init()
+{
+    GPIO_InitTypeDef GPIO_InitStruct;
+
+    /* Enable the GPIO_LED Clock */
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+
+    /* Configure the GPIO_LED pin */
+    GPIO_InitStruct.Pin = GPIO_PIN_5;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    BSP_LED2_Off();
+}
+
+/**
+  * @brief  DeInit LED2.
+  * @note Led DeInit does not disable the GPIO clock nor disable the Mfx 
+  */
+static void BSP_LED2_DeInit()
+{
+    GPIO_InitTypeDef gpio_init_structure;
+
+    /* Turn off LED */
+    BSP_LED2_Off();
+    /* DeInit the GPIO_LED pin */
+    gpio_init_structure.Pin = GPIO_PIN_5;
+    HAL_GPIO_DeInit(GPIOA, gpio_init_structure.Pin);
 }
 
 /**
@@ -188,44 +245,24 @@ static void SystemClock_Config(void)
 }
 
 /**
-  * @brief  This function is executed in case of error occurrence.
-  * @param  None
-  * @retval None
+  * @brief  Turn LED2 On.
   */
+static void BSP_LED2_On()
+{
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+}
+
+/**
+  * @brief  Turn LED2 Off.
+  */
+static void BSP_LED2_Off()
+{
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+}
+
 static void Error_Handler(void)
 {
-    /* Turn LED2 on */
-    BSP_LED_On(LED2);
+    BSP_LED2_On();
     while (1) {
     }
 }
-
-#ifdef USE_FULL_ASSERT
-
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t* file, uint32_t line)
-{
-    /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-
-    /* Infinite loop */
-    while (1) {
-    }
-}
-#endif
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
