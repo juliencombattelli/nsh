@@ -3,7 +3,6 @@ project(Stm32NucleoF411RE_main LANGUAGES C CXX ASM)
 
 nsh_add_executable(Stm32NucleoF411RE_main
     main.cpp
-    #stm32f4xx_it.c
     syscalls.c
 )
 target_compile_features(Stm32NucleoF411RE_main
