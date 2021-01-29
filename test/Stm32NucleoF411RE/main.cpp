@@ -1,7 +1,9 @@
-#include "stdio.h"
 #include "stm32f4xx_hal.h"
 
 #include "gtest/gtest.h"
+
+#include <array>
+#include <cstdio>
 
 int add(int op1, int op2)
 {
@@ -41,6 +43,14 @@ static void BSP_LED2_Off();
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 
+template <typename... Args>
+static auto to_argv(Args... str)
+{
+    static_assert(std::conjunction_v<std::is_convertible<Args, char*>...>, "Args must be convertible to a non-const char*");
+    std::array argv { static_cast<char*>(str)..., static_cast<char*>(nullptr) };
+    return argv;
+}
+
 int main(void)
 {
     HAL_Init();
@@ -60,12 +70,13 @@ int main(void)
         Error_Handler();
     }
 
-    int argc = 1;
     char arg0[] = "gtest_main_on_nucleo";
-    char* argv[] = { arg0, NULL };
+    char arg1[] = "--gtest_color=yes";
+    auto argv = to_argv(arg0, arg1);
+    int argc = argv.size() - 1;
 
     puts("\r\n\r\n");
-    testing::InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv.data());
     auto error = RUN_ALL_TESTS();
 
     if (error) {
