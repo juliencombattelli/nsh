@@ -6,6 +6,10 @@ nsh_add_executable(Stm32NucleoF411RE_main
     #stm32f4xx_it.c
     syscalls.c
 )
+target_compile_features(Stm32NucleoF411RE_main
+    PRIVATE
+        cxx_std_17
+)
 target_include_directories(Stm32NucleoF411RE_main
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
