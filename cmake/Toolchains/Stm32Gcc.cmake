@@ -36,6 +36,7 @@ if(NOT (TARGET STM32::Nano))
 endif()
 
 # Repeat find_program with REQUIRED option (missing in stm32_gcc.cmake...)
+# Could be done in stm32-cmake_patch script (given as a commented example)
 find_program(CMAKE_C_COMPILER NAMES ${STM32_TARGET_TRIPLET}-gcc PATHS ${TOOLCHAIN_BIN_PATH} NO_DEFAULT_PATH REQUIRED)
 find_program(CMAKE_CXX_COMPILER NAMES ${STM32_TARGET_TRIPLET}-g++ PATHS ${TOOLCHAIN_BIN_PATH} NO_DEFAULT_PATH REQUIRED)
 find_program(CMAKE_ASM_COMPILER NAMES ${STM32_TARGET_TRIPLET}-gcc PATHS ${TOOLCHAIN_BIN_PATH} NO_DEFAULT_PATH REQUIRED)
