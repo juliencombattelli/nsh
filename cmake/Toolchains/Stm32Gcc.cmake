@@ -48,7 +48,7 @@ set(CMAKE_EXECUTABLE_SUFFIX_ASM ".elf")
 function(stm32_target_add_size TARGET)
     add_custom_target(${TARGET}-size ALL
         COMMAND ${CMAKE_SIZE} --format=berkeley $<TARGET_FILE:${TARGET}>
-        DEPENDS ${TARGET}
+        DEPENDS $<TARGET_FILE:${TARGET}>
         VERBATIM
     )
 endfunction()
@@ -57,7 +57,7 @@ function(stm32_target_add_bin TARGET)
     add_custom_command(
         OUTPUT ${TARGET}.bin
         COMMAND ${CMAKE_OBJCOPY} -O binary $<TARGET_FILE:${TARGET}> ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}.bin
-        DEPENDS ${TARGET}-size
+        DEPENDS ${TARGET} ${TARGET}-size
         VERBATIM
     )
     add_custom_target(${TARGET}-bin ALL 
