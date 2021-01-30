@@ -25,6 +25,8 @@ target_compile_features(nsh
         c_restrict
 )
 
+add_library(Nsh::Nsh ALIAS nsh)
+
 install(
     TARGETS nsh
     RUNTIME DESTINATION bin
