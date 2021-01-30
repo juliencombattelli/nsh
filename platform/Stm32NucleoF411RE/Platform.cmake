@@ -49,9 +49,9 @@ function(stm32_target_add_start_debug_server)
     endif()
 endfunction()
 
-set(NSH_GTEST_PATCH_COMMAND "")
+set(NSH_GTEST_PATCH_COMMAND "" CACHE INTERNAL "")
 
-add_library(Nsh::Bsp INTERFACE IMPORTED)
+add_library(Nsh::Bsp INTERFACE IMPORTED GLOBAL)
 target_link_libraries(Nsh::Bsp
     INTERFACE
         STM32::NoSys
@@ -72,7 +72,7 @@ function(nsh_add_executable TARGET)
     stm32_target_add_start_debug_server(${TARGET})
 endfunction()
 
-add_library(Nsh::GTest INTERFACE IMPORTED)
+add_library(Nsh::GTest INTERFACE IMPORTED GLOBAL)
 # No thread support on STM32F4. Using GTEST_HAS_THREAD=0 causes a "macro redefined" error...
 set(gtest_disable_pthreads ON CACHE INTERNAL "")
 target_compile_definitions(Nsh::GTest
@@ -89,7 +89,9 @@ target_compile_definitions(Nsh::GTest
 )
 target_compile_options(Nsh::GTest
     INTERFACE
-        $<$<C_COMPILER_ID:GNU>:-Wno-psabi>
+        "$<$<C_COMPILER_ID:GNU>:-Wno-psabi>"
 )
 
 stm32_target_flash_file(${PROJECT_SOURCE_DIR}/bin/Nucleo_blink_led.NUCLEO_F411RE.bin)
+
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/gtest)

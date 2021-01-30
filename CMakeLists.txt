@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.17)
 project(nsh LANGUAGES C CXX ASM)
 
+option(ENABLE_TESTS "Build tests" ON)
+
 include(cmake/Scripts/NshSetup.cmake)
 
 nsh_add_library(nsh
@@ -23,14 +25,8 @@ target_compile_features(nsh
         c_restrict
 )
 
-nsh_add_executable(simple_shell test/simple_shell.c)
-target_link_libraries(simple_shell
-    PRIVATE
-        nsh
-)
-
 install(
-    TARGETS simple_shell
+    TARGETS nsh
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
@@ -38,9 +34,4 @@ install(
 
 if(ENABLE_TESTS)
     add_subdirectory(test)
-endif()
-
-if(UNIX)
-    add_executable(send_cmds test/send_cmds.c)
-    add_test(NAME simple_shell_test COMMAND bash -c "$<TARGET_FILE:send_cmds> -d1000 help exit | $<TARGET_FILE:simple_shell>")
 endif()

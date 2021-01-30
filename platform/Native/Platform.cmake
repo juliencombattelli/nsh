@@ -8,9 +8,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(NSH_GTEST_PATCH_COMMAND "")
 
-add_library(Nsh::Bsp INTERFACE IMPORTED)
+add_library(Nsh::Bsp INTERFACE IMPORTED GLOBAL)
 
-add_library(Nsh::GTest INTERFACE IMPORTED)
+add_library(Nsh::GTest INTERFACE IMPORTED GLOBAL)
+target_link_libraries(Nsh::GTest INTERFACE gtest)
+
+add_library(Nsh::GTestMain INTERFACE IMPORTED GLOBAL)
+target_link_libraries(Nsh::GTestMain INTERFACE gtest_main)
 
 function(nsh_add_executable)
     add_executable(${ARGV})
