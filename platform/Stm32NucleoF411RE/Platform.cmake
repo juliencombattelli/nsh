@@ -4,7 +4,7 @@ stm32_fetch_hal(F4)
 find_package(CMSIS COMPONENTS STM32F4 REQUIRED)
 find_package(HAL COMPONENTS STM32F4 REQUIRED)
 find_package(OpenOCD 0.10.0)
-find_package(GDB COMPONENTS armv7e-m i386)
+find_package(GDB COMPONENTS armv7e-m)
 
 set(OPENOCD_CONF_FILE board/st_nucleo_f4.cfg)
 set(OPENOCD_COMMAND "program @binary@ verify reset exit 0x08000000")
