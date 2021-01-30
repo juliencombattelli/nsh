@@ -1,8 +1,7 @@
 enable_testing()
 
-if(NSH_PLATFORM_NAME STREQUAL Stm32NucleoF411RE)
-    add_subdirectory(Stm32NucleoF411RE)
-endif()
+add_subdirectory(units)
 
-nsh_add_executable(testgtest test.cpp)
-target_link_libraries(testgtest PRIVATE gtest)
+if(UNIX)
+    add_subdirectory(simple_shell)
+endif()

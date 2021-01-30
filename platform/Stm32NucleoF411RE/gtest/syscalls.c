@@ -1,5 +1,3 @@
-#include <_ansi.h>
-#include <reent.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/errno.h>
@@ -14,6 +12,11 @@
 
 #include "stm32f4xx_hal.h"
 
+/**
+ * Definition of POSIX syscalls for a STM32 bare-metal target.
+ * See https://sourceware.org/newlib/libc.html#Syscalls for more information.
+ */
+
 extern int __io_putchar(int ch) __attribute__((weak));
 extern int __io_getchar(void) __attribute__((weak));
 
@@ -23,15 +26,14 @@ caddr_t _sbrk(int incr)
 {
     extern char end asm("end");
     static char* heap_end;
-    char *prev_heap_end;
+    char* prev_heap_end;
 
     if (heap_end == 0)
         heap_end = &end;
 
     prev_heap_end = heap_end;
 
-    if (heap_end + incr > stack_ptr)
-    {
+    if (heap_end + incr > stack_ptr) {
         //		write(1, "Heap and stack collision\n", 25);
         //		abort();
         errno = ENOMEM;
@@ -168,19 +170,4 @@ int _execve(char* name, char** argv, char** env)
 {
     errno = ENOMEM;
     return -1;
-}
-
-char* getcwd(char* buf, size_t size)
-{
-    const char cwd[] = "./";
-    if (sizeof(cwd) > size) {
-        return NULL;
-    }
-    strncpy(buf, "./", size);
-    return buf;
-}
-
-int mkdir(const char* path, mode_t mode)
-{
-    return 0;
 }

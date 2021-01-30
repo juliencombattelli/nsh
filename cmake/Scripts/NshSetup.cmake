@@ -12,7 +12,7 @@ if (NOT CMAKE_CROSSCOMPILING)
 endif()
 
 # Include platform file
-include(${CMAKE_CURRENT_LIST_DIR}/../Platforms/${NSH_PLATFORM_NAME}.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../../platform/${NSH_PLATFORM_NAME}/Platform.cmake)
 
 # Check if the selected platform is valid
 include(${CMAKE_CURRENT_LIST_DIR}/NshPlatformChecker.cmake)
