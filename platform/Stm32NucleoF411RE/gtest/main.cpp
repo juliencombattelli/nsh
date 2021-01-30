@@ -18,7 +18,7 @@ static void Error_Handler(void);
 template <typename... Args>
 static auto to_argv(Args... str)
 {
-    static_assert(std::conjunction_v<std::is_convertible<Args, char*>...>, "Args must be convertible to a non-const char*");
+    static_assert(std::conjunction_v<std::is_convertible<Args, char*>...>, "Args must be convertible to non-const char*");
     std::array argv { static_cast<char*>(str)..., static_cast<char*>(nullptr) };
     return argv;
 }
@@ -62,77 +62,6 @@ int main(void)
 }
 
 /**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
-extern "C" int __io_putchar(int ch)
-{
-    /* Place your implementation of fputc here */
-    /* e.g. write a character to the EVAL_COM1 and Loop until the end of transmission */
-    HAL_UART_Transmit(&UartHandle, (uint8_t*)&ch, 1, 0xFFFF);
-
-    return ch;
-}
-
-/**
-  * @brief UART MSP Initialization 
-  *        This function configures the hardware resources used in this example: 
-  *           - Peripheral's clock enable
-  *           - Peripheral's GPIO Configuration  
-  * @param huart: UART handle pointer
-  * @retval None
-  */
-extern "C" void HAL_UART_MspInit(UART_HandleTypeDef* huart)
-{
-    GPIO_InitTypeDef GPIO_InitStruct;
-
-    /*##-1- Enable peripherals and GPIO Clocks #################################*/
-    /* Enable GPIO TX/RX clock */
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-
-    /* Enable USARTx clock */
-    __HAL_RCC_USART2_CLK_ENABLE();
-
-    /*##-2- Configure peripheral GPIO ##########################################*/
-    /* UART TX GPIO pin configuration  */
-    GPIO_InitStruct.Pin = GPIO_PIN_2;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
-    GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
-
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    /* UART RX GPIO pin configuration  */
-    GPIO_InitStruct.Pin = GPIO_PIN_3;
-    GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
-
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-}
-
-/**
-  * @brief UART MSP De-Initialization 
-  *        This function frees the hardware resources used in this example:
-  *          - Disable the Peripheral's clock
-  *          - Revert GPIO and NVIC configuration to their default state
-  * @param huart: UART handle pointer
-  * @retval None
-  */
-extern "C" void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
-{
-    /*##-1- Reset peripherals ##################################################*/
-    __HAL_RCC_USART2_FORCE_RESET();
-    __HAL_RCC_USART2_RELEASE_RESET();
-
-    /*##-2- Disable peripherals and GPIO Clocks #################################*/
-    /* Configure UART Tx as alternate function  */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2);
-    /* Configure UART Rx as alternate function  */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_3);
-}
-
-/**
   * @brief  Configure LED2 GPIO.
   */
 static void BSP_LED2_Init()
@@ -166,6 +95,29 @@ static void BSP_LED2_DeInit()
     /* DeInit the GPIO_LED pin */
     gpio_init_structure.Pin = GPIO_PIN_5;
     HAL_GPIO_DeInit(GPIOA, gpio_init_structure.Pin);
+}
+
+/**
+  * @brief  Turn LED2 On.
+  */
+static void BSP_LED2_On()
+{
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+}
+
+/**
+  * @brief  Turn LED2 Off.
+  */
+static void BSP_LED2_Off()
+{
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+}
+
+static void Error_Handler(void)
+{
+    BSP_LED2_On();
+    while (1) {
+    }
 }
 
 /**
@@ -227,30 +179,90 @@ static void SystemClock_Config(void)
     }
 }
 
-/**
-  * @brief  Turn LED2 On.
-  */
-static void BSP_LED2_On()
-{
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-}
-
-/**
-  * @brief  Turn LED2 Off.
-  */
-static void BSP_LED2_Off()
-{
-    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-}
-
-static void Error_Handler(void)
-{
-    BSP_LED2_On();
-    while (1) {
-    }
-}
-
 extern "C" {
+
+/**
+  * @brief  Retargets the C library printf function to the USART.
+  * @param  None
+  * @retval None
+  */
+int __io_putchar(int ch)
+{
+    HAL_UART_Transmit(&UartHandle, (uint8_t*)&ch, 1, 0xFFFF);
+    return ch;
+}
+
+/**
+  * @brief  Retargets the C library printf function to the USART.
+  * @param  None
+  * @retval None
+  */
+int __io_getchar(void)
+{
+    HAL_StatusTypeDef status = HAL_BUSY;
+    uint8_t ch;
+    while (status != HAL_OK) {
+        status = HAL_UART_Receive(&UartHandle, &ch, 1, 10);
+    }
+    return ch;
+}
+
+/**
+  * @brief UART MSP Initialization 
+  *        This function configures the hardware resources used in this example: 
+  *           - Peripheral's clock enable
+  *           - Peripheral's GPIO Configuration  
+  * @param huart: UART handle pointer
+  * @retval None
+  */
+void HAL_UART_MspInit(UART_HandleTypeDef* huart)
+{
+    GPIO_InitTypeDef GPIO_InitStruct;
+
+    /*##-1- Enable peripherals and GPIO Clocks #################################*/
+    /* Enable GPIO TX/RX clock */
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+
+    /* Enable USARTx clock */
+    __HAL_RCC_USART2_CLK_ENABLE();
+
+    /*##-2- Configure peripheral GPIO ##########################################*/
+    /* UART TX GPIO pin configuration  */
+    GPIO_InitStruct.Pin = GPIO_PIN_2;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    /* UART RX GPIO pin configuration  */
+    GPIO_InitStruct.Pin = GPIO_PIN_3;
+    GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+}
+
+/**
+  * @brief UART MSP De-Initialization 
+  *        This function frees the hardware resources used in this example:
+  *          - Disable the Peripheral's clock
+  *          - Revert GPIO and NVIC configuration to their default state
+  * @param huart: UART handle pointer
+  * @retval None
+  */
+void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
+{
+    /*##-1- Reset peripherals ##################################################*/
+    __HAL_RCC_USART2_FORCE_RESET();
+    __HAL_RCC_USART2_RELEASE_RESET();
+
+    /*##-2- Disable peripherals and GPIO Clocks #################################*/
+    /* Configure UART Tx as alternate function  */
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2);
+    /* Configure UART Rx as alternate function  */
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_3);
+}
 
 /**
   * @brief  This function handles NMI exception.
@@ -357,6 +369,165 @@ char* getcwd(char* buf, size_t size)
 int mkdir(const char* /*path*/, mode_t /*mode*/)
 {
     errno = EPERM;
+    return -1;
+}
+
+#include <sys/time.h>
+
+/**
+ * Definition of POSIX syscalls for a STM32 bare-metal target.
+ * See https://sourceware.org/newlib/libc.html#Syscalls for more information.
+ */
+
+register char* stack_ptr asm("sp");
+
+caddr_t _sbrk(int incr)
+{
+    extern char end asm("end");
+    static char* heap_end;
+    char* prev_heap_end;
+
+    if (heap_end == 0)
+        heap_end = &end;
+
+    prev_heap_end = heap_end;
+
+    if (heap_end + incr > stack_ptr) {
+        //		write(1, "Heap and stack collision\n", 25);
+        //		abort();
+        errno = ENOMEM;
+        return (caddr_t)-1;
+    }
+
+    heap_end += incr;
+
+    return (caddr_t)prev_heap_end;
+}
+
+/*
+ * _gettimeofday primitive (Stub function)
+ * */
+int _gettimeofday(struct timeval* tp, struct timezone* tzp)
+{
+    /* Return fixed data for the timezone.  */
+    if (tzp) {
+        tzp->tz_minuteswest = 0;
+        tzp->tz_dsttime = 0;
+    }
+    if (tp) {
+        tp->tv_sec = 0;
+        tp->tv_usec = HAL_GetTick() * 1000;
+    }
+
+    return 0;
+}
+void initialise_monitor_handles()
+{
+}
+
+int _getpid(void)
+{
+    return 1;
+}
+
+int _kill(int pid, int sig)
+{
+    errno = EINVAL;
+    return -1;
+}
+
+void _exit(int status)
+{
+    _kill(status, -1);
+    while (1) { }
+}
+
+int _write(int file, char* ptr, int len)
+{
+    int DataIdx;
+
+    for (DataIdx = 0; DataIdx < len; DataIdx++) {
+        __io_putchar(*ptr++);
+    }
+    return len;
+}
+
+int _close(int file)
+{
+    return -1;
+}
+
+int _fstat(int file, struct stat* st)
+{
+    st->st_mode = S_IFCHR;
+    return 0;
+}
+
+int _isatty(int file)
+{
+    return 1;
+}
+
+int _lseek(int file, int ptr, int dir)
+{
+    return 0;
+}
+
+int _read(int file, char* ptr, int len)
+{
+    int DataIdx;
+
+    for (DataIdx = 0; DataIdx < len; DataIdx++) {
+        *ptr++ = __io_getchar();
+    }
+
+    return len;
+}
+
+int _open(char* path, int flags, ...)
+{
+    /* Pretend like we always fail */
+    return -1;
+}
+
+int _wait(int* status)
+{
+    errno = ECHILD;
+    return -1;
+}
+
+int _unlink(char* name)
+{
+    errno = ENOENT;
+    return -1;
+}
+
+int _times(struct tms* buf)
+{
+    return -1;
+}
+
+int _stat(char* file, struct stat* st)
+{
+    st->st_mode = S_IFCHR;
+    return 0;
+}
+
+int _link(char* oldpath, char* newpath)
+{
+    errno = EMLINK;
+    return -1;
+}
+
+int _fork(void)
+{
+    errno = EAGAIN;
+    return -1;
+}
+
+int _execve(char* name, char** argv, char** env)
+{
+    errno = ENOMEM;
     return -1;
 }
 }

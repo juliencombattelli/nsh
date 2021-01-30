@@ -22,8 +22,3 @@ TEST(CalcTest, Sub)
     ASSERT_EQ(3, sub(5, 2));
     ASSERT_EQ(-10, sub(5, 15));
 }
-
-TEST(CalcTest, Hello)
-{
-    ASSERT_EQ(true, true);
-}

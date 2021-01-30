@@ -3,7 +3,6 @@ project(NshSTM32GTestMain LANGUAGES C CXX ASM)
 
 nsh_add_library(stm32-gtest-main STATIC
     main.cpp
-    syscalls.c
 )
 target_compile_features(stm32-gtest-main
     PRIVATE
