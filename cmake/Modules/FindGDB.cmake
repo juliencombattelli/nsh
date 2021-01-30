@@ -78,7 +78,7 @@ if(GDB_EXECUTABLE)
     # If GDB version command returned successfully
     if(NOT _gdb_version_result)
         # Extract version string
-        string(REGEX REPLACE "[^0-9]*([0-9]+[0-9.]*).*" "\\1" GDB_VERSION_STRING "${_gdb_version}")
+        string(REGEX REPLACE "GNU gdb \\([^)]*\\) [^0-9]*([0-9]+[0-9.]*).*" "\\1" GDB_VERSION_STRING "${_gdb_version}")
         string(REPLACE "." ";" _gdb_version_list "${GDB_VERSION_STRING}")
         list(GET _gdb_version_list 0 GDB_VERSION_MAJOR)
         list(GET _gdb_version_list 1 GDB_VERSION_MINOR)
