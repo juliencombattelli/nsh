@@ -11,7 +11,7 @@ set(NSH_GTEST_PATCH_COMMAND "")
 add_library(Nsh::Bsp INTERFACE IMPORTED GLOBAL)
 
 add_library(Nsh::GTest INTERFACE IMPORTED GLOBAL)
-target_link_libraries(Nsh::GTest INTERFACE gtest)
+target_link_libraries(Nsh::GTest INTERFACE gtest gmock)
 
 add_library(Nsh::GTestMain INTERFACE IMPORTED GLOBAL)
 target_link_libraries(Nsh::GTestMain INTERFACE gtest_main)

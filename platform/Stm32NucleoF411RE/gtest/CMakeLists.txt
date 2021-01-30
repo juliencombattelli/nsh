@@ -14,7 +14,7 @@ target_include_directories(stm32-gtest-main
 )
 target_link_libraries(stm32-gtest-main
     PUBLIC
-        gtest
+        Nsh::GTest
     PRIVATE
         Nsh::Bsp
         STM32::Nano

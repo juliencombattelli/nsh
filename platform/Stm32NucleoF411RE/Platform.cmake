@@ -91,6 +91,11 @@ target_compile_options(Nsh::GTest
     INTERFACE
         "$<$<C_COMPILER_ID:GNU>:-Wno-psabi>"
 )
+target_link_libraries(Nsh::GTest
+    INTERFACE
+        gtest
+        gmock
+)
 
 stm32_target_flash_file(${PROJECT_SOURCE_DIR}/bin/Nucleo_blink_led.NUCLEO_F411RE.bin)
 
