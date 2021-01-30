@@ -9,14 +9,15 @@ environment has all needed variables, functions and targets defined.
 The ``nsh_check_platform`` function must be called AFTER the inclusion of the
 platform file used.
 
-The ``nsh_check_platform`` function checks if the following ``IMPORTED`` targets
-exist:
+The ``nsh_check_platform`` function checks if the following targets exist:
 
 ``Nsh::Bsp``
   Target providing all compile options, link options, and library dependencies
   every executable and libraries must use to be built for the considered platform.
 
 ``Nsh::GTest``
+
+``Nsh::GTestMain``
 
 ``nsh_add_executable``
 
@@ -25,15 +26,6 @@ exist:
 ``CACHE{NSH_PLATFORM_NAME}``
 
 ``CACHE{NSH_GTEST_PATCH_COMMAND}``
-
-Example usage:
-
-.. code-block:: cmake
-
-  find_package(OpenOCD)
-  if(OPENOCD_FOUND)
-    message("OpenOCD found: ${OPENOCD_EXECUTABLE}")
-  endif()
 
 #]=======================================================================]
 
