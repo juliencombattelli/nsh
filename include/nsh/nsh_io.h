@@ -3,6 +3,10 @@
 
 #include <nsh/nsh_config.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 char nsh_io_get_char(void);
 
 void nsh_io_put_char(char c);
@@ -22,5 +26,9 @@ void nsh_io_erase_line(void);
 #if NSH_FEATURE_USE_PRINTF == 1
 int nsh_io_printf(const char* restrict format, ...);
 #endif /* NSH_FEATURE_USE_PRINTF == 1 */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* NSH_IO_H_ */
