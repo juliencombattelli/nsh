@@ -22,8 +22,8 @@ Nsh supports the following platforms:
 
 ### Requirements
 
-This project requires CMake 3.13+ to build the source code.
-If building for STM32, a arm-none-eabi-gcc toolchain is required to build, and OpenOCD is needed to flash and debug the target.
+This project requires CMake 3.17+ to build the source code.
+If building for STM32, a arm-none-eabi-gcc toolchain is required, OpenOCD and GDB are needed to flash and debug the target.
 Here are some build procedure examples.
 
 ### Native Unix build in Debug mode
