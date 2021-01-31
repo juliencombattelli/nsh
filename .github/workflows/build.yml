@@ -59,10 +59,10 @@ jobs:
 
       - name: Install arm-none-eabi-gcc
         if: ${{ matrix.config.name == 'STM32 GCC' }}
-        uses: fiam/arm-none-eabi-gcc@v1
-        with:
-          release: "10-2020-q4"
-          directory: /tmp/gcc-arm-none-eabi
+        run: |
+          wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+          mkdir -p /tmp/gcc-arm-none-eabi
+          tar -C /tmp/gcc-arm-none-eabi -xf gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
 
       - name: Configure
         env:
