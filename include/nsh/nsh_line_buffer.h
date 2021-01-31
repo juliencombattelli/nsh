@@ -6,6 +6,10 @@
 
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct nsh_line_buffer {
     char buffer[NSH_LINE_BUFFER_SIZE];
     int size;
@@ -22,5 +26,9 @@ void nsh_line_buffer_erase_last_char(nsh_line_buffer_t* linebuf);
 bool nsh_line_buffer_is_full(nsh_line_buffer_t* linebuf);
 
 bool nsh_line_buffer_is_empty(nsh_line_buffer_t* linebuf);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* NSH_LINE_BUFFER_H_ */

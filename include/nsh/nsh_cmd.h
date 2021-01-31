@@ -11,6 +11,10 @@
 #include <nsh/nsh_common_defs.h>
 #include <nsh/nsh_config.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef char nsh_cmd_name_t[NSH_MAX_STRING_SIZE];
 typedef int (*nsh_cmd_handler_t)(int, char**);
 
@@ -35,5 +39,9 @@ nsh_cmd_t* nsh_cmd_find_matching(nsh_cmd_array_t* cmds, const char* partial_name
 nsh_cmd_t* nsh_cmd_find(nsh_cmd_array_t* cmds, const char* name);
 
 int nsh_cmd_register(nsh_cmd_array_t* cmds, const char* name, nsh_cmd_handler_t handler);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* NSH_CMD_H_ */

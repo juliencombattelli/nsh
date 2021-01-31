@@ -14,6 +14,10 @@
 
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct nsh_history {
     char entries[NSH_CMD_HISTORY_SIZE][NSH_LINE_BUFFER_SIZE];
     int head;
@@ -32,6 +36,10 @@ bool nsh_history_is_empty(const nsh_history_t* hist);
 int nsh_history_add_entry(nsh_history_t* hist, const char* entry);
 
 int nsh_history_get_entry(nsh_history_t* hist, int age, char* entry);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* NSH_FEATURE_USE_HISTORY == 1 */
 
