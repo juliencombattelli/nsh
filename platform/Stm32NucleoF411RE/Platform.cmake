@@ -54,7 +54,7 @@ set(NSH_GTEST_PATCH_COMMAND "" CACHE INTERNAL "")
 add_library(Nsh::Bsp INTERFACE IMPORTED GLOBAL)
 target_link_libraries(Nsh::Bsp
     INTERFACE
-        STM32::NoSys
+        STM32::Nano
         CMSIS::STM32::F411RE
 )
 
