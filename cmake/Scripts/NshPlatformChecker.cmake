@@ -29,6 +29,9 @@ The ``nsh_check_platform`` function checks if the following targets exist:
 
 #]=======================================================================]
 
+# message(CHECK_* is available since CMake 3.17
+cmake_minimum_required(VERSION 3.17)
+
 function(_nsh_assert_variable_exists VARIABLE)
     message(CHECK_START "Looking for variable ${VARIABLE}")
     if(DEFINED ${VARIABLE})
