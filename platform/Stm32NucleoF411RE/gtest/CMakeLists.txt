@@ -17,7 +17,6 @@ target_link_libraries(stm32-gtest-main
         Nsh::GTest
     PRIVATE
         Nsh::Bsp
-        STM32::Nano
         HAL::STM32::F4::RCC
         HAL::STM32::F4::GPIO
         HAL::STM32::F4::CORTEX
