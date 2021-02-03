@@ -70,6 +70,13 @@ function(nsh_platform_add_executable TARGET)
     stm32_target_add_start_debug_server(${TARGET})
 endfunction()
 
+function(nsh_platform_add_test)
+    # TODO register a command:
+    # - flashing the test on board
+    # - getting output from serial connection
+    # - determining if test passed or failed (how??)
+endfunction()
+
 add_library(Nsh::Platform::GTest INTERFACE IMPORTED GLOBAL)
 # No thread support on STM32F4. Using GTEST_HAS_THREAD=0 causes a "macro redefined" error...
 set(gtest_disable_pthreads ON CACHE INTERNAL "")

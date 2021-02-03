@@ -33,6 +33,10 @@ The ``nsh_check_platform`` function checks if the following targets exist:
   Its signature is the same as CMake's `add_library
   <https://cmake.org/cmake/help/latest/command/add_library.html>`_.
 
+``nsh_platform_add_test``
+  Function registering a test to be run by ctest. Its signature is the same as 
+  CMake's `add_test <https://cmake.org/cmake/help/latest/command/add_test.html>`_.
+
 ``CACHE{NSH_GTEST_PATCH_COMMAND}``
   Command executed as the patch step of GTest installation. It must be compatible with
   `FetchContent_Declare <https://cmake.org/cmake/help/latest/module/FetchContent.html#command:fetchcontent_declare>`_'s
@@ -92,6 +96,7 @@ function(nsh_check_platform)
     endif()
     _nsh_assert_command_exists(nsh_platform_add_executable)
     _nsh_assert_command_exists(nsh_platform_add_library)
+    _nsh_assert_command_exists(nsh_platform_add_test)
 
     list(POP_BACK CMAKE_MESSAGE_INDENT)
     if(checks_failed)

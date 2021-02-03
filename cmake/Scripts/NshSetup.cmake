@@ -35,3 +35,8 @@ function(nsh_add_executable TARGET)
     target_link_libraries(${TARGET} PUBLIC Nsh::Platform)
     target_project_warnings(${TARGET})
 endfunction()
+
+# Define Nsh specific add_test wrapper
+function(nsh_add_test)
+    nsh_platform_add_test(${ARGV})
+endfunction()

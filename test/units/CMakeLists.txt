@@ -6,6 +6,4 @@ target_link_libraries(utests
         Nsh::Platform::GTestMain
 )
 
-if(NSH_PLATFORM_NAME STREQUAL Native)
-    add_test(NAME utests COMMAND utests)
-endif()
+nsh_add_test(NAME utests COMMAND utests)
