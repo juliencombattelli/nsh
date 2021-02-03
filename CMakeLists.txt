@@ -42,6 +42,7 @@ install(
 )
 
 if(ENABLE_TESTS)
+    include(GoogleTest)
     enable_testing()
     add_subdirectory(test)
 endif()
