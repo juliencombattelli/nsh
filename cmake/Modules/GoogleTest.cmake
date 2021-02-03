@@ -1,7 +1,6 @@
 # FetchContent_MakeAvailable was added in CMake 3.14
 cmake_minimum_required(VERSION 3.14)
 
-option(ENABLE_TESTS "Download GTest and build the Nsh test suite" ON)
 if(ENABLE_TESTS)
     include(FetchContent)
 

@@ -1,8 +1,15 @@
 cmake_minimum_required(VERSION 3.17)
 project(nsh LANGUAGES C CXX ASM)
 
-option(ENABLE_TESTS "Build tests" ON)
+include(CMakeDependentOption)
 
+option(ENABLE_TESTS "Download GTest and build the Nsh test suite" ON)
+cmake_dependent_option(ENABLE_COVERAGE "Enable test coverage report generation" OFF "ENABLE_TESTS" OFF)
+option(ENABLE_CPPCHECK "Enable static analysis with cppcheck" OFF)
+option(ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy" OFF)
+option(ENABLE_INCLUDE_WHAT_YOU_USE "Enable static analysis with include-what-you-use" OFF)
+
+# Include setup script defining and verifying the targeted platform
 include(cmake/Scripts/NshSetup.cmake)
 
 nsh_add_library(nsh
