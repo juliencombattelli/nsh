@@ -19,7 +19,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/NshPlatformChecker.cmake)
 nsh_check_platform(${NSH_PLATFORM_NAME})
 
 # Include additional modules
-include(GoogleTest)
 include(StaticAnalyzers)
 include(Warnings)
 
