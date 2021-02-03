@@ -51,31 +51,29 @@ endfunction()
 
 set(NSH_GTEST_PATCH_COMMAND "" CACHE INTERNAL "")
 
-add_library(Nsh::Bsp INTERFACE IMPORTED GLOBAL)
-target_link_libraries(Nsh::Bsp
+add_library(Nsh::Platform INTERFACE IMPORTED GLOBAL)
+target_link_libraries(Nsh::Platform
     INTERFACE
         STM32::Nano
         CMSIS::STM32::F411RE
 )
 
-function(nsh_add_library TARGET)
+function(nsh_platform_add_library TARGET)
     add_library(${TARGET} ${ARGN})
-    target_link_libraries(${TARGET} PUBLIC Nsh::Bsp)
 endfunction()
 
-function(nsh_add_executable TARGET)
+function(nsh_platform_add_executable TARGET)
     add_executable(${TARGET} ${ARGN})
-    target_link_libraries(${TARGET} PUBLIC Nsh::Bsp)
     stm32_target_add_size(${TARGET})
     stm32_target_add_bin(${TARGET})
     stm32_target_add_flash(${TARGET})
     stm32_target_add_start_debug_server(${TARGET})
 endfunction()
 
-add_library(Nsh::GTest INTERFACE IMPORTED GLOBAL)
+add_library(Nsh::Platform::GTest INTERFACE IMPORTED GLOBAL)
 # No thread support on STM32F4. Using GTEST_HAS_THREAD=0 causes a "macro redefined" error...
 set(gtest_disable_pthreads ON CACHE INTERNAL "")
-target_compile_definitions(Nsh::GTest
+target_compile_definitions(Nsh::Platform::GTest
     INTERFACE
         $<$<C_COMPILER_ID:GNU>:_GNU_SOURCE>
         PATH_MAX=256
@@ -87,11 +85,11 @@ target_compile_definitions(Nsh::GTest
         GTEST_HAS_STREAM_REDIRECTION=0
         GTEST_HAS_TR1_TUPLE=0
 )
-target_compile_options(Nsh::GTest
+target_compile_options(Nsh::Platform::GTest
     INTERFACE
         "$<$<C_COMPILER_ID:GNU>:-Wno-psabi>"
 )
-target_link_libraries(Nsh::GTest
+target_link_libraries(Nsh::Platform::GTest
     INTERFACE
         gtest
         gmock

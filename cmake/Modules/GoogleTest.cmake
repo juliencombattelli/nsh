@@ -14,6 +14,6 @@ if(ENABLE_TESTS)
 
     FetchContent_MakeAvailable(googletest)
 
-    target_link_libraries(gtest PUBLIC Nsh::Bsp)
-    target_link_libraries(gtest PRIVATE Nsh::GTest)
+    target_link_libraries(gtest PUBLIC Nsh::Platform)
+    target_link_libraries(gtest PRIVATE Nsh::Platform::GTest)
 endif()
