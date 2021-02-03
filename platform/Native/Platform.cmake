@@ -23,3 +23,8 @@ endfunction()
 function(nsh_platform_add_library)
     add_library(${ARGV})
 endfunction()
+
+function(nsh_platform_add_test)
+    add_test(${ARGV})
+endfunction()
+
