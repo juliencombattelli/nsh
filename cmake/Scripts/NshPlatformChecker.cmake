@@ -11,21 +11,32 @@ platform file used.
 
 The ``nsh_check_platform`` function checks if the following targets exist:
 
-``Nsh::Bsp``
-  Target providing all compile options, link options, and library dependencies
-  every executable and libraries must use to be built for the considered platform.
+``Nsh::Platform``
+  Alias or imported target providing all compile options, link options, and library 
+  dependencies every executable and library must use to be built for the considered platform.
 
-``Nsh::GTest``
+``Nsh::Platform::GTest``
+  Alias or imported target providing GTest and GMock library built for the considered platform.
 
-``Nsh::GTestMain``
+``Nsh::Platform::GTestMain``
+  Alias or imported target providing GTest main entry point built for the considered platform.
 
-``nsh_add_executable``
+``nsh_platform_add_executable``
+  Function adding an executable to the project using the specified source files.
+  This function is used to inject platform specific behavior to build an executable.
+  Its signature is the same as CMake's `add_executable
+  <https://cmake.org/cmake/help/latest/command/add_executable.html>`_.
 
-``nsh_add_library``
-
-``CACHE{NSH_PLATFORM_NAME}``
+``nsh_platform_add_library``
+  Function adding a library to the project using the specified source files.
+  This function is used to inject platform specific behavior to build a library.
+  Its signature is the same as CMake's `add_library
+  <https://cmake.org/cmake/help/latest/command/add_library.html>`_.
 
 ``CACHE{NSH_GTEST_PATCH_COMMAND}``
+  Command executed as the patch step of GTest installation. It must be compatible with
+  `FetchContent_Declare <https://cmake.org/cmake/help/latest/module/FetchContent.html#command:fetchcontent_declare>`_'s
+  ``PATCH_COMMAND`` option.
 
 #]=======================================================================]
 
@@ -74,13 +85,13 @@ function(nsh_check_platform)
     if(ENABLE_TESTS)
         _nsh_assert_variable_exists(NSH_GTEST_PATCH_COMMAND)
     endif()
-    _nsh_assert_target_exists(Nsh::Bsp)
+    _nsh_assert_target_exists(Nsh::Platform)
     if(ENABLE_TESTS)
-        _nsh_assert_target_exists(Nsh::GTest)
-        _nsh_assert_target_exists(Nsh::GTestMain)
+        _nsh_assert_target_exists(Nsh::Platform::GTest)
+        _nsh_assert_target_exists(Nsh::Platform::GTestMain)
     endif()
-    _nsh_assert_command_exists(nsh_add_executable)
-    _nsh_assert_command_exists(nsh_add_library)
+    _nsh_assert_command_exists(nsh_platform_add_executable)
+    _nsh_assert_command_exists(nsh_platform_add_library)
 
     list(POP_BACK CMAKE_MESSAGE_INDENT)
     if(checks_failed)

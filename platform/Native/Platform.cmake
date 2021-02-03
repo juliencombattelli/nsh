@@ -8,18 +8,18 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(NSH_GTEST_PATCH_COMMAND "")
 
-add_library(Nsh::Bsp INTERFACE IMPORTED GLOBAL)
+add_library(Nsh::Platform INTERFACE IMPORTED GLOBAL)
 
-add_library(Nsh::GTest INTERFACE IMPORTED GLOBAL)
-target_link_libraries(Nsh::GTest INTERFACE gtest gmock)
+add_library(Nsh::Platform::GTest INTERFACE IMPORTED GLOBAL)
+target_link_libraries(Nsh::Platform::GTest INTERFACE gtest gmock)
 
-add_library(Nsh::GTestMain INTERFACE IMPORTED GLOBAL)
-target_link_libraries(Nsh::GTestMain INTERFACE gtest_main)
+add_library(Nsh::Platform::GTestMain INTERFACE IMPORTED GLOBAL)
+target_link_libraries(Nsh::Platform::GTestMain INTERFACE gtest_main)
 
-function(nsh_add_executable)
+function(nsh_platform_add_executable)
     add_executable(${ARGV})
 endfunction()
 
-function(nsh_add_library)
+function(nsh_platform_add_library)
     add_library(${ARGV})
 endfunction()
