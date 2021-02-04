@@ -42,7 +42,8 @@ install(
 )
 
 if(ENABLE_TESTS)
-    include(GoogleTest)
     enable_testing()
+    include(GoogleTest)
+    include(Coverage)
     add_subdirectory(test)
 endif()

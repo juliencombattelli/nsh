@@ -26,16 +26,17 @@ This project requires CMake 3.17+ to build the source code.
 If building for STM32, a arm-none-eabi-gcc toolchain is required, OpenOCD and GDB are needed to flash and debug the target.
 Here are some build procedure examples.
 
-### Native Unix build in Debug mode
+### Native Unix build in Debug mode with test coverage
 
 ```bash
 # Configure the project
-cmake -S path-to-nsh -B nsh-build-native-debug -DCMAKE_BUILD_TYPE=Debug
+cmake -S path-to-nsh -B nsh-build-native-debug -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON
 # Build Nsh
 cmake --build nsh-build-native-debug --parallel 4
 # Run tests
-cd nsh-build-native-debug
-ctest
+cmake --build nsh-build-native-debug --target test
+# Run coverage report generation
+cmake --build nsh-build-native-debug --target coverage
 ```
 
 ### ST Nucleo F411RE build
