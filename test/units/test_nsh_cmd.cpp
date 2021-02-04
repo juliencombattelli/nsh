@@ -31,11 +31,11 @@ static int cmd_test_handler(int, char**)
 TEST(NshCmdInit, Success)
 {
     nsh_cmd_t cmd;
-    auto status = nsh_cmd_init(&cmd, cmd_test_name, cmd_test_handler);
+    auto status = nsh_cmd_init(&cmd, cmd_test_name, &cmd_test_handler);
 
     ASSERT_EQ(status, NSH_STATUS_OK);
     ASSERT_THAT(cmd.name, ElementsAreArray(cmd_test_name));
-    ASSERT_EQ(cmd.handler, cmd_test_handler);
+    ASSERT_EQ(cmd.handler, &cmd_test_handler);
 }
 
 TEST(NshCmdInit, SuccessNullHandler)
@@ -51,7 +51,7 @@ TEST(NshCmdInit, SuccessNullHandler)
 TEST(NshCmdInit, FailureNullCmd)
 {
     nsh_cmd_t cmd;
-    auto status = nsh_cmd_init(nullptr, cmd_test_name, cmd_test_handler);
+    auto status = nsh_cmd_init(nullptr, cmd_test_name, &cmd_test_handler);
 
     ASSERT_EQ(status, NSH_STATUS_WRONG_ARG);
 }
@@ -59,7 +59,7 @@ TEST(NshCmdInit, FailureNullCmd)
 TEST(NshCmdInit, FailureNullName)
 {
     nsh_cmd_t cmd;
-    auto status = nsh_cmd_init(&cmd, nullptr, cmd_test_handler);
+    auto status = nsh_cmd_init(&cmd, nullptr, &cmd_test_handler);
 
     ASSERT_EQ(status, NSH_STATUS_WRONG_ARG);
 }
