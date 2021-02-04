@@ -1,4 +1,7 @@
-nsh_add_executable(utests test.cpp)
+nsh_add_executable(utests
+    test.cpp
+    test_nsh_cmd.cpp
+)
 target_link_libraries(utests
     PRIVATE
         Nsh::Nsh
