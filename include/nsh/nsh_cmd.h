@@ -28,6 +28,10 @@ typedef struct nsh_cmd_array {
     int count;
 } nsh_cmd_array_t;
 
+int nsh_cmd_init_empty(nsh_cmd_t* cmd);
+
+int nsh_cmd_init(nsh_cmd_t* cmd, const char* name, nsh_cmd_handler_t handler);
+
 void nsh_cmd_copy(nsh_cmd_t* dst, const nsh_cmd_t* src);
 
 void nsh_cmd_swap(nsh_cmd_t* cmd1, nsh_cmd_t* cmd2);

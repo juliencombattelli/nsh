@@ -9,6 +9,31 @@
 
 #include <string.h>
 
+int nsh_cmd_init_empty(nsh_cmd_t* cmd)
+{
+    if (!cmd) {
+        return NSH_STATUS_WRONG_ARG;
+    }
+    strncpy(cmd->name, "", NSH_MAX_STRING_SIZE);
+    cmd->handler = NULL;
+    return NSH_STATUS_OK;
+}
+
+int nsh_cmd_init(nsh_cmd_t* cmd, const char* name, nsh_cmd_handler_t handler)
+{
+    if (!cmd || !name) {
+        return NSH_STATUS_WRONG_ARG;
+    }
+    size_t name_len = strlen(name);
+    if (name_len == 0 || name_len > NSH_MAX_STRING_SIZE) {
+        return NSH_STATUS_WRONG_ARG;
+    }
+
+    strncpy(cmd->name, name, NSH_MAX_STRING_SIZE);
+    cmd->handler = handler;
+    return NSH_STATUS_OK;
+}
+
 void nsh_cmd_copy(nsh_cmd_t* dst, const nsh_cmd_t* src)
 {
     dst->handler = src->handler;
