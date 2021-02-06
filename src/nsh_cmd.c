@@ -19,7 +19,7 @@ int nsh_cmd_init_empty(nsh_cmd_t* cmd)
     return NSH_STATUS_OK;
 }
 
-int nsh_cmd_init(nsh_cmd_t* cmd, const char* name, nsh_cmd_handler_t handler)
+int nsh_cmd_init(nsh_cmd_t* cmd, const char* name, nsh_cmd_handler_t* handler)
 {
     if (!cmd || !name) {
         return NSH_STATUS_WRONG_ARG;
@@ -74,7 +74,7 @@ nsh_cmd_t* nsh_cmd_find(nsh_cmd_array_t* cmds, const char* name)
     return nsh_cmd_find_matching(cmds, name, (int)strlen(name));
 }
 
-int nsh_cmd_register(nsh_cmd_array_t* cmds, const char* name, nsh_cmd_handler_t handler)
+int nsh_cmd_register(nsh_cmd_array_t* cmds, const char* name, nsh_cmd_handler_t* handler)
 {
     if (cmds->count >= NSH_CMD_MAX_COUNT) {
         // If we have reached the max cmd count, ignore all registration request

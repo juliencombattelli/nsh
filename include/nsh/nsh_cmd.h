@@ -15,12 +15,11 @@
 extern "C" {
 #endif
 
-typedef char nsh_cmd_name_t[NSH_MAX_STRING_SIZE];
-typedef int (*nsh_cmd_handler_t)(int, char**);
+typedef int(nsh_cmd_handler_t)(int, char**);
 
 typedef struct nsh_cmd {
-    nsh_cmd_handler_t handler;
-    nsh_cmd_name_t name;
+    nsh_cmd_handler_t* handler;
+    char name[NSH_MAX_STRING_SIZE];
 } nsh_cmd_t;
 
 typedef struct nsh_cmd_array {
@@ -30,7 +29,7 @@ typedef struct nsh_cmd_array {
 
 int nsh_cmd_init_empty(nsh_cmd_t* cmd);
 
-int nsh_cmd_init(nsh_cmd_t* cmd, const char* name, nsh_cmd_handler_t handler);
+int nsh_cmd_init(nsh_cmd_t* cmd, const char* name, nsh_cmd_handler_t* handler);
 
 void nsh_cmd_copy(nsh_cmd_t* dst, const nsh_cmd_t* src);
 
@@ -42,7 +41,7 @@ nsh_cmd_t* nsh_cmd_find_matching(nsh_cmd_array_t* cmds, const char* partial_name
 
 nsh_cmd_t* nsh_cmd_find(nsh_cmd_array_t* cmds, const char* name);
 
-int nsh_cmd_register(nsh_cmd_array_t* cmds, const char* name, nsh_cmd_handler_t handler);
+int nsh_cmd_register(nsh_cmd_array_t* cmds, const char* name, nsh_cmd_handler_t* handler);
 
 #ifdef __cplusplus
 }
