@@ -14,8 +14,7 @@ int nsh_cmd_init_empty(nsh_cmd_t* cmd)
     if (!cmd) {
         return NSH_STATUS_WRONG_ARG;
     }
-    strncpy(cmd->name, "", NSH_MAX_STRING_SIZE);
-    cmd->handler = NULL;
+    memset(cmd, 0, sizeof(nsh_cmd_t));
     return NSH_STATUS_OK;
 }
 
