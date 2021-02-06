@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "name": "Linux GCC Debug",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64",
+            "compileCommands": "${workspaceFolder}/build-native/compile_commands.json",
+            "customConfigurationVariables": {
+                "binaryDir": "build-native",
+                "cmakeArgs": "-DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=On"
+            }
+        }
+    ],
+    "version": 4
+}
