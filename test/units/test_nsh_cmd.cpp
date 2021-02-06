@@ -53,7 +53,6 @@ TEST(NshCmdInit, SuccessNullHandler)
 
 TEST(NshCmdInit, FailureNullCmd)
 {
-    nsh_cmd_t cmd;
     auto status = nsh_cmd_init(nullptr, cmd_test_name, &cmd_test_handler);
 
     ASSERT_EQ(status, NSH_STATUS_WRONG_ARG);
