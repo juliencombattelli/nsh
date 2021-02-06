@@ -81,13 +81,7 @@ int nsh_cmd_register(nsh_cmd_array_t* cmds, const char* name, nsh_cmd_handler_t*
         return NSH_STATUS_MAX_CMD_NB_REACH;
     }
 
-    size_t name_len = strlen(name);
-    if (name_len == 0 || name_len > NSH_MAX_STRING_SIZE || !handler) {
-        return NSH_STATUS_WRONG_ARG;
-    }
-
-    strncpy(cmds->array[cmds->count].name, name, NSH_MAX_STRING_SIZE);
-    cmds->array[cmds->count].handler = handler;
+    nsh_cmd_init(&cmds->array[cmds->count], name, handler);
 
     cmds->count++;
 
