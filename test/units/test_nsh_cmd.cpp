@@ -63,3 +63,24 @@ TEST(NshCmdInit, FailureNullName)
 
     ASSERT_EQ(status, NSH_STATUS_WRONG_ARG);
 }
+
+TEST(NshCmdInit, FailureEmptyName)
+{
+    nsh_cmd_t cmd;
+    auto status = nsh_cmd_init(&cmd, "", &cmd_test_handler);
+
+    ASSERT_EQ(status, NSH_STATUS_WRONG_ARG);
+}
+
+TEST(NshCmdInit, FailureNameTooLong)
+{
+    constexpr size_t size_too_long = NSH_MAX_STRING_SIZE + 1;
+
+    char name_too_long[size_too_long + 1] = { 0 }; // Keep one char for '\0'
+    memset(name_too_long, 'a', size_too_long);
+
+    nsh_cmd_t cmd;
+    auto status = nsh_cmd_init(&cmd, name_too_long, &cmd_test_handler);
+
+    ASSERT_EQ(status, NSH_STATUS_WRONG_ARG);
+}
