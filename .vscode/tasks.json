@@ -44,6 +44,14 @@
             },
             "group": "build",
             "problemMatcher": []
+        },
+        {
+            "label": "Run unit tests",
+            "detail": "Run the GTest unit test suite",
+            "type": "shell",
+            "command": "../nsh-${input:configBinaryDir}/test/units/utests",
+            "group": "build",
+            "problemMatcher": []
         }
     ],
     "inputs": [
