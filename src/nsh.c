@@ -29,7 +29,7 @@ static nsh_t nsh;
 
 int nsh_init(void)
 {
-    nsh.cmds.count = 0;
+    nsh_cmd_array_init(&nsh.cmds);
 
     nsh_line_buffer_reset(&nsh.line);
 
@@ -38,8 +38,8 @@ int nsh_init(void)
     nsh.current_history_entry = -1;
 #endif
 
-    nsh_cmd_register(&nsh.cmds, "help", cmd_builtin_help);
-    nsh_cmd_register(&nsh.cmds, "exit", cmd_builtin_exit);
+    nsh_cmd_array_register(&nsh.cmds, "help", cmd_builtin_help);
+    nsh_cmd_array_register(&nsh.cmds, "exit", cmd_builtin_exit);
 
     return NSH_STATUS_OK;
 }
@@ -52,7 +52,7 @@ static int nsh_execute(int argc, char** argv)
     }
 
     // Find matching command
-    nsh_cmd_t* matching_cmd = nsh_cmd_find(&nsh.cmds, argv[0]);
+    nsh_cmd_t* matching_cmd = nsh_cmd_array_find(&nsh.cmds, argv[0]);
 
     if (!matching_cmd) {
         // If there is no match, return an error
@@ -78,7 +78,7 @@ static int nsh_autocomplete(void)
 #else
 
     nsh_cmd_array_t match;
-    match.count = 0;
+    nsh_cmd_array_init(&match);
 
     // Find all commands name matching the actual buffer
     for (int i = 0; i < nsh.cmds.count; i++) {
@@ -89,7 +89,7 @@ static int nsh_autocomplete(void)
 
     if (match.count > 0) {
         // Sort the matching commands in lexicographical order
-        nsh_cmd_lexicographic_sort(&match);
+        nsh_cmd_array_lexicographic_sort(&match);
 
         // Display the commands name
         nsh_io_put_newline();
@@ -289,8 +289,7 @@ static int nsh_split_command_line(const char* str, char sep, char output[][NSH_M
 
 int nsh_register_command(const char* name, nsh_cmd_handler_t* handler)
 {
-    nsh_status_t status = nsh_cmd_register(&nsh.cmds, name, handler);
-    return status;
+    return nsh_cmd_array_register(&nsh.cmds, name, handler);
 }
 
 void nsh_run(void)
