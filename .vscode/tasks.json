@@ -1,0 +1,63 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Configure",
+            "type": "shell",
+            "command": "cmake -S ${workspaceFolder} -B ${workspaceFolder}/../nsh-${input:configBinaryDir} ${input:configCmakeArgs}",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "cmake --build ${workspaceFolder}/../nsh-${input:configBinaryDir}",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Run tests",
+            "type": "shell",
+            "command": "cmake --build ${workspaceFolder}/../nsh-${input:configBinaryDir} --target test",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate coverage report",
+            "type": "shell",
+            "command": "cmake --build ${workspaceFolder}/../nsh-${input:configBinaryDir} --target coverage",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "View coverage report",
+            "detail": "Open the test coverage report in the default browser",
+            "type": "shell",
+            "command": "sensible-browser ../nsh-${input:configBinaryDir}/coverage/index.html",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    // VSCode redefines in some cases the BROWSER variable to a custom
+                    // browser-wrapper script, which can interfere with sensible-browser
+                    "BROWSER": ""
+                }
+            },
+            "group": "build",
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "configBinaryDir",
+            "type": "command",
+            "command": "cpptools.activeConfigCustomVariable",
+            "args": "binaryDir"
+        },
+        {
+            "id": "configCmakeArgs",
+            "type": "command",
+            "command": "cpptools.activeConfigCustomVariable",
+            "args": "cmakeArgs"
+        }
+    ]
+}
