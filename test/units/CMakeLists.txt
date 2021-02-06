@@ -1,6 +1,10 @@
 nsh_add_executable(utests
     test_nsh_cmd.cpp
 )
+target_compile_features(utests
+    PRIVATE
+        cxx_std_17
+)
 target_link_libraries(utests
     PRIVATE
         Nsh::Nsh
