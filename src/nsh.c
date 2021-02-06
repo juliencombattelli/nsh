@@ -287,7 +287,7 @@ static int nsh_split_command_line(const char* str, char sep, char output[][NSH_M
     return nsh_copy_token(&str[beg], output, token_count, input_size - beg);
 }
 
-int nsh_register_command(const char* name, nsh_cmd_handler_t handler)
+int nsh_register_command(const char* name, nsh_cmd_handler_t* handler)
 {
     nsh_status_t status = nsh_cmd_register(&nsh.cmds, name, handler);
     return status;

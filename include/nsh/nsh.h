@@ -16,7 +16,7 @@ extern "C" {
 
 int nsh_init();
 
-int nsh_register_command(const char* name, nsh_cmd_handler_t handler);
+int nsh_register_command(const char* name, nsh_cmd_handler_t* handler);
 
 void nsh_run(void);
 
