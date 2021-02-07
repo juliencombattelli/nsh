@@ -1,5 +1,6 @@
 nsh_add_executable(utests
     test_nsh_cmd.cpp
+    test_nsh_cmd_array.cpp
 )
 target_compile_features(utests
     PRIVATE

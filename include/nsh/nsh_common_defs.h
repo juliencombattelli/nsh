@@ -10,6 +10,12 @@
 
 #define NSH_UNUSED(var) ((void)var)
 
+#if defined(__GNUC__) || defined(__GNUG__) || defined(__clang__)
+#define NON_NULL(...) __attribute__((nonnull(__VA_ARGS__)))
+#else
+#define NON_NULL(...)
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

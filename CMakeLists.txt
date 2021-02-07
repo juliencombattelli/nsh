@@ -15,6 +15,7 @@ include(cmake/Scripts/NshSetup.cmake)
 nsh_add_library(nsh
     src/nsh.c
     src/nsh_cmd.c
+    src/nsh_cmd_array.c
     src/nsh_io.c
     src/nsh_cmd_builtins.c
     src/nsh_history.c
