@@ -24,7 +24,7 @@ TEST(NshCmdArrayInit, Success)
     ASSERT_THAT(cmds.array, Each(FieldsAre(nullptr, StrEq(""))));
 }
 
-TEST(NshCmdArrayRegister, Success1Element)
+TEST(NshCmdArrayRegister, SuccessOneElement)
 {
     nsh_cmd_array_t cmds;
     ASSERT_EQ(nsh_cmd_array_init(&cmds), NSH_STATUS_OK);
@@ -37,7 +37,20 @@ TEST(NshCmdArrayRegister, Success1Element)
     ASSERT_EQ(cmds.array[0].handler, &cmd_test_handler);
 }
 
-TEST(NshCmdArrayRegister, SuccessMaxElement)
+TEST(NshCmdArrayRegister, SuccessMaxElements)
+{
+    nsh_cmd_array_t cmds;
+    ASSERT_EQ(nsh_cmd_array_init(&cmds), NSH_STATUS_OK);
+
+    for (auto i = 0u; i < NSH_CMD_MAX_COUNT; i++) {
+        ASSERT_EQ(nsh_cmd_array_register(&cmds, cmd_test_name, &cmd_test_handler), NSH_STATUS_OK);
+        ASSERT_EQ(cmds.count, i + 1);
+        ASSERT_STREQ(cmds.array[i].name, cmd_test_name);
+        ASSERT_EQ(cmds.array[i].handler, &cmd_test_handler);
+    }
+}
+
+TEST(NshCmdArrayRegister, FailureTooManyElements)
 {
     nsh_cmd_array_t cmds;
     ASSERT_EQ(nsh_cmd_array_init(&cmds), NSH_STATUS_OK);
