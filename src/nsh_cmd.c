@@ -27,18 +27,16 @@ int nsh_cmd_init(nsh_cmd_t* cmd, const char* name, nsh_cmd_handler_t* handler)
     return NSH_STATUS_OK;
 }
 
-int nsh_cmd_copy(nsh_cmd_t* dst, const nsh_cmd_t* src)
+void nsh_cmd_copy(nsh_cmd_t* dst, const nsh_cmd_t* src)
 {
     dst->handler = src->handler;
     strncpy(dst->name, src->name, sizeof(dst->name));
-    return NSH_STATUS_OK;
 }
 
-int nsh_cmd_swap(nsh_cmd_t* cmd1, nsh_cmd_t* cmd2)
+void nsh_cmd_swap(nsh_cmd_t* cmd1, nsh_cmd_t* cmd2)
 {
     nsh_cmd_t temp;
     nsh_cmd_copy(&temp, cmd1);
     nsh_cmd_copy(cmd1, cmd2);
     nsh_cmd_copy(cmd2, &temp);
-    return NSH_STATUS_OK;
 }

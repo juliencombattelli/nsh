@@ -13,10 +13,7 @@ int nsh_cmd_array_lexicographic_sort(nsh_cmd_array_t* cmds)
     for (int i = 0; i < cmds->count - 1; ++i) {
         for (int j = i + 1; j < cmds->count; ++j) {
             if (strcmp(cmds->array[i].name, cmds->array[j].name) > 0) {
-                int status = nsh_cmd_swap(&cmds->array[i], &cmds->array[j]);
-                if (status != NSH_STATUS_OK) {
-                    return status;
-                }
+                nsh_cmd_swap(&cmds->array[i], &cmds->array[j]);
             }
         }
     }
