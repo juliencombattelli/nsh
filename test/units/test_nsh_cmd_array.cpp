@@ -7,7 +7,7 @@ using testing::Each;
 using testing::FieldsAre;
 using testing::StrEq;
 
-static const char cmd_test_name[NSH_MAX_STRING_SIZE] = "test";
+static constexpr const char cmd_test_name[NSH_MAX_STRING_SIZE] = "test";
 static int cmd_test_handler(int, char**)
 {
     return 0;
