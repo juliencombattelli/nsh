@@ -1,5 +1,6 @@
 #include <nsh/nsh.h>
 #include <nsh/nsh_cmd.h>
+#include <nsh/nsh_cmd_array.h>
 #include <nsh/nsh_cmd_builtins.h>
 #include <nsh/nsh_common_defs.h>
 #include <nsh/nsh_history.h>
