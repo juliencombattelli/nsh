@@ -21,8 +21,8 @@ extern "C" {
 
 typedef struct nsh_history {
     char entries[NSH_CMD_HISTORY_SIZE][NSH_LINE_BUFFER_SIZE];
-    int head;
-    int tail;
+    int head; ///< Insertion index for new element
+    int tail; ///< Oldest element index (0 if empty)
     int size;
 } nsh_history_t;
 
