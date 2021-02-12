@@ -35,12 +35,8 @@ bool nsh_history_is_empty(const nsh_history_t* hist)
     return (hist->size == 0);
 }
 
-int nsh_history_add_entry(nsh_history_t* hist, const char* entry)
+void nsh_history_add_entry(nsh_history_t* hist, const char* entry)
 {
-    if (!hist) {
-        return NSH_STATUS_WRONG_ARG;
-    }
-
     strncpy(hist->entries[hist->head], entry, sizeof(hist->entries[hist->head]));
 
     hist->head = (hist->head + 1) % (int)NSH_CMD_HISTORY_SIZE;
@@ -50,13 +46,11 @@ int nsh_history_add_entry(nsh_history_t* hist, const char* entry)
     } else {
         hist->size++;
     }
-
-    return NSH_STATUS_OK;
 }
 
 int nsh_history_get_entry(nsh_history_t* hist, int age, char* entry)
 {
-    if (!hist || !entry || age < 0 || age >= nsh_history_entry_count(hist)) {
+    if (age < 0 || age >= nsh_history_entry_count(hist)) {
         return NSH_STATUS_WRONG_ARG;
     }
 
