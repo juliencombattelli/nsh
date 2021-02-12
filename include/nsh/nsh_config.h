@@ -50,7 +50,7 @@
  * in BSS region, which can be pretty huge...
  * Require: NSH_FEATURE_USE_HISTORY == 1
  */
-#define NSH_CMD_HISTORY_SIZE 16u
+#define NSH_CMD_HISTORY_SIZE 16
 
 /*
  * Default prompt displayed at the beginning of each command line.

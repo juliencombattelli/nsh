@@ -39,10 +39,10 @@ void nsh_history_add_entry(nsh_history_t* hist, const char* entry)
 {
     strncpy(hist->entries[hist->head], entry, sizeof(hist->entries[hist->head]));
 
-    hist->head = (hist->head + 1) % (int)NSH_CMD_HISTORY_SIZE;
+    hist->head = (hist->head + 1) % NSH_CMD_HISTORY_SIZE;
 
     if (nsh_history_is_full(hist)) {
-        hist->tail = (hist->tail + 1) % (int)NSH_CMD_HISTORY_SIZE;
+        hist->tail = (hist->tail + 1) % NSH_CMD_HISTORY_SIZE;
     } else {
         hist->size++;
     }
