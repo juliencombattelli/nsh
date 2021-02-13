@@ -3,14 +3,6 @@
 
 #include <nsh/nsh_history.h>
 
-using testing::ElementsAreArray;
-
-static constexpr const char cmd_test_name[NSH_MAX_STRING_SIZE] = "test";
-static int cmd_test_handler(int, char**)
-{
-    return 0;
-}
-
 TEST(NshHistoryReset, Success)
 {
     nsh_history_t hist;
