@@ -17,7 +17,7 @@
  * If you exceed this number, the read line function will return the status
  * NSH_STATUS_BUFFER_OVERFLOW, and a warning will be displayed.
  */
-#define NSH_LINE_BUFFER_SIZE 128u
+#define NSH_LINE_BUFFER_SIZE 128
 
 /*
  * Maximum character count for commands name and arguments string.
