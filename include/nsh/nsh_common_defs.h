@@ -10,6 +10,21 @@
 
 #define NSH_UNUSED(var) ((void)var)
 
+/** 
+ * @def NON_NULL(<arg-index>...)
+ * @brief Indicates that listed pointer arguments shall not be null.
+ * 
+ * This macro acts as a precondition for a function, indicating that arguments
+ * whose index is present in the list must not be null. The precondition is meant
+ * to be checkable by a compiler (GCC and Clang at least).
+ * If a null pointer is passed to an argument marked as NON_NULL, and the function
+ * does not check if this argument is null, then the behaviour is undefined.
+ * 
+ * @example
+ * // When calling func, i and c arguments shall not be null
+ * void func(int* i, float f, char* c, void* p) NON_NULL(1,3)
+ * 
+ */
 #if defined(__GNUC__) || defined(__GNUG__) || defined(__clang__)
 #define NON_NULL(...) __attribute__((nonnull(__VA_ARGS__)))
 #else
