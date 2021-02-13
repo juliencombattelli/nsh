@@ -2,6 +2,7 @@ nsh_add_executable(utests
     test_nsh_cmd.cpp
     test_nsh_cmd_array.cpp
     test_nsh_history.cpp
+    test_nsh_line_buffer.cpp
 )
 target_compile_features(utests
     PRIVATE
