@@ -117,6 +117,7 @@ static void nsh_display_history_entry(int age)
     if (age == -1) {
         nsh_io_erase_line();
         nsh_io_print_prompt();
+        nsh_line_buffer_reset(&nsh.line);
     } else {
         int status = nsh_history_get_entry(&nsh.history, age, nsh.line.buffer);
         if (status == NSH_STATUS_OK) {
