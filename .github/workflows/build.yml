@@ -78,6 +78,14 @@ jobs:
       - name: Run tests
         working-directory: build
         run: ctest
+        
+      - name: Coverage
+        if: ${{ matrix.config.name == 'Ubuntu GCC' && matrix.build_type == 'Debug' }}
+        run: |
+          # Generate coverage report
+          cmake --build build --target coverage
+          # Uploading report to CodeCov
+          bash <(curl -s https://codecov.io/bash) -f coverage.info || echo "Codecov did not collect coverage reports"
 
       - name: Install Strip
         run: |
