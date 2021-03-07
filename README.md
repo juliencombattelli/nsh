@@ -1,5 +1,6 @@
 # Nsh
 ![build status](https://github.com/juliencombattelli/nsh/workflows/Build%20&%20Tests/badge.svg)
+[![codecov](https://codecov.io/gh/juliencombattelli/nsh/branch/master/graph/badge.svg?token=0L5KEeuCMn)](https://codecov.io/gh/juliencombattelli/nsh)
 
 Nsh (NanoSHell) is a lightwheight shell targeting embedded systems.
 It can also be run on Unix-like platforms mainly for testing purposes.
