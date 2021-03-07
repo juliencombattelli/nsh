@@ -83,6 +83,8 @@ jobs:
       - name: Coverage
         if: ${{ matrix.config.name == 'Ubuntu GCC' && matrix.build_type == 'Debug' }}
         run: |
+          # Install lcov
+          apt install lcov
           # Generate coverage report
           cmake --build build --target coverage
           # Uploading report to CodeCov
