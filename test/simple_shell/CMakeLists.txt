@@ -50,7 +50,7 @@ add_test(
     NAME simple_shell_test_too_many_arg
     # Send: "<A command with far too much arguments><ENTER>", "exit<ENTER>"
     # Expected: too many arguments warning message, then exit
-    COMMAND bash -c "echo -e 'a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7\\nexit\\n' | $<TARGET_FILE:simple_shell>"
+    COMMAND bash -c "echo -e 'a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7 8 9\\nexit\\n' | $<TARGET_FILE:simple_shell>"
 )
 add_test(
     NAME simple_shell_test_unsupported_input

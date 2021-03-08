@@ -258,7 +258,7 @@ static int nsh_copy_token(const char* str, char output[][NSH_MAX_STRING_SIZE], i
     memcpy(output[*token_count], str, token_size);
     output[*token_count][token_size] = '\0';
     (*token_count)++;
-    if (*token_count > NSH_CMD_ARGS_MAX_COUNT) {
+    if (*token_count >= NSH_CMD_ARGS_MAX_COUNT) {
         nsh_io_put_string("WARNING: too many arguments\r\n");
         return NSH_STATUS_MAX_ARGS_NB_REACH;
     }
