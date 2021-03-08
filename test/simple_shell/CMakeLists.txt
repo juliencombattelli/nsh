@@ -24,3 +24,8 @@ add_test(
     NAME simple_shell_test_split_cmdline
     COMMAND bash -c "echo -e 'It is not a bug\\nexit' | $<TARGET_FILE:simple_shell>"
 )
+add_test(
+    NAME simple_shell_test_long_line
+    COMMAND bash -c "echo -e 'Writing the first 90 percent of a computer program takes 90 percent of the time. The remaining ten percent also takes 90 percent of the time and the final touches also take 90 percent of the time.\\nexit' | $<TARGET_FILE:simple_shell>"
+)
+
