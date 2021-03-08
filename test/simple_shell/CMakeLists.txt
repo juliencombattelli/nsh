@@ -18,7 +18,7 @@ add_test(
 )
 add_test(
     NAME simple_shell_test_history
-    COMMAND bash -c "echo -e 'hello\\nholla\\n\\x1b[A\\x1b[A\\x1b[B\\nexit' | $<TARGET_FILE:simple_shell>"
+    COMMAND bash -c "echo -e 'hello\\nholla\\n\\x1b[A\\x1b[A\\x1b[A\\x1b[B\\x1b[B\\nexit' | $<TARGET_FILE:simple_shell>"
 )
 add_test(
     NAME simple_shell_test_split_cmdline
