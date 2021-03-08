@@ -5,6 +5,18 @@ target_link_libraries(simple_shell
 )
 
 add_test(
-    NAME simple_shell_test 
-    COMMAND bash -c "echo -e 'hell\\bp\\nhello\\nholla\\n\\x1b[A\\x1b[A\\x1b[B\\nex\\t' | $<TARGET_FILE:simple_shell>"
+    NAME simple_shell_test_default_cmds
+    COMMAND bash -c "echo -e 'help\\nexit' | $<TARGET_FILE:simple_shell>"
+)
+add_test(
+    NAME simple_shell_test_autocomplete
+    COMMAND bash -c "echo -e 'exi\\t' | $<TARGET_FILE:simple_shell>"
+)
+add_test(
+    NAME simple_shell_test_backspace
+    COMMAND bash -c "echo -e 'hell\\bp\\nexit' | $<TARGET_FILE:simple_shell>"
+)
+add_test(
+    NAME simple_shell_test_history
+    COMMAND bash -c "echo -e 'hello\\nholla\\n\\x1b[A\\x1b[A\\x1b[B\\nexit' | $<TARGET_FILE:simple_shell>"
 )
