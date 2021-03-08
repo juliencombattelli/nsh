@@ -78,7 +78,7 @@ jobs:
       
       - name: Run tests
         working-directory: build
-        run: ctest
+        run: ctest -V
         
       - name: Coverage
         if: ${{ matrix.config.name == 'Ubuntu GCC' && matrix.build_type == 'Debug' }}
