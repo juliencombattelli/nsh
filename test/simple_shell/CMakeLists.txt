@@ -4,8 +4,7 @@ target_link_libraries(simple_shell
         nsh
 )
 
-add_executable(send_cmds send_cmds.c)
 add_test(
     NAME simple_shell_test 
-    COMMAND bash -c "$<TARGET_FILE:send_cmds> -d1000 help exit | $<TARGET_FILE:simple_shell>"
+    COMMAND bash -c "echo -e 'hell\\bp\\nexit' | $<TARGET_FILE:simple_shell>"
 )
