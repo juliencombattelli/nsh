@@ -19,6 +19,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/NshPlatformChecker.cmake)
 nsh_check_platform(${NSH_PLATFORM_NAME})
 
 # Include additional modules
+include(Sanitizers)
 include(StaticAnalyzers)
 include(Warnings)
 
@@ -27,6 +28,7 @@ function(nsh_add_library TARGET)
     nsh_platform_add_library(${TARGET} ${ARGN})
     target_link_libraries(${TARGET} PUBLIC Nsh::Platform)
     target_project_warnings(${TARGET})
+    target_enable_sanitizers(${TARGET})
 endfunction()
 
 # Define Nsh specific add_executable wrapper
@@ -34,6 +36,7 @@ function(nsh_add_executable TARGET)
     nsh_platform_add_executable(${TARGET} ${ARGN})
     target_link_libraries(${TARGET} PUBLIC Nsh::Platform)
     target_project_warnings(${TARGET})
+    target_enable_sanitizers(${TARGET})
 endfunction()
 
 # Define Nsh specific add_test wrapper
