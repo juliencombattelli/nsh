@@ -40,3 +40,7 @@ add_test(
     NAME simple_shell_test_unsupported_input
     COMMAND bash -c "echo -e '\\x1b[C\\nexit' | $<TARGET_FILE:simple_shell>"
 )
+add_test(
+    NAME simple_shell_test_null_cmd
+    COMMAND bash -c "echo -e 'null\\nexit' | $<TARGET_FILE:simple_shell>"
+)
