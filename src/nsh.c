@@ -39,8 +39,8 @@ int nsh_init(void)
     nsh.current_history_entry = -1;
 #endif
 
-    nsh_cmd_array_register(&nsh.cmds, "help", cmd_builtin_help);
-    nsh_cmd_array_register(&nsh.cmds, "exit", cmd_builtin_exit);
+    nsh_register_command("help", cmd_builtin_help);
+    nsh_register_command("exit", cmd_builtin_exit);
 
     return NSH_STATUS_OK;
 }
