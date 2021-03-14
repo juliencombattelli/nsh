@@ -15,6 +15,22 @@
                 "binaryDir": "build-native",
                 "cmakeArgs": "-DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=On"
             }
+        },
+        {
+            "name": "Linux Clang Debug",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64",
+            "compileCommands": "${workspaceFolder}/../nsh-build-native-clang/compile_commands.json",
+            "customConfigurationVariables": {
+                "binaryDir": "build-native-clang",
+                "cmakeArgs": "-DCMAKE_CXX_FLAGS_INIT=\"-stdlib=libc++\" -DCMAKE_SHARED_LINKER_FLAGS_INIT=\"-stdlib=libc++\" -DCMAKE_EXE_LINKER_FLAGS_INIT=\"-stdlib=libc++\"-DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=On"
+            }
         }
     ],
     "version": 4
