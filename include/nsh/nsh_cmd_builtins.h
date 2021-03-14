@@ -12,9 +12,9 @@
 extern "C" {
 #endif
 
-int cmd_builtin_help(int argc, char** argv);
+int cmd_builtin_help(unsigned int argc, char** argv);
 
-int cmd_builtin_exit(int argc, char** argv);
+int cmd_builtin_exit(unsigned int argc, char** argv);
 
 #ifdef __cplusplus
 }

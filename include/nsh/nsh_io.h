@@ -15,7 +15,7 @@ void nsh_io_put_newline(void);
 
 void nsh_io_put_string(const char* str);
 
-void nsh_io_put_buffer(const char* str, int size);
+void nsh_io_put_buffer(const char* str, unsigned int size);
 
 void nsh_io_print_prompt(void);
 

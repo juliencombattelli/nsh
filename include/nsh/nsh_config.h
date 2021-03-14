@@ -17,7 +17,7 @@
  * If you exceed this number, the read line function will return the status
  * NSH_STATUS_BUFFER_OVERFLOW, and a warning will be displayed.
  */
-#define NSH_LINE_BUFFER_SIZE 128
+#define NSH_LINE_BUFFER_SIZE 128u
 
 /*
  * Maximum character count for commands name and arguments string.
@@ -50,7 +50,7 @@
  * in BSS region, which can be pretty huge...
  * Require: NSH_FEATURE_USE_HISTORY == 1
  */
-#define NSH_CMD_HISTORY_SIZE 16
+#define NSH_CMD_HISTORY_SIZE 16u
 
 /*
  * Default prompt displayed at the beginning of each command line.

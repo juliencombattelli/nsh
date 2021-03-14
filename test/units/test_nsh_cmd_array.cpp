@@ -8,7 +8,7 @@ using testing::FieldsAre;
 using testing::StrEq;
 
 static constexpr const char cmd_test_name[NSH_MAX_STRING_SIZE] = "test";
-static int cmd_test_handler(int, char**)
+static int cmd_test_handler(unsigned int, char**)
 {
     return 0;
 }
@@ -122,15 +122,15 @@ TEST(NshCmdArrayFind, Success)
     ASSERT_STREQ(cmd->name, "cmd2_test");
 }
 
-static int cmd1(int, char**)
+static int cmd1(unsigned int, char**)
 {
     return 1;
 }
-static int cmd2(int, char**)
+static int cmd2(unsigned int, char**)
 {
     return 2;
 }
-static int cmd3(int, char**)
+static int cmd3(unsigned int, char**)
 {
     return 3;
 }

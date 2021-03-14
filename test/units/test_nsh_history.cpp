@@ -50,7 +50,7 @@ TEST(NshHistoryAddEntry, SuccessWhenOverriding)
     nsh_history_reset(&hist);
 
     const char new_entry[] = "new_entry";
-    for (int i = 0; i < NSH_CMD_HISTORY_SIZE; i++) {
+    for (unsigned int i = 0; i < NSH_CMD_HISTORY_SIZE; i++) {
         nsh_history_add_entry(&hist, new_entry);
     }
 
@@ -82,7 +82,7 @@ TEST(NshHistoryEntryCount, SuccessWhenFull)
     nsh_history_reset(&hist);
 
     const char new_entry[] = "new_entry";
-    for (int i = 0; i < NSH_CMD_HISTORY_SIZE; i++) {
+    for (unsigned int i = 0; i < NSH_CMD_HISTORY_SIZE; i++) {
         nsh_history_add_entry(&hist, new_entry);
     }
 
@@ -95,7 +95,7 @@ TEST(NshHistoryEntryCount, SuccessWhenOverriding)
     nsh_history_reset(&hist);
 
     const char new_entry[] = "new_entry";
-    for (int i = 0; i < NSH_CMD_HISTORY_SIZE; i++) {
+    for (unsigned int i = 0; i < NSH_CMD_HISTORY_SIZE; i++) {
         nsh_history_add_entry(&hist, new_entry);
     }
 
@@ -145,7 +145,7 @@ TEST(NshHistoryGetEntry, SuccessWhenOverriding)
     nsh_history_reset(&hist);
 
     const char new_entry[] = "new_entry";
-    for (int i = 0; i < NSH_CMD_HISTORY_SIZE; i++) {
+    for (unsigned int i = 0; i < NSH_CMD_HISTORY_SIZE; i++) {
         nsh_history_add_entry(&hist, new_entry);
     }
 
@@ -165,7 +165,7 @@ TEST(NshHistoryGetEntry, FailureInvalidNegativeAge)
     nsh_history_reset(&hist);
 
     char entry[NSH_LINE_BUFFER_SIZE] = {};
-    auto status = nsh_history_get_entry(&hist, -1, entry);
+    auto status = nsh_history_get_entry(&hist, UINT_MAX, entry);
 
     ASSERT_EQ(status, NSH_STATUS_WRONG_ARG);
 }

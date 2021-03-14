@@ -7,7 +7,7 @@
 #include <stdarg.h>
 #endif /* NSH_FEATURE_USE_PRINTF == 1 */
 
-#define NSH_IO_ESC             "\e"
+#define NSH_IO_ESC             "\x1B"
 #define NSH_IO_CSI             NSH_IO_ESC "["
 #define NSH_IO_ERASE_LINE      NSH_IO_CSI "2K"
 #define NSH_IO_MOVE_BEGIN_LINE "\r"
@@ -34,12 +34,12 @@ void nsh_io_put_string(const char* str)
 {
     // TODO This implementation is suboptimal and two loops are executed
     // One by strlen, one by nsh_io_put_buffer...
-    nsh_io_put_buffer(str, (int)strlen(str));
+    nsh_io_put_buffer(str, (unsigned int)strlen(str));
 }
 
-void nsh_io_put_buffer(const char* str, int size)
+void nsh_io_put_buffer(const char* str, unsigned int size)
 {
-    for (int i = 0; i < size; i++) {
+    for (unsigned int i = 0; i < size; i++) {
         nsh_io_put_char(str[i]);
     }
 }

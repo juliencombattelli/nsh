@@ -12,7 +12,7 @@ extern "C" {
 
 typedef struct nsh_line_buffer {
     char buffer[NSH_LINE_BUFFER_SIZE];
-    int size;
+    unsigned int size;
 } nsh_line_buffer_t;
 
 void nsh_line_buffer_reset(nsh_line_buffer_t* linebuf) NON_NULL(1);

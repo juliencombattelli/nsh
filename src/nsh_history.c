@@ -20,7 +20,7 @@ void nsh_history_reset(nsh_history_t* hist)
     hist->size = 0;
 }
 
-int nsh_history_entry_count(const nsh_history_t* hist)
+unsigned int nsh_history_entry_count(const nsh_history_t* hist)
 {
     return hist->size;
 }
@@ -48,15 +48,15 @@ void nsh_history_add_entry(nsh_history_t* hist, const char* entry)
     }
 }
 
-int nsh_history_get_entry(nsh_history_t* hist, int age, char* entry)
+int nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry)
 {
-    if (age < 0 || age >= nsh_history_entry_count(hist)) {
+    if (age >= nsh_history_entry_count(hist)) {
         return NSH_STATUS_WRONG_ARG;
     }
 
-    int most_recent_entry = hist->head - 1; // head points to the element just after the most recent entry
-    int entry_index = most_recent_entry - age;
-    if (entry_index < 0) {
+    unsigned int most_recent_entry = hist->head - 1; // head points to the element just after the most recent entry
+    unsigned int entry_index = most_recent_entry - age;
+    if (entry_index > NSH_CMD_HISTORY_SIZE) {
         entry_index += NSH_CMD_HISTORY_SIZE;
     }
 

@@ -10,7 +10,7 @@
 
 #include <stdio.h>
 
-int cmd_builtin_help(int argc, char** argv)
+int cmd_builtin_help(unsigned int argc, char** argv)
 {
     NSH_UNUSED(argc);
     NSH_UNUSED(argv);
@@ -18,7 +18,7 @@ int cmd_builtin_help(int argc, char** argv)
     return NSH_STATUS_OK;
 }
 
-int cmd_builtin_exit(int argc, char** argv)
+int cmd_builtin_exit(unsigned int argc, char** argv)
 {
     NSH_UNUSED(argc);
     NSH_UNUSED(argv);

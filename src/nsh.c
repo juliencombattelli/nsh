@@ -8,6 +8,7 @@
 #include <nsh/nsh_line_buffer.h>
 
 #include <ctype.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,7 +22,7 @@ typedef struct nsh {
     nsh_cmd_array_t cmds;
 #if NSH_FEATURE_USE_HISTORY == 1
     nsh_history_t history;
-    int current_history_entry;
+    unsigned int current_history_entry;
 #endif
 
 } nsh_t;
@@ -36,7 +37,7 @@ int nsh_init(void)
 
 #if NSH_FEATURE_USE_HISTORY == 1
     nsh_history_reset(&nsh.history);
-    nsh.current_history_entry = -1;
+    nsh.current_history_entry = UINT_MAX;
 #endif
 
     nsh_register_command("help", cmd_builtin_help);
@@ -45,7 +46,7 @@ int nsh_init(void)
     return NSH_STATUS_OK;
 }
 
-static int nsh_execute(int argc, char** argv)
+static int nsh_execute(unsigned int argc, char** argv)
 {
     if (argv[0] == NULL || argv[0][0] == '\0') {
         // An empty command was entered.
@@ -82,7 +83,7 @@ static int nsh_autocomplete(void)
     nsh_cmd_array_init(&match);
 
     // Find all commands name matching the actual buffer
-    for (int i = 0; i < nsh.cmds.count; i++) {
+    for (unsigned int i = 0; i < nsh.cmds.count; i++) {
         if (memcmp(nsh.line.buffer, nsh.cmds.array[i].name, nsh.line.size) == 0) {
             nsh_cmd_copy(&match.array[match.count++], &nsh.cmds.array[i]);
         }
@@ -94,7 +95,7 @@ static int nsh_autocomplete(void)
 
         // Display the commands name
         nsh_io_put_newline();
-        for (int i = 0; i < match.count; i++) {
+        for (unsigned int i = 0; i < match.count; i++) {
             nsh_io_put_string(match.array[i].name);
             nsh_io_put_char(' ');
         }
@@ -112,9 +113,9 @@ static int nsh_autocomplete(void)
 }
 
 #if NSH_FEATURE_USE_HISTORY == 1
-static void nsh_display_history_entry(int age)
+static void nsh_display_history_entry(unsigned int age)
 {
-    if (age == -1) {
+    if (age == UINT_MAX) {
         nsh_io_erase_line();
         nsh_io_print_prompt();
         nsh_line_buffer_reset(&nsh.line);
@@ -124,7 +125,7 @@ static void nsh_display_history_entry(int age)
             nsh_io_erase_line();
             nsh_io_print_prompt();
             nsh_io_put_string(nsh.line.buffer);
-            nsh.line.size = (int)strlen(nsh.line.buffer);
+            nsh.line.size = (unsigned int)strlen(nsh.line.buffer);
         }
     }
 }
@@ -136,7 +137,7 @@ static int nsh_display_previous_entry(void)
     return NSH_STATUS_UNSUPPORTED;
 #else
     nsh.current_history_entry++;
-    int entry_count = nsh_history_entry_count(&nsh.history);
+    unsigned int entry_count = nsh_history_entry_count(&nsh.history);
     if (nsh.current_history_entry >= entry_count) {
         nsh.current_history_entry = entry_count - 1;
     }
@@ -152,7 +153,7 @@ static int nsh_display_next_entry(void)
 #if NSH_FEATURE_USE_HISTORY == 0
     return NSH_STATUS_UNSUPPORTED;
 #else
-    if (nsh.current_history_entry >= 0) {
+    if (nsh.current_history_entry < NSH_CMD_HISTORY_SIZE) {
         nsh.current_history_entry--;
     }
 
@@ -212,7 +213,7 @@ static void nsh_erase_last_char(void)
 static int nsh_read_line(void)
 {
 #if NSH_FEATURE_USE_HISTORY == 1
-    nsh.current_history_entry = -1;
+    nsh.current_history_entry = UINT_MAX;
 #endif
 
     nsh_line_buffer_reset(&nsh.line);
@@ -248,7 +249,7 @@ static int nsh_read_line(void)
     return NSH_STATUS_BUFFER_OVERFLOW;
 }
 
-static int nsh_copy_token(const char* str, char output[][NSH_MAX_STRING_SIZE], int* token_count, int token_size)
+static int nsh_copy_token(const char* str, char output[][NSH_MAX_STRING_SIZE], unsigned int* token_count, unsigned int token_size)
 {
     if (token_size > NSH_MAX_STRING_SIZE - 1) // Keep one char for '\0'
     {
@@ -265,15 +266,15 @@ static int nsh_copy_token(const char* str, char output[][NSH_MAX_STRING_SIZE], i
     return NSH_STATUS_OK;
 }
 
-static int nsh_split_command_line(const char* str, char sep, char output[][NSH_MAX_STRING_SIZE], int* token_count)
+static int nsh_split_command_line(const char* str, char sep, char output[][NSH_MAX_STRING_SIZE], unsigned int* token_count)
 {
-    int beg = 0;
-    int end = 0;
-    int input_size = (int)strlen(str);
+    unsigned int beg = 0;
+    unsigned int end = 0;
+    unsigned int input_size = (unsigned int)strlen(str);
 
     *token_count = 0;
 
-    for (int i = 0; i < input_size; i++) {
+    for (unsigned int i = 0; i < input_size; i++) {
         if (str[i] == sep) {
             end = i;
             int ret = nsh_copy_token(&str[beg], output, token_count, end - beg);
@@ -307,7 +308,7 @@ void nsh_run(void)
     char* argv[NSH_CMD_ARGS_MAX_COUNT] = { NULL };
 
     while (true) {
-        int argc = 0;
+        unsigned int argc = 0;
 
         nsh_io_print_prompt();
 
@@ -322,7 +323,7 @@ void nsh_run(void)
             }
 
             // Copy the address of all tokens into 'argv'
-            for (int i = 0; i < argc; i++) {
+            for (unsigned int i = 0; i < argc; i++) {
                 argv[i] = args[i];
             }
 

@@ -43,7 +43,7 @@ TEST(NshLineBufferAppendChar, SuccessMaxChar)
     nsh_line_buffer_t line;
     nsh_line_buffer_reset(&line);
 
-    for (int i = 0; i < NSH_LINE_BUFFER_SIZE - 1; i++) {
+    for (unsigned int i = 0; i < NSH_LINE_BUFFER_SIZE - 1; i++) {
         ASSERT_EQ(nsh_line_buffer_append_char(&line, 'a'), NSH_STATUS_OK);
     }
 
@@ -59,7 +59,7 @@ TEST(NshLineBufferAppendChar, FailureFull)
     nsh_line_buffer_t line;
     nsh_line_buffer_reset(&line);
 
-    for (int i = 0; i < NSH_LINE_BUFFER_SIZE; i++) {
+    for (unsigned int i = 0; i < NSH_LINE_BUFFER_SIZE; i++) {
         ASSERT_EQ(nsh_line_buffer_append_char(&line, 'a'), NSH_STATUS_OK);
     }
 
@@ -85,7 +85,7 @@ TEST(NshLineBufferAppendNull, SuccessEndOfBuffer)
     nsh_line_buffer_t line;
     nsh_line_buffer_reset(&line);
 
-    for (int i = 0; i < NSH_LINE_BUFFER_SIZE - 1; i++) {
+    for (unsigned int i = 0; i < NSH_LINE_BUFFER_SIZE - 1; i++) {
         ASSERT_EQ(nsh_line_buffer_append_char(&line, 'a'), NSH_STATUS_OK);
     }
     nsh_line_buffer_append_null(&line);
@@ -100,7 +100,7 @@ TEST(NshLineBufferAppendNull, SuccessLastCharOverwritten)
     nsh_line_buffer_t line;
     nsh_line_buffer_reset(&line);
 
-    for (int i = 0; i < NSH_LINE_BUFFER_SIZE; i++) {
+    for (unsigned int i = 0; i < NSH_LINE_BUFFER_SIZE; i++) {
         ASSERT_EQ(nsh_line_buffer_append_char(&line, 'a'), NSH_STATUS_OK);
     }
 
@@ -140,7 +140,7 @@ TEST(NshLineBufferIsFull, Success)
     nsh_line_buffer_t line;
     nsh_line_buffer_reset(&line);
 
-    for (int i = 0; i < NSH_LINE_BUFFER_SIZE - 1; i++) {
+    for (unsigned int i = 0; i < NSH_LINE_BUFFER_SIZE - 1; i++) {
         ASSERT_EQ(nsh_line_buffer_append_char(&line, 'a'), NSH_STATUS_OK);
     }
 
@@ -152,7 +152,7 @@ TEST(NshLineBufferIsFull, SuccessFull)
     nsh_line_buffer_t line;
     nsh_line_buffer_reset(&line);
 
-    for (int i = 0; i < NSH_LINE_BUFFER_SIZE; i++) {
+    for (unsigned int i = 0; i < NSH_LINE_BUFFER_SIZE; i++) {
         ASSERT_EQ(nsh_line_buffer_append_char(&line, 'a'), NSH_STATUS_OK);
     }
 
@@ -182,7 +182,7 @@ TEST(NshLineBufferIsEmpty, SuccessFull)
     nsh_line_buffer_t line;
     nsh_line_buffer_reset(&line);
 
-    for (int i = 0; i < NSH_LINE_BUFFER_SIZE; i++) {
+    for (unsigned int i = 0; i < NSH_LINE_BUFFER_SIZE; i++) {
         ASSERT_EQ(nsh_line_buffer_append_char(&line, 'a'), NSH_STATUS_OK);
     }
 
