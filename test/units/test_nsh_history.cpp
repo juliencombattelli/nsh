@@ -165,7 +165,7 @@ TEST(NshHistoryGetEntry, FailureInvalidNegativeAge)
     nsh_history_reset(&hist);
 
     char entry[NSH_LINE_BUFFER_SIZE] = {};
-    auto status = nsh_history_get_entry(&hist, UINT_MAX, entry);
+    auto status = nsh_history_get_entry(&hist, NSH_HISTORY_INVALID_ENTRY, entry);
 
     ASSERT_EQ(status, NSH_STATUS_WRONG_ARG);
 }

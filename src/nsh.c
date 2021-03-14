@@ -8,7 +8,6 @@
 #include <nsh/nsh_line_buffer.h>
 
 #include <ctype.h>
-#include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,7 +36,7 @@ int nsh_init(void)
 
 #if NSH_FEATURE_USE_HISTORY == 1
     nsh_history_reset(&nsh.history);
-    nsh.current_history_entry = UINT_MAX;
+    nsh.current_history_entry = NSH_HISTORY_INVALID_ENTRY;
 #endif
 
     nsh_register_command("help", cmd_builtin_help);
@@ -115,7 +114,7 @@ static int nsh_autocomplete(void)
 #if NSH_FEATURE_USE_HISTORY == 1
 static void nsh_display_history_entry(unsigned int age)
 {
-    if (age == UINT_MAX) {
+    if (age == NSH_HISTORY_INVALID_ENTRY) {
         nsh_io_erase_line();
         nsh_io_print_prompt();
         nsh_line_buffer_reset(&nsh.line);
@@ -213,7 +212,7 @@ static void nsh_erase_last_char(void)
 static int nsh_read_line(void)
 {
 #if NSH_FEATURE_USE_HISTORY == 1
-    nsh.current_history_entry = UINT_MAX;
+    nsh.current_history_entry = NSH_HISTORY_INVALID_ENTRY;
 #endif
 
     nsh_line_buffer_reset(&nsh.line);

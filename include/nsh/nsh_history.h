@@ -13,11 +13,14 @@
 
 #if NSH_FEATURE_USE_HISTORY == 1
 
+#include <limits.h>
 #include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define NSH_HISTORY_INVALID_ENTRY UINT_MAX
 
 typedef struct nsh_history {
     char entries[NSH_CMD_HISTORY_SIZE][NSH_LINE_BUFFER_SIZE];
