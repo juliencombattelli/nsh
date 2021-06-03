@@ -1,4 +1,6 @@
 set(NSH_GTEST_PATCH_COMMAND "")
+# TODO check gnu size availability
+set(CMAKE_SIZE "size")
 
 add_library(Nsh::Platform INTERFACE IMPORTED GLOBAL)
 
