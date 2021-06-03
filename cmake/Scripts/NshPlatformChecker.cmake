@@ -20,6 +20,7 @@ The ``nsh_check_platform`` function checks if the following targets exist:
 
 ``Nsh::Platform::GTestMain``
   Alias or imported target providing GTest main entry point built for the considered platform.
+  This program should call the testing::InitGoogleTest function and the RUN_ALL_TESTS macro.
 
 ``nsh_platform_add_executable``
   Function adding an executable to the project using the specified source files.
