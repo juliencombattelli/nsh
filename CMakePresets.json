@@ -1,0 +1,64 @@
+{
+    "version": 2,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 20,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "displayName": "Base Config",
+            "description": "Base configuration",
+            "binaryDir": "${sourceParentDir}/nsh-build/${presetName}"
+        },
+        {
+            "name": "native",
+            "inherits": "base",
+            "displayName": "Native Config",
+            "description": "Configuration for native build"
+        },
+        {
+            "name": "stm32",
+            "inherits": "base",
+            "displayName": "STM32 Base Config",
+            "description": "Base configuration for STM32 targets",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/Toolchains/Stm32Gcc.cmake"
+            }
+        },
+        {
+            "name": "stm32f411re",
+            "inherits": "stm32",
+            "displayName": "STM32F411RE Config",
+            "description": "Configuration for STM32F411RE cross-compilation",
+            "cacheVariables": {
+                "NSH_STM32_TARGET": "Stm32NucleoF411RE"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": true
+            }
+        }
+    ],
+    "vendor": {
+        "example.com/ExampleIDE/1.0": {
+            "autoFormat": false
+        }
+    }
+}
