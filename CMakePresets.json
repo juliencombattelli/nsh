@@ -1,64 +1,99 @@
 {
     "version": 2,
-    "cmakeMinimumRequired": {
-        "major": 3,
-        "minor": 20,
-        "patch": 0
-    },
     "configurePresets": [
         {
+            "hidden": true,
             "name": "base",
-            "displayName": "Base Config",
-            "description": "Base configuration",
-            "binaryDir": "${sourceParentDir}/nsh-build/${presetName}"
+            "generator": "Ninja",
+            "binaryDir": "${sourceParentDir}/nsh-build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_DIR": "${sourceParentDir}/nsh-install/${presetName}"
+            }
         },
         {
-            "name": "native",
-            "inherits": "base",
+            "hidden": true,
+            "name": "base-debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "hidden": true,
+            "name": "base-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "hidden": true,
+            "name": "base-native",
             "displayName": "Native Config",
-            "description": "Configuration for native build"
+            "description": "Configuration for native build",
+            "inherits": "base"
         },
         {
-            "name": "stm32",
-            "inherits": "base",
+            "name": "native-debug",
+            "displayName": "Debug Native Config",
+            "description": "Debug configuration for native build",
+            "inherits": [
+                "base",
+                "base-debug"
+            ]
+        },
+        {
+            "name": "native-release",
+            "displayName": "Release Native Config",
+            "description": "Release configuration for native build",
+            "inherits": [
+                "base",
+                "base-release"
+            ]
+        },
+        {
+            "hidden": true,
+            "name": "base-stm32",
             "displayName": "STM32 Base Config",
             "description": "Base configuration for STM32 targets",
+            "inherits": "base",
             "cacheVariables": {
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/Toolchains/Stm32Gcc.cmake"
             }
         },
         {
-            "name": "stm32f411re",
-            "inherits": "stm32",
+            "hidden": true,
+            "name": "base-stm32f411re",
+            "inherits": "base-stm32",
             "displayName": "STM32F411RE Config",
             "description": "Configuration for STM32F411RE cross-compilation",
             "cacheVariables": {
                 "NSH_STM32_TARGET": "Stm32NucleoF411RE"
             }
-        }
-    ],
-    "buildPresets": [
+        },
         {
-            "name": "default",
-            "configurePreset": "default"
-        }
-    ],
-    "testPresets": [
+            "name": "stm32f411re-debug",
+            "inherits": [
+                "base-stm32f411re",
+                "base-debug"
+            ],
+            "displayName": "STM32F411RE Debug Config",
+            "description": "Debug configuration for STM32F411RE cross-compilation",
+            "cacheVariables": {
+                "NSH_STM32_TARGET": "Stm32NucleoF411RE"
+            }
+        },
         {
-            "name": "default",
-            "configurePreset": "default",
-            "output": {
-                "outputOnFailure": true
-            },
-            "execution": {
-                "noTestsAction": "error",
-                "stopOnFailure": true
+            "name": "stm32f411re-release",
+            "inherits": [
+                "base-stm32f411re",
+                "base-release"
+            ],
+            "displayName": "STM32F411RE Release Config",
+            "description": "Release configuration for STM32F411RE cross-compilation",
+            "cacheVariables": {
+                "NSH_STM32_TARGET": "Stm32NucleoF411RE"
             }
         }
     ],
-    "vendor": {
-        "example.com/ExampleIDE/1.0": {
-            "autoFormat": false
-        }
-    }
+    "buildPresets": [],
+    "testPresets": []
 }
