@@ -1,10 +1,12 @@
 #include <nsh/nsh.h>
 
-#include <stdio.h>
+namespace nsh::tools {
 
-int main(void)
+int main(int /*argc*/, char* /*argv*/[])
 {
     nsh_init();
     nsh_run();
     return 0;
+}
+
 }

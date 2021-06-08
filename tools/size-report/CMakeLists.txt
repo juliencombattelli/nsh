@@ -10,10 +10,11 @@ function(nsh_add_size_report_target TARGET)
     # Add compile definitions specific to this lib
     target_compile_definitions(${TARGET}-lib PRIVATE ${ARGN})
     # Add executable with a basic main file
-    nsh_add_executable(${TARGET} main.c)
+    nsh_add_tool(${TARGET} main.cpp)
     target_link_libraries(${TARGET} PRIVATE ${TARGET}-lib)
     # Append executable binary file to the SIZE_REPORT_LIBS list
-    set(SIZE_REPORT_LIBS ${SIZE_REPORT_LIBS} $<TARGET_FILE:${TARGET}> PARENT_SCOPE)
+    list(APPEND SIZE_REPORT_LIBS $<TARGET_FILE:${TARGET}>)
+    set(SIZE_REPORT_LIBS ${SIZE_REPORT_LIBS} PARENT_SCOPE)
 endfunction()
 
 nsh_add_size_report_target(nsh_size_report_base
@@ -59,8 +60,9 @@ nsh_add_size_report_target(nsh_size_report_all_features
 )
 
 add_custom_target(nsh-size-report ALL
-    COMMAND > ${CMAKE_BINARY_DIR}/size-report.txt
-    COMMAND ${CMAKE_SIZE} --format=berkeley ${SIZE_REPORT_LIBS} | tee ${CMAKE_BINARY_DIR}/size-report.txt
-    DEPENDS ${SIZE_REPORT_LIBS}
+    COMMAND ${CMAKE_COMMAND} -DBINARY_DIR=${CMAKE_BINARY_DIR} -P GetCompileOptions.cmake
+    COMMAND ${CMAKE_SIZE} --format=berkeley ${SIZE_REPORT_LIBS}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    DEPENDS ${CMAKE_BINARY_DIR}/compile_commands.json ${SIZE_REPORT_LIBS}
     VERBATIM
 )
