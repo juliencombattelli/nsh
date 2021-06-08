@@ -70,7 +70,7 @@ if(OPENOCD_EXECUTABLE)
     RESULT_VARIABLE _openocd_version_result
   )
   if(NOT _openocd_version_result)
-    string(REGEX MATCH "^Open On-Chip Debugger ([0-9]+.[0-9]+.[0-9]+) " _openocd_version_match "${_openocd_version}")
+    string(REGEX MATCH "^Open On-Chip Debugger ([0-9]+.[0-9]+.[0-9]+)" _openocd_version_match "${_openocd_version}")
     set(OPENOCD_VERSION_STRING ${CMAKE_MATCH_1})
     string(REPLACE "." ";" _openocd_version_list "${OPENOCD_VERSION_STRING}")
     list(GET _openocd_version_list 0 OPENOCD_VERSION_MAJOR)
