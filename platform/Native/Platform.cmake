@@ -22,3 +22,4 @@ function(nsh_platform_add_test)
     add_test(${ARGV})
 endfunction()
 
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tools-main)
