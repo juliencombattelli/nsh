@@ -13,6 +13,8 @@ option(ENABLE_SIZE_REPORT "Generate a report of the binary size with and without
 # Include setup script defining and verifying the targeted platform
 include(cmake/Scripts/NshSetup.cmake)
 
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 # Interface library with all general compiler flags (include dirs, options, etc)
 # Defined mainly to allow compilation of multiple Nsh libs with different flags (see tools/size-report)
 add_library(nsh-interface INTERFACE)
@@ -23,7 +25,7 @@ target_include_directories(nsh-interface
 )
 target_compile_features(nsh-interface
     INTERFACE
-        c_restrict
+        c_std_11
 )
 
 # Main library with sources and platform specific options
