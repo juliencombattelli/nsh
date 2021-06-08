@@ -57,11 +57,12 @@ if(ENABLE_TESTS)
 endif()
 
 if(ENABLE_SIZE_REPORT)
-    if(UNIX)
+    if(CMAKE_HOST_UNIX AND
+        (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang"))
         add_subdirectory(tools/size-report)
     else()
         message(WARNING
-            " Size report requested but usable only on Unix-like platforms.\n"
+            " Size report requested but usable only on Unix-like platforms with GCC or Clang.\n"
             " Size report generation will be disabled."
         )
     endif()
