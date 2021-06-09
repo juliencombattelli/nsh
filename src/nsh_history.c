@@ -7,9 +7,10 @@
 
 #include <nsh/nsh_config.h>
 
+#include <nsh/nsh_common_defs.h>
+
 #if NSH_FEATURE_USE_HISTORY == 1
 
-#include <nsh/nsh_common_defs.h>
 #include <nsh/nsh_history.h>
 #include <string.h>
 
