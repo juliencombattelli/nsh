@@ -16,6 +16,12 @@ cmake_minimum_required(VERSION 3.19)
 file(REAL_PATH main.cpp report_size_main)
 
 # TODO Check if compile_commands exists
+if(NOT EXISTS ${BINARY_DIR}/compile_commands.json)
+    message(FATAL_ERROR
+        " ${BINARY_DIR}/compile_commands.json does not exist.\n"
+        " Ensure the project has been configured and CMAKE_EXPORT_COMPILE_COMMANDS enabled."
+    )
+endif()
 
 # Read the compile_commands.json file
 file(READ ${BINARY_DIR}/compile_commands.json compile_commands_json)
