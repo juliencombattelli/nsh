@@ -57,12 +57,18 @@ if(ENABLE_TESTS)
 endif()
 
 if(ENABLE_SIZE_REPORT)
-    if(CMAKE_HOST_UNIX AND
-        (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang"))
+    if(
+        (CMAKE_HOST_UNIX)
+            AND
+        (CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID MATCHES "Clang")
+            AND
+        (CMAKE_GENERATOR MATCHES "Makefile" OR CMAKE_GENERATOR MATCHES "Ninja")
+    )
         add_subdirectory(tools/size-report)
     else()
         message(WARNING
-            " Size report requested but usable only on Unix-like platforms with GCC or Clang.\n"
+            " Size report requested but usable only on Unix-like platforms with GCC or Clang,\n"
+            "   when Ninja or a Makefile generator are used.\n"
             " Size report generation will be disabled."
         )
     endif()
