@@ -11,13 +11,6 @@ if (NOT CMAKE_CROSSCOMPILING)
     nsh_set_platform(Native)
 endif()
 
-# Include platform file
-include(${CMAKE_CURRENT_LIST_DIR}/../../platform/${NSH_PLATFORM_NAME}/Platform.cmake)
-
-# Check if the selected platform is valid
-include(${CMAKE_CURRENT_LIST_DIR}/NshPlatformChecker.cmake)
-nsh_check_platform(${NSH_PLATFORM_NAME})
-
 # Include additional modules
 include(Sanitizers)
 include(StaticAnalyzers)
@@ -50,3 +43,10 @@ function(nsh_add_tool TARGET)
     target_compile_features(${TARGET} PRIVATE cxx_std_17)
     target_link_libraries(${TARGET} PRIVATE Nsh::Platform::ToolsMain)
 endfunction()
+
+# Include platform file
+include(${CMAKE_CURRENT_LIST_DIR}/../../platform/${NSH_PLATFORM_NAME}/Platform.cmake)
+
+# Check if the selected platform is valid
+include(${CMAKE_CURRENT_LIST_DIR}/NshPlatformChecker.cmake)
+nsh_check_platform(${NSH_PLATFORM_NAME})
