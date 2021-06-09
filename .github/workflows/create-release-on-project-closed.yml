@@ -22,7 +22,7 @@ jobs:
           tag_name: ${{ steps.release_name_extracting.outputs.release_name }}
           release_name: Release ${{ steps.release_name_extracting.outputs.release_name }}
           body: |
-            Changes in this Release
+            Minor release of nsh focused on 
             - First Change
             - Second Change
           draft: true
