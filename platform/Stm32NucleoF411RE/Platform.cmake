@@ -105,3 +105,4 @@ target_link_libraries(Nsh::Platform::GTest
 stm32_target_flash_file(${PROJECT_SOURCE_DIR}/bin/Nucleo_blink_led.NUCLEO_F411RE.bin)
 
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/gtestmain)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tools-main)

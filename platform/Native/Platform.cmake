@@ -1,4 +1,6 @@
 set(NSH_GTEST_PATCH_COMMAND "")
+# TODO check gnu size availability
+set(CMAKE_SIZE "size")
 
 add_library(Nsh::Platform INTERFACE IMPORTED GLOBAL)
 
@@ -20,3 +22,4 @@ function(nsh_platform_add_test)
     add_test(${ARGV})
 endfunction()
 
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/tools-main)

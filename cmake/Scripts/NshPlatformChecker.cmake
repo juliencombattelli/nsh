@@ -15,6 +15,10 @@ The ``nsh_check_platform`` function checks if the following targets exist:
   Alias or imported target providing all compile options, link options, and library 
   dependencies every executable and library must use to be built for the considered platform.
 
+``Nsh::Platform::ToolsMain``
+  Alias or imported target providing a main entry point built for the considered platform.
+  This program usually performs all initializations required to run a tool on that platform.
+
 ``Nsh::Platform::GTest``
   Alias or imported target providing GTest and GMock library built for the considered platform.
 
@@ -91,6 +95,7 @@ function(nsh_check_platform)
         _nsh_assert_variable_exists(NSH_GTEST_PATCH_COMMAND)
     endif()
     _nsh_assert_target_exists(Nsh::Platform)
+    _nsh_assert_target_exists(Nsh::Platform::ToolsMain)
     if(ENABLE_TESTS)
         _nsh_assert_target_exists(Nsh::Platform::GTest)
         _nsh_assert_target_exists(Nsh::Platform::GTestMain)

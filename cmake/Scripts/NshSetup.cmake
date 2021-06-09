@@ -43,3 +43,10 @@ endfunction()
 function(nsh_add_test)
     nsh_platform_add_test(${ARGV})
 endfunction()
+
+# Define Nsh wrapper to add a platform-agnostic tool
+function(nsh_add_tool TARGET)
+    nsh_add_executable(${TARGET} ${ARGN})
+    target_compile_features(${TARGET} PRIVATE cxx_std_17)
+    target_link_libraries(${TARGET} PRIVATE Nsh::Platform::ToolsMain)
+endfunction()
