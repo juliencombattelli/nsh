@@ -5,8 +5,11 @@ function(nsh_add_size_report_target TARGET)
     # Duplicate nsh lib by creating a new one, getting sources from main nsh lib and linking to nsh-interface
     nsh_add_library(${TARGET}-lib STATIC)
     get_target_property(nsh_sources Nsh::Nsh SOURCES)
+    get_target_property(nsh_include_dirs Nsh::Nsh INCLUDE_DIRECTORIES)
+    get_target_property(nsh_compile_features Nsh::Nsh COMPILE_FEATURES)
     target_sources(${TARGET}-lib PRIVATE ${nsh_sources})
-    target_link_libraries(${TARGET}-lib PUBLIC nsh-interface)
+    target_include_directories(${TARGET}-lib PUBLIC ${nsh_include_dirs})
+    target_compile_features(${TARGET}-lib PUBLIC ${nsh_compile_features})
     # Add compile definitions specific to this lib
     target_compile_definitions(${TARGET}-lib PRIVATE ${ARGN})
     # Add executable with a basic main file
