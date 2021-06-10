@@ -327,11 +327,14 @@ void nsh_run(nsh_t* nsh)
     // Local storage for command line after spliting
     char args[NSH_CMD_ARGS_MAX_COUNT][NSH_MAX_STRING_SIZE];
 
-    // Array of pointers that point to the string contained by 'args'
-    // In C/C++, an array decays to a pointer in most circumstances,
-    // but this isn't recursive. So a T[] decays to a T*, but a T[][]
-    // doesn't decay to a T**. Then we are forced to add an extra step:
-    // char[][] -> char*[] -> char**
+    /*
+     * Array of pointers that points to the string contained by 'args'.
+     *
+     * In C/C++, an array decays to a pointer in most circumstances,
+     * but this isn't recursive. So a T[] decays to a T*, but a T[][]
+     * doesn't decay to a T**. Therefore we are forced to add an extra
+     * step: char[][] -> char*[] -> char**
+     */
     char* argv[NSH_CMD_ARGS_MAX_COUNT] = { NULL };
 
     while (true) {
