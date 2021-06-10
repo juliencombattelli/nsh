@@ -39,7 +39,7 @@ static int nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv)
     }
 
     // Find matching command
-    const nsh_cmd_t* matching_cmd = nsh_cmd_array_find(&nsh.cmds, argv[0]);
+    const nsh_cmd_t* matching_cmd = nsh_cmd_array_find(&nsh->cmds, argv[0]);
 
     if (!matching_cmd) {
         // If there is no match, return an error
