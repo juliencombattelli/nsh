@@ -74,4 +74,4 @@ typedef enum nsh_status {
 }
 #endif
 
-#endif /* NSH_COMMON_DEFS_H_ */
+#endif // NSH_COMMON_DEFS_H_

@@ -13,4 +13,4 @@ int cmd_builtin_exit(unsigned int argc, char** argv);
 }
 #endif
 
-#endif /* NSH_CMD_BUILTINS_H_ */
+#endif // NSH_CMD_BUILTINS_H_

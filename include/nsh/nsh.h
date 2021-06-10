@@ -32,4 +32,4 @@ void nsh_run(void);
 }
 #endif
 
-#endif /* NSH_H_ */
+#endif // NSH_H_

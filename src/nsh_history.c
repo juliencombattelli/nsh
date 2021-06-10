@@ -59,4 +59,4 @@ int nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry)
     return NSH_STATUS_OK;
 }
 
-#endif /* NSH_FEATURE_USE_HISTORY == 1 */
+#endif // NSH_FEATURE_USE_HISTORY == 1

@@ -113,4 +113,4 @@
 #undef NSH_CMD_HISTORY_SIZE
 #endif
 
-#endif /* NSH_CONFIG_H_ */
+#endif // NSH_CONFIG_H_

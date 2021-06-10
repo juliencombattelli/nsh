@@ -28,4 +28,4 @@ int nsh_cmd_array_register(nsh_cmd_array_t* cmds, const char* name, nsh_cmd_hand
 }
 #endif
 
-#endif /* NSH_CMD_ARRAY_H_ */
+#endif // NSH_CMD_ARRAY_H_

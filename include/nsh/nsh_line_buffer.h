@@ -31,4 +31,4 @@ bool nsh_line_buffer_is_empty(nsh_line_buffer_t* linebuf) NSH_NON_NULL(1);
 }
 #endif
 
-#endif /* NSH_LINE_BUFFER_H_ */
+#endif // NSH_LINE_BUFFER_H_

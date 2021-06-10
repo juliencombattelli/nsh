@@ -38,6 +38,6 @@ int nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry) NS
 }
 #endif
 
-#endif /* NSH_FEATURE_USE_HISTORY == 1 */
+#endif // NSH_FEATURE_USE_HISTORY == 1
 
-#endif /* NSH_HISTORY_H_ */
+#endif // NSH_HISTORY_H_

@@ -27,4 +27,4 @@ void nsh_cmd_swap(nsh_cmd_t* cmd1, nsh_cmd_t* cmd2) NSH_NON_NULL(1, 2);
 }
 #endif
 
-#endif /* NSH_CMD_H_ */
+#endif // NSH_CMD_H_
