@@ -1,3 +1,4 @@
+#include <nsh/nsh_common_defs.h>
 #include <nsh/nsh_config.h>
 #include <nsh/nsh_io_plugin_default.h>
 #include <nsh/nsh_io_plugin_default_impl.h>
@@ -86,7 +87,7 @@ void nsh_io_erase_line(void)
 
 #if NSH_FEATURE_USE_PRINTF == 1
 #include <stdarg.h>
-int nsh_io_printf(const char* restrict format, ...)
+int nsh_io_printf(const char* NSH_RESTRICT format, ...)
 {
     va_list args;
     va_start(args, format);

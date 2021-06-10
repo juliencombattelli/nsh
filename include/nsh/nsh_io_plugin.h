@@ -16,7 +16,7 @@ typedef void nsh_io_print_prompt_t(void);
 typedef void nsh_io_erase_last_char_t(void);
 typedef void nsh_io_erase_line_t(void);
 #if NSH_FEATURE_USE_PRINTF == 1
-typedef int nsh_io_printf_t(const char* restrict format, ...);
+typedef int nsh_io_printf_t(const char* NSH_RESTRICT format, ...);
 #endif
 
 typedef struct nsh_io_plugin {

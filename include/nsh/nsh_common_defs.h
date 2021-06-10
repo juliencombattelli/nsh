@@ -37,6 +37,27 @@
 #define NON_NULL(...)
 #endif
 
+/**
+ * @def NSH_RESTRICT
+ * @brief Portable restrict keyword for both C and C++.
+ * 
+ * This macro allows the usage of restrict keyword when nsh is compiled as C, and
+ * the usage of corresponding compilers extension when compiled as C++.
+ * If a compiler does not provide an alternative restrict keyword for C++, this
+ * macro expands to nothing.
+ */
+#ifdef __cplusplus
+#if defined(__GNUC__) || defined(__GNUG__) || defined(__clang__)
+#define NSH_RESTRICT __restrict__
+#elif defined(_MSC_VER)
+#define NSH_RESTRICT __restrict
+#else
+#define NSH_RESTRICT /* empty */
+#endif
+#else
+#define NSH_RESTRICT restrict
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
