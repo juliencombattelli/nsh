@@ -8,6 +8,12 @@
 #ifndef NSH_COMMON_DEFS_H_
 #define NSH_COMMON_DEFS_H_
 
+/**
+ * @def NSH_UNUSED(<var-name>)
+ * @brief Indicates that <var-name> is unused in the current scope.
+ * 
+ * This macro is used to prevent some compiler warnings about unused variables.
+ */
 #define NSH_UNUSED(var) ((void)var)
 
 /** 
