@@ -1,10 +1,3 @@
-/*
- * nsh_history.c
- *
- *  Created on: May 10, 2018
- *      Author: jucom
- */
-
 #include <nsh/nsh_config.h>
 
 #include <nsh/nsh_common_defs.h>
@@ -49,7 +42,7 @@ void nsh_history_add_entry(nsh_history_t* hist, const char* entry)
     }
 }
 
-int nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry)
+nsh_status_t nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry)
 {
     if (age >= nsh_history_entry_count(hist)) {
         return NSH_STATUS_WRONG_ARG;
@@ -66,4 +59,4 @@ int nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry)
     return NSH_STATUS_OK;
 }
 
-#endif /* NSH_FEATURE_USE_HISTORY == 1 */
+#endif // NSH_FEATURE_USE_HISTORY == 1

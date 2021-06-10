@@ -15,30 +15,27 @@ include(cmake/Scripts/NshSetup.cmake)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Interface library with all general compiler flags (include dirs, options, etc)
-# Defined mainly to allow compilation of multiple Nsh libs with different flags (see tools/size-report)
-add_library(nsh-interface INTERFACE)
-target_include_directories(nsh-interface
-    INTERFACE
-        $<INSTALL_INTERFACE:include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
-)
-target_compile_features(nsh-interface
-    INTERFACE
-        c_std_11
-)
-
 # Main library with sources and platform specific options
 nsh_add_library(nsh
     ${CMAKE_CURRENT_LIST_DIR}/src/nsh.c
     ${CMAKE_CURRENT_LIST_DIR}/src/nsh_cmd.c
     ${CMAKE_CURRENT_LIST_DIR}/src/nsh_cmd_array.c
-    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_io.c
     ${CMAKE_CURRENT_LIST_DIR}/src/nsh_cmd_builtins.c
     ${CMAKE_CURRENT_LIST_DIR}/src/nsh_history.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_io_plugin_default.c
     ${CMAKE_CURRENT_LIST_DIR}/src/nsh_line_buffer.c
 )
-target_link_libraries(nsh PUBLIC nsh-interface)
+target_include_directories(nsh
+    PUBLIC
+        $<INSTALL_INTERFACE:include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
+    PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/src/include
+)
+target_compile_features(nsh
+    PUBLIC
+        c_std_11
+)
 
 add_library(Nsh::Nsh ALIAS nsh)
 

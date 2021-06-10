@@ -1,10 +1,3 @@
-/*
- * nsh_config.h
- *
- *  Created on: May 10, 2018
- *      Author: jucom
- */
-
 #ifndef NSH_CONFIG_H_
 #define NSH_CONFIG_H_
 
@@ -42,7 +35,7 @@
 /*
  * Maximum number of arguments you can write in a command line.
  * An argument is anything between whitespaces, ie "cmd arg1 arg2=true"
- * contains three arguments: "cmd", "arg1", and "arg2=true"
+ * contains three arguments: "cmd", "arg1", and "arg2=true".
  * If you reach this number, the argument line split function will return with
  * the status NSH_STATUS_MAX_ARGS_NB_REACH.
  */
@@ -92,7 +85,7 @@
 #endif
 
 /*
- * Allow command return code printing (for debug purpose)
+ * Allow command return code printing (for debug purpose).
  * Require: NSH_FEATURE_USE_PRINTF == 1
  */
 #ifndef NSH_FEATURE_USE_RETURN_CODE_PRINTING
@@ -114,10 +107,10 @@
 
 /*
  * Undef NSH_CMD_HISTORY_SIZE if NSH_FEATURE_USE_HISTORY == 0,
- * this symbol should not be used if the history is not used
+ * this symbol should not be used if the history is not used.
  */
 #if NSH_FEATURE_USE_HISTORY == 0
 #undef NSH_CMD_HISTORY_SIZE
 #endif
 
-#endif /* NSH_CONFIG_H_ */
+#endif // NSH_CONFIG_H_

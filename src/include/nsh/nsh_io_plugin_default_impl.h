@@ -1,5 +1,5 @@
-#ifndef NSH_IO_H_
-#define NSH_IO_H_
+#ifndef NSH_IO_PLUGIN_DEFAULT_IMPL_H_
+#define NSH_IO_PLUGIN_DEFAULT_IMPL_H_
 
 #include <nsh/nsh_config.h>
 
@@ -24,11 +24,11 @@ void nsh_io_erase_last_char(void);
 void nsh_io_erase_line(void);
 
 #if NSH_FEATURE_USE_PRINTF == 1
-int nsh_io_printf(const char* restrict format, ...);
-#endif /* NSH_FEATURE_USE_PRINTF == 1 */
+int nsh_io_printf(const char* NSH_RESTRICT format, ...);
+#endif
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* NSH_IO_H_ */
+#endif // NSH_IO_PLUGIN_DEFAULT_IMPL_H_
