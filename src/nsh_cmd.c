@@ -2,13 +2,13 @@
 
 #include <string.h>
 
-int nsh_cmd_init_empty(nsh_cmd_t* cmd)
+nsh_status_t nsh_cmd_init_empty(nsh_cmd_t* cmd)
 {
     memset(cmd, 0, sizeof(nsh_cmd_t));
     return NSH_STATUS_OK;
 }
 
-int nsh_cmd_init(nsh_cmd_t* cmd, const char* name, nsh_cmd_handler_t* handler)
+nsh_status_t nsh_cmd_init(nsh_cmd_t* cmd, const char* name, nsh_cmd_handler_t* handler)
 {
     size_t name_len = strlen(name);
     if (name_len == 0 || name_len > NSH_MAX_STRING_SIZE) {

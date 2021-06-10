@@ -17,7 +17,7 @@ typedef struct nsh_line_buffer {
 
 void nsh_line_buffer_reset(nsh_line_buffer_t* linebuf) NSH_NON_NULL(1);
 
-int nsh_line_buffer_append_char(nsh_line_buffer_t* linebuf, char c) NSH_NON_NULL(1);
+nsh_status_t nsh_line_buffer_append_char(nsh_line_buffer_t* linebuf, char c) NSH_NON_NULL(1);
 
 void nsh_line_buffer_append_null(nsh_line_buffer_t* linebuf) NSH_NON_NULL(1);
 

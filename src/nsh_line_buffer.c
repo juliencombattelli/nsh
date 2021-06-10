@@ -8,7 +8,7 @@ void nsh_line_buffer_reset(nsh_line_buffer_t* linebuf)
     linebuf->buffer[0] = '\0';
 }
 
-int nsh_line_buffer_append_char(nsh_line_buffer_t* linebuf, char c)
+nsh_status_t nsh_line_buffer_append_char(nsh_line_buffer_t* linebuf, char c)
 {
     if (nsh_line_buffer_is_full(linebuf)) {
         return NSH_STATUS_BUFFER_OVERFLOW;

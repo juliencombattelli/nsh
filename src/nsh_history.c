@@ -42,7 +42,7 @@ void nsh_history_add_entry(nsh_history_t* hist, const char* entry)
     }
 }
 
-int nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry)
+nsh_status_t nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry)
 {
     if (age >= nsh_history_entry_count(hist)) {
         return NSH_STATUS_WRONG_ARG;

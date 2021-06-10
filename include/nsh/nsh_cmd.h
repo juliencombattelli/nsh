@@ -15,9 +15,9 @@ typedef struct nsh_cmd {
     char name[NSH_MAX_STRING_SIZE];
 } nsh_cmd_t;
 
-int nsh_cmd_init_empty(nsh_cmd_t* cmd) NSH_NON_NULL(1);
+nsh_status_t nsh_cmd_init_empty(nsh_cmd_t* cmd) NSH_NON_NULL(1);
 
-int nsh_cmd_init(nsh_cmd_t* cmd, const char* name, nsh_cmd_handler_t* handler) NSH_NON_NULL(1, 2);
+nsh_status_t nsh_cmd_init(nsh_cmd_t* cmd, const char* name, nsh_cmd_handler_t* handler) NSH_NON_NULL(1, 2);
 
 void nsh_cmd_copy(nsh_cmd_t* dst, const nsh_cmd_t* src) NSH_NON_NULL(1, 2);
 

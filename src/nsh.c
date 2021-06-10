@@ -31,7 +31,7 @@ nsh_t nsh_init(nsh_io_plugin_t io, nsh_status_t* status)
     return nsh;
 }
 
-static int nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv)
+static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv, int* ret)
 {
     if (argv[0] == NULL || argv[0][0] == '\0') {
         // An empty command was entered.
@@ -51,14 +51,14 @@ static int nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv)
     }
 
     // Execute matching command
-    int ret = matching_cmd->handler(argc, argv);
+    *ret = matching_cmd->handler(argc, argv);
 #if NSH_FEATURE_USE_RETURN_CODE_PRINTING == 1
-    nsh->io.printf("command '%s' return %d\r\n", argv[0], ret);
+    nsh->io.printf("command '%s' return %d\r\n", argv[0], *ret);
 #endif
-    return ret;
+    return NSH_STATUS_OK;
 }
 
-static int nsh_autocomplete(const nsh_t* nsh)
+static nsh_status_t nsh_autocomplete(const nsh_t* nsh)
 {
 #if NSH_FEATURE_USE_AUTOCOMPLETION == 0
     NSH_UNUSED(nsh);
@@ -106,7 +106,7 @@ static void nsh_display_history_entry(nsh_t* nsh)
         nsh->io.print_prompt();
         nsh_line_buffer_reset(&nsh->line);
     } else {
-        int status = nsh_history_get_entry(&nsh->history, nsh->current_history_entry, nsh->line.buffer);
+        nsh_status_t status = nsh_history_get_entry(&nsh->history, nsh->current_history_entry, nsh->line.buffer);
         if (status == NSH_STATUS_OK) {
             nsh->io.erase_line();
             nsh->io.print_prompt();
@@ -117,7 +117,7 @@ static void nsh_display_history_entry(nsh_t* nsh)
 }
 #endif
 
-static int nsh_display_previous_entry(nsh_t* nsh)
+static nsh_status_t nsh_display_previous_entry(nsh_t* nsh)
 {
 #if NSH_FEATURE_USE_HISTORY == 0
     NSH_UNUSED(nsh);
@@ -135,7 +135,7 @@ static int nsh_display_previous_entry(nsh_t* nsh)
 #endif
 }
 
-static int nsh_display_next_entry(nsh_t* nsh)
+static nsh_status_t nsh_display_next_entry(nsh_t* nsh)
 {
 #if NSH_FEATURE_USE_HISTORY == 0
     NSH_UNUSED(nsh);
@@ -151,7 +151,7 @@ static int nsh_display_next_entry(nsh_t* nsh)
 #endif
 }
 
-static int nsh_handle_escape_sequence(nsh_t* nsh)
+static nsh_status_t nsh_handle_escape_sequence(nsh_t* nsh)
 {
     // Only VT100 escape sequences with the form "\e[<code>" are supported
 
@@ -198,7 +198,7 @@ static void nsh_erase_last_char(nsh_t* nsh)
     }
 }
 
-static int nsh_read_line(nsh_t* nsh)
+static nsh_status_t nsh_read_line(nsh_t* nsh)
 {
 #if NSH_FEATURE_USE_HISTORY == 1
     nsh->current_history_entry = NSH_HISTORY_INVALID_ENTRY;
@@ -279,7 +279,7 @@ static int nsh_split_command_line(const char* str, char sep, char output[][NSH_M
     return nsh_copy_token(&str[beg], output, token_count, input_size - beg);
 }
 
-int nsh_register_command(nsh_t* nsh, const char* name, nsh_cmd_handler_t* handler)
+nsh_status_t nsh_register_command(nsh_t* nsh, const char* name, nsh_cmd_handler_t* handler)
 {
     return nsh_cmd_array_register(&nsh->cmds, name, handler);
 }
@@ -318,12 +318,13 @@ void nsh_run(nsh_t* nsh)
             }
 
             // Execute the command with 'argc' number of argument stored in 'argv'
-            int cmd_result = nsh_execute(nsh, argc, argv);
-            if (cmd_result == NSH_STATUS_CMD_NOT_FOUND) {
+            int cmd_result = 0;
+            nsh_status_t cmd_status = nsh_execute(nsh, argc, argv, &cmd_result); // cmd_result is ignored for now
+            if (cmd_status == NSH_STATUS_CMD_NOT_FOUND) {
                 nsh->io.put_string("ERROR: command '");
                 nsh->io.put_string(argv[0]);
                 nsh->io.put_string("' not found\r\n");
-            } else if (cmd_result == NSH_STATUS_QUIT) {
+            } else if (cmd_status == NSH_STATUS_QUIT) {
                 break;
             }
         }

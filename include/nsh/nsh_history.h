@@ -32,7 +32,7 @@ bool nsh_history_is_empty(const nsh_history_t* hist) NSH_NON_NULL(1);
 
 void nsh_history_add_entry(nsh_history_t* hist, const char* entry) NSH_NON_NULL(1, 2);
 
-int nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry) NSH_NON_NULL(1, 3);
+nsh_status_t nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry) NSH_NON_NULL(1, 3);
 
 #ifdef __cplusplus
 }

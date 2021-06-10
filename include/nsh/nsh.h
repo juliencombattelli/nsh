@@ -24,7 +24,7 @@ typedef struct nsh_s {
 
 nsh_t nsh_init(nsh_io_plugin_t io, nsh_status_t* status) NSH_NON_NULL(2);
 
-int nsh_register_command(nsh_t* nsh, const char* name, nsh_cmd_handler_t* handler);
+nsh_status_t nsh_register_command(nsh_t* nsh, const char* name, nsh_cmd_handler_t* handler);
 
 void nsh_run(nsh_t* nsh);
 

@@ -2,13 +2,13 @@
 
 #include <string.h>
 
-int nsh_cmd_array_init(nsh_cmd_array_t* cmds)
+nsh_status_t nsh_cmd_array_init(nsh_cmd_array_t* cmds)
 {
     memset(cmds, 0, sizeof(nsh_cmd_array_t));
     return NSH_STATUS_OK;
 }
 
-int nsh_cmd_array_lexicographic_sort(nsh_cmd_array_t* cmds)
+nsh_status_t nsh_cmd_array_lexicographic_sort(nsh_cmd_array_t* cmds)
 {
     for (unsigned int i = 0; i < cmds->count - 1; ++i) {
         for (unsigned int j = i + 1; j < cmds->count; ++j) {
@@ -35,7 +35,7 @@ const nsh_cmd_t* nsh_cmd_array_find(const nsh_cmd_array_t* cmds, const char* nam
     return nsh_cmd_array_find_matching(cmds, name, (unsigned int)strlen(name));
 }
 
-int nsh_cmd_array_register(nsh_cmd_array_t* cmds, const char* name, nsh_cmd_handler_t* handler)
+nsh_status_t nsh_cmd_array_register(nsh_cmd_array_t* cmds, const char* name, nsh_cmd_handler_t* handler)
 {
     if (cmds->count >= NSH_CMD_MAX_COUNT) {
         // If we have reached the max cmd count, ignore all registration request
