@@ -20,16 +20,16 @@ typedef int nsh_io_printf_t(const char* NSH_RESTRICT format, ...);
 #endif
 
 typedef struct nsh_io_plugin {
-    nsh_io_get_char_t* get_char;
-    nsh_io_put_char_t* put_char;
-    nsh_io_put_newline_t* put_newline;
-    nsh_io_put_string_t* put_string;
-    nsh_io_put_buffer_t* put_buffer;
-    nsh_io_print_prompt_t* print_prompt;
-    nsh_io_erase_last_char_t* erase_last_char;
-    nsh_io_erase_line_t* erase_line;
+    nsh_io_get_char_t* const get_char;
+    nsh_io_put_char_t* const put_char;
+    nsh_io_put_newline_t* const put_newline;
+    nsh_io_put_string_t* const put_string;
+    nsh_io_put_buffer_t* const put_buffer;
+    nsh_io_print_prompt_t* const print_prompt;
+    nsh_io_erase_last_char_t* const erase_last_char;
+    nsh_io_erase_line_t* const erase_line;
 #if NSH_FEATURE_USE_PRINTF == 1
-    nsh_io_printf_t* printf;
+    nsh_io_printf_t* const printf;
 #endif
 } nsh_io_plugin_t;
 
