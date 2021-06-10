@@ -1,31 +1,12 @@
 #include <nsh/nsh.h>
-#include <nsh/nsh_cmd.h>
-#include <nsh/nsh_cmd_array.h>
 #include <nsh/nsh_cmd_builtins.h>
 #include <nsh/nsh_common_defs.h>
-#include <nsh/nsh_history.h>
-#include <nsh/nsh_io_plugin.h>
 #include <nsh/nsh_io_plugin_default.h>
-#include <nsh/nsh_line_buffer.h>
 
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-
-///////////////////////////////////////////////////////////////////////////////
-//// Shell structure/instance declaration
-///////////////////////////////////////////////////////////////////////////////
-
-typedef struct nsh {
-    nsh_io_plugin_t io;
-    nsh_line_buffer_t line;
-    nsh_cmd_array_t cmds;
-#if NSH_FEATURE_USE_HISTORY == 1
-    nsh_history_t history;
-    unsigned int current_history_entry;
-#endif
-} nsh_t;
 
 static nsh_t nsh;
 
