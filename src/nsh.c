@@ -16,8 +16,8 @@ static nsh_status_t nsh_split_command_line(const char* str, char sep, char outpu
     unsigned int* token_count)
     NSH_NON_NULL(1, 3, 4);
 
-static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv, int* ret)
-    NSH_NON_NULL(1, 4);
+static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv)
+    NSH_NON_NULL(1);
 
 static nsh_status_t nsh_autocomplete(const nsh_t* nsh)
     NSH_NON_NULL(1);
@@ -88,7 +88,7 @@ static nsh_status_t nsh_split_command_line(const char* str, char sep, char outpu
     return nsh_copy_token(&str[beg], output, token_count, input_size - beg);
 }
 
-static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv, int* ret)
+static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv)
 {
     if (argv[0] == NULL || argv[0][0] == '\0') {
         // An empty command was entered.
@@ -108,11 +108,11 @@ static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv
     }
 
     // Execute matching command
-    *ret = matching_cmd->handler(argc, argv);
+    nsh_status_t status = matching_cmd->handler(argc, argv);
 #if NSH_FEATURE_USE_RETURN_CODE_PRINTING == 1
-    nsh->io.printf("command '%s' return %d\r\n", argv[0], *ret);
+    nsh->io.printf("command '%s' return %d\r\n", argv[0], status);
 #endif
-    return NSH_STATUS_OK;
+    return status;
 }
 
 static nsh_status_t nsh_autocomplete(const nsh_t* nsh)
@@ -359,8 +359,7 @@ void nsh_run(nsh_t* nsh)
             }
 
             // Execute the command with 'argc' number of argument stored in 'argv'
-            int cmd_result = 0;
-            nsh_status_t cmd_status = nsh_execute(nsh, argc, argv, &cmd_result); // cmd_result is ignored for now
+            nsh_status_t cmd_status = nsh_execute(nsh, argc, argv);
             if (cmd_status == NSH_STATUS_CMD_NOT_FOUND) {
                 nsh->io.put_string("ERROR: command '");
                 nsh->io.put_string(argv[0]);

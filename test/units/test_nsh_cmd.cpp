@@ -6,9 +6,9 @@
 using testing::ElementsAreArray;
 
 static constexpr const char cmd_test_name[NSH_MAX_STRING_SIZE] = "test";
-static int cmd_test_handler(unsigned int, char**)
+static nsh_status_t cmd_test_handler(unsigned int, char**)
 {
-    return 0;
+    return NSH_STATUS_OK;
 }
 
 TEST(NshCmdInitEmpty, Success)

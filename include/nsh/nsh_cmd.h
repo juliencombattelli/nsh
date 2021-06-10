@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-typedef int nsh_cmd_handler_t(unsigned int, char**);
+typedef nsh_status_t nsh_cmd_handler_t(unsigned int, char**);
 
 typedef struct nsh_cmd {
     nsh_cmd_handler_t* handler;
