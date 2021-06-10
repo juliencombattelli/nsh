@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(NshSTM32GTestMain LANGUAGES C CXX ASM)
 
 nsh_add_library(stm32-gtest-main STATIC
-    main.cpp
+    gtest-main.cpp
 )
 target_compile_features(stm32-gtest-main
     PRIVATE

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(NshSTM32ToolsMain LANGUAGES C CXX ASM)
 
 nsh_platform_add_library(tools-main STATIC
-    main.cpp
+    tools-main.cpp
 )
 target_compile_features(tools-main
     PRIVATE
