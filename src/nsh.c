@@ -8,27 +8,84 @@
 #include <stdlib.h>
 #include <string.h>
 
-nsh_t nsh_init(nsh_io_plugin_t io, nsh_status_t* status)
-{
-    nsh_t nsh = {
-        .io = io
-    };
+static nsh_status_t nsh_copy_token(const char* str, char output[][NSH_MAX_STRING_SIZE], unsigned int* token_count,
+    unsigned int token_size)
+    NSH_NON_NULL(1, 2, 3);
 
-    nsh_cmd_array_init(&nsh.cmds);
+static nsh_status_t nsh_split_command_line(const char* str, char sep, char output[][NSH_MAX_STRING_SIZE],
+    unsigned int* token_count)
+    NSH_NON_NULL(1, 3, 4);
 
-    nsh_line_buffer_reset(&nsh.line);
+static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv, int* ret)
+    NSH_NON_NULL(1, 4);
+
+static nsh_status_t nsh_autocomplete(const nsh_t* nsh)
+    NSH_NON_NULL(1);
 
 #if NSH_FEATURE_USE_HISTORY == 1
-    nsh_history_reset(&nsh.history);
-    nsh.current_history_entry = NSH_HISTORY_INVALID_ENTRY;
+static void nsh_display_history_entry(nsh_t* nsh)
+    NSH_NON_NULL(1);
 #endif
 
-    nsh_register_command(&nsh, "help", cmd_builtin_help);
-    nsh_register_command(&nsh, "exit", cmd_builtin_exit);
+static nsh_status_t nsh_display_previous_entry(nsh_t* nsh)
+    NSH_NON_NULL(1);
 
-    *status = NSH_STATUS_OK;
+static nsh_status_t nsh_display_next_entry(nsh_t* nsh)
+    NSH_NON_NULL(1);
 
-    return nsh;
+static nsh_status_t nsh_handle_escape_sequence(nsh_t* nsh)
+    NSH_NON_NULL(1);
+
+static void nsh_validate_entry(nsh_t* nsh)
+    NSH_NON_NULL(1);
+
+static void nsh_erase_last_char(nsh_t* nsh)
+    NSH_NON_NULL(1);
+
+static nsh_status_t nsh_read_line(nsh_t* nsh)
+    NSH_NON_NULL(1);
+
+static nsh_status_t nsh_copy_token(const char* str, char output[][NSH_MAX_STRING_SIZE], unsigned int* token_count,
+    unsigned int token_size)
+{
+    if (token_size > NSH_MAX_STRING_SIZE - 1) // Keep one char for '\0'
+    {
+        //nsh->io.put_string("WARNING: too long argument\r\n");
+        return NSH_STATUS_BUFFER_OVERFLOW;
+    }
+    memcpy(output[*token_count], str, token_size);
+    output[*token_count][token_size] = '\0';
+    (*token_count)++;
+    if (*token_count >= NSH_CMD_ARGS_MAX_COUNT) {
+        //nsh->io.put_string("WARNING: too many arguments\r\n");
+        return NSH_STATUS_MAX_ARGS_NB_REACH;
+    }
+    return NSH_STATUS_OK;
+}
+
+static nsh_status_t nsh_split_command_line(const char* str, char sep, char output[][NSH_MAX_STRING_SIZE],
+    unsigned int* token_count)
+{
+    unsigned int beg = 0;
+    unsigned int end = 0;
+    unsigned int input_size = (unsigned int)strlen(str);
+
+    *token_count = 0;
+
+    for (unsigned int i = 0; i < input_size; i++) {
+        if (str[i] == sep) {
+            end = i;
+            nsh_status_t ret = nsh_copy_token(&str[beg], output, token_count, end - beg);
+            if (ret != NSH_STATUS_OK) { // If an error is detected during copy, abort split and return the error code
+                return ret;
+            }
+            end++;
+            beg = end;
+        }
+    }
+
+    // Parse the last token and return the status of the copy
+    return nsh_copy_token(&str[beg], output, token_count, input_size - beg);
 }
 
 static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv, int* ret)
@@ -237,46 +294,27 @@ static nsh_status_t nsh_read_line(nsh_t* nsh)
     return NSH_STATUS_BUFFER_OVERFLOW;
 }
 
-static int nsh_copy_token(const char* str, char output[][NSH_MAX_STRING_SIZE], unsigned int* token_count,
-    unsigned int token_size)
+nsh_t nsh_init(nsh_io_plugin_t io, nsh_status_t* status)
 {
-    if (token_size > NSH_MAX_STRING_SIZE - 1) // Keep one char for '\0'
-    {
-        //nsh->io.put_string("WARNING: too long argument\r\n");
-        return NSH_STATUS_BUFFER_OVERFLOW;
-    }
-    memcpy(output[*token_count], str, token_size);
-    output[*token_count][token_size] = '\0';
-    (*token_count)++;
-    if (*token_count >= NSH_CMD_ARGS_MAX_COUNT) {
-        //nsh->io.put_string("WARNING: too many arguments\r\n");
-        return NSH_STATUS_MAX_ARGS_NB_REACH;
-    }
-    return NSH_STATUS_OK;
-}
+    nsh_t nsh = {
+        .io = io
+    };
 
-static int nsh_split_command_line(const char* str, char sep, char output[][NSH_MAX_STRING_SIZE], unsigned int* token_count)
-{
-    unsigned int beg = 0;
-    unsigned int end = 0;
-    unsigned int input_size = (unsigned int)strlen(str);
+    nsh_cmd_array_init(&nsh.cmds);
 
-    *token_count = 0;
+    nsh_line_buffer_reset(&nsh.line);
 
-    for (unsigned int i = 0; i < input_size; i++) {
-        if (str[i] == sep) {
-            end = i;
-            int ret = nsh_copy_token(&str[beg], output, token_count, end - beg);
-            if (ret != NSH_STATUS_OK) { // If an error is detected during copy, abort split and return the error code
-                return ret;
-            }
-            end++;
-            beg = end;
-        }
-    }
+#if NSH_FEATURE_USE_HISTORY == 1
+    nsh_history_reset(&nsh.history);
+    nsh.current_history_entry = NSH_HISTORY_INVALID_ENTRY;
+#endif
 
-    // Parse the last token and return the status of the copy
-    return nsh_copy_token(&str[beg], output, token_count, input_size - beg);
+    nsh_register_command(&nsh, "help", cmd_builtin_help);
+    nsh_register_command(&nsh, "exit", cmd_builtin_exit);
+
+    *status = NSH_STATUS_OK;
+
+    return nsh;
 }
 
 nsh_status_t nsh_register_command(nsh_t* nsh, const char* name, nsh_cmd_handler_t* handler)
