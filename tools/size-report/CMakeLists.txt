@@ -11,7 +11,7 @@ function(nsh_add_size_report_target TARGET)
     target_include_directories(${TARGET}-lib PUBLIC ${nsh_include_dirs})
     target_compile_features(${TARGET}-lib PUBLIC ${nsh_compile_features})
     # Add compile definitions specific to this lib
-    target_compile_definitions(${TARGET}-lib PRIVATE ${ARGN})
+    target_compile_definitions(${TARGET}-lib ${ARGN})
     # Add executable with a basic main file
     nsh_add_tool(${TARGET} main.cpp)
     target_link_libraries(${TARGET} PRIVATE ${TARGET}-lib)
@@ -20,46 +20,61 @@ function(nsh_add_size_report_target TARGET)
     set(SIZE_REPORT_LIBS ${SIZE_REPORT_LIBS} PARENT_SCOPE)
 endfunction()
 
+nsh_add_size_report_target(nsh_size_report_baseline
+    PUBLIC
+        NSH_SIZE_REPORT_BASELINE
+        NSH_FEATURE_USE_AUTOCOMPLETION=0
+        NSH_FEATURE_USE_HISTORY=0
+        NSH_FEATURE_USE_PRINTF=0
+        NSH_FEATURE_USE_RETURN_CODE_PRINTING=0
+)
+
 nsh_add_size_report_target(nsh_size_report_base
-    NSH_FEATURE_USE_AUTOCOMPLETION=0
-    NSH_FEATURE_USE_HISTORY=0
-    NSH_FEATURE_USE_PRINTF=0
-    NSH_FEATURE_USE_RETURN_CODE_PRINTING=0
+    PRIVATE
+        NSH_FEATURE_USE_AUTOCOMPLETION=0
+        NSH_FEATURE_USE_HISTORY=0
+        NSH_FEATURE_USE_PRINTF=0
+        NSH_FEATURE_USE_RETURN_CODE_PRINTING=0
 )
 
 nsh_add_size_report_target(nsh_size_report_autocomplete
-    NSH_FEATURE_USE_AUTOCOMPLETION=1
-    NSH_FEATURE_USE_HISTORY=0
-    NSH_FEATURE_USE_PRINTF=0
-    NSH_FEATURE_USE_RETURN_CODE_PRINTING=0
+    PRIVATE
+        NSH_FEATURE_USE_AUTOCOMPLETION=1
+        NSH_FEATURE_USE_HISTORY=0
+        NSH_FEATURE_USE_PRINTF=0
+        NSH_FEATURE_USE_RETURN_CODE_PRINTING=0
 )
 
 nsh_add_size_report_target(nsh_size_report_history
-    NSH_FEATURE_USE_AUTOCOMPLETION=0
-    NSH_FEATURE_USE_HISTORY=1
-    NSH_FEATURE_USE_PRINTF=0
-    NSH_FEATURE_USE_RETURN_CODE_PRINTING=0
+    PRIVATE
+        NSH_FEATURE_USE_AUTOCOMPLETION=0
+        NSH_FEATURE_USE_HISTORY=1
+        NSH_FEATURE_USE_PRINTF=0
+        NSH_FEATURE_USE_RETURN_CODE_PRINTING=0
 )
 
 nsh_add_size_report_target(nsh_size_report_printf
-    NSH_FEATURE_USE_AUTOCOMPLETION=0
-    NSH_FEATURE_USE_HISTORY=0
-    NSH_FEATURE_USE_PRINTF=1
-    NSH_FEATURE_USE_RETURN_CODE_PRINTING=0
+    PRIVATE
+        NSH_FEATURE_USE_AUTOCOMPLETION=0
+        NSH_FEATURE_USE_HISTORY=0
+        NSH_FEATURE_USE_PRINTF=1
+        NSH_FEATURE_USE_RETURN_CODE_PRINTING=0
 )
 
 nsh_add_size_report_target(nsh_size_report_return_code_printing
-    NSH_FEATURE_USE_AUTOCOMPLETION=0
-    NSH_FEATURE_USE_HISTORY=0
-    NSH_FEATURE_USE_PRINTF=0
-    NSH_FEATURE_USE_RETURN_CODE_PRINTING=1
+    PRIVATE
+        NSH_FEATURE_USE_AUTOCOMPLETION=0
+        NSH_FEATURE_USE_HISTORY=0
+        NSH_FEATURE_USE_PRINTF=0
+        NSH_FEATURE_USE_RETURN_CODE_PRINTING=1
 )
 
 nsh_add_size_report_target(nsh_size_report_all_features
-    NSH_FEATURE_USE_AUTOCOMPLETION=1
-    NSH_FEATURE_USE_HISTORY=1
-    NSH_FEATURE_USE_PRINTF=1
-    NSH_FEATURE_USE_RETURN_CODE_PRINTING=1
+    PRIVATE
+        NSH_FEATURE_USE_AUTOCOMPLETION=1
+        NSH_FEATURE_USE_HISTORY=1
+        NSH_FEATURE_USE_PRINTF=1
+        NSH_FEATURE_USE_RETURN_CODE_PRINTING=1
 )
 
 add_custom_target(nsh-size-report ALL

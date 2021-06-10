@@ -1,3 +1,16 @@
+#ifdef NSH_SIZE_REPORT_BASELINE
+
+namespace nsh::tools {
+
+int main(int /*argc*/, char* /*argv*/[])
+{
+    return 0;
+}
+
+} // namespace nsh::tools
+
+#else
+
 #include <nsh/nsh.h>
 #include <nsh/nsh_io_plugin_default.h>
 
@@ -12,3 +25,5 @@ int main(int /*argc*/, char* /*argv*/[])
 }
 
 } // namespace nsh::tools
+
+#endif // NSH_SIZE_REPORT_BASELINE
