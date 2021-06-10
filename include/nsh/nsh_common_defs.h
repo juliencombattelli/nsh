@@ -1,10 +1,3 @@
-/*
- * nsh_common_defs.h
- *
- *  Created on: May 10, 2018
- *      Author: jucom
- */
-
 #ifndef NSH_COMMON_DEFS_H_
 #define NSH_COMMON_DEFS_H_
 

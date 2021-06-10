@@ -1,10 +1,3 @@
-/*
- * nsh_history.c
- *
- *  Created on: May 10, 2018
- *      Author: jucom
- */
-
 #include <nsh/nsh_config.h>
 
 #include <nsh/nsh_common_defs.h>

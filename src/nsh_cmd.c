@@ -1,10 +1,3 @@
-/*
- * nsh_cmd.c
- *
- *  Created on: May 10, 2018
- *      Author: jucom
- */
-
 #include <nsh/nsh_cmd.h>
 
 #include <string.h>

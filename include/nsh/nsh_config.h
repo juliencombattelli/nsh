@@ -1,10 +1,3 @@
-/*
- * nsh_config.h
- *
- *  Created on: May 10, 2018
- *      Author: jucom
- */
-
 #ifndef NSH_CONFIG_H_
 #define NSH_CONFIG_H_
 

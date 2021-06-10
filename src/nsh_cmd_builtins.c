@@ -1,10 +1,3 @@
-/*
- * nsh_cmd_builtins.c
- *
- *  Created on: May 10, 2018
- *      Author: jucom
- */
-
 #include <nsh/nsh_cmd_builtins.h>
 #include <nsh/nsh_common_defs.h>
 

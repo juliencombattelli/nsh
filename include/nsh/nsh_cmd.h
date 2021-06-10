@@ -1,10 +1,3 @@
-/*
- * nsh_cmd.h
- *
- *  Created on: May 10, 2018
- *      Author: jucom
- */
-
 #ifndef NSH_CMD_H_
 #define NSH_CMD_H_
 

@@ -1,10 +1,3 @@
-/*
- * nsh_history.h
- *
- *  Created on: May 10, 2018
- *      Author: jucom
- */
-
 #ifndef NSH_HISTORY_H_
 #define NSH_HISTORY_H_
 
