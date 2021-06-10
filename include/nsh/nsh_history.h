@@ -29,17 +29,17 @@ typedef struct nsh_history {
     unsigned int size;
 } nsh_history_t;
 
-void nsh_history_reset(nsh_history_t* hist) NON_NULL(1);
+void nsh_history_reset(nsh_history_t* hist) NSH_NON_NULL(1);
 
-unsigned int nsh_history_entry_count(const nsh_history_t* hist) NON_NULL(1);
+unsigned int nsh_history_entry_count(const nsh_history_t* hist) NSH_NON_NULL(1);
 
-bool nsh_history_is_full(const nsh_history_t* hist) NON_NULL(1);
+bool nsh_history_is_full(const nsh_history_t* hist) NSH_NON_NULL(1);
 
-bool nsh_history_is_empty(const nsh_history_t* hist) NON_NULL(1);
+bool nsh_history_is_empty(const nsh_history_t* hist) NSH_NON_NULL(1);
 
-void nsh_history_add_entry(nsh_history_t* hist, const char* entry) NON_NULL(1, 2);
+void nsh_history_add_entry(nsh_history_t* hist, const char* entry) NSH_NON_NULL(1, 2);
 
-int nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry) NON_NULL(1, 3);
+int nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry) NSH_NON_NULL(1, 3);
 
 #ifdef __cplusplus
 }

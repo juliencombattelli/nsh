@@ -26,7 +26,7 @@ int main(void)
     // setvbuf(stdin, NULL, _IONBF, 0);
     // setvbuf(stdout, NULL, _IONBF, 0);
     nsh_init();
-    nsh_register_command("null", NULL); // NON_NULL precondition not satisfied
+    nsh_register_command("null", NULL); // NSH_NON_NULL precondition not satisfied
     nsh_run();
     return 0;
 }
