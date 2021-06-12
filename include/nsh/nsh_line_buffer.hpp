@@ -1,8 +1,8 @@
-#ifndef NSH_LINE_BUFFER_H_
-#define NSH_LINE_BUFFER_H_
+#ifndef NSH_LINE_BUFFER_HPP_
+#define NSH_LINE_BUFFER_HPP_
 
-#include <nsh/nsh_common_defs.h>
-#include <nsh/nsh_config.h>
+#include <nsh/nsh_common_defs.hpp>
+#include <nsh/nsh_config.hpp>
 
 #include <stdbool.h>
 
@@ -23,4 +23,4 @@ bool nsh_line_buffer_is_full(nsh_line_buffer_t* linebuf) NSH_NON_NULL(1);
 
 bool nsh_line_buffer_is_empty(nsh_line_buffer_t* linebuf) NSH_NON_NULL(1);
 
-#endif // NSH_LINE_BUFFER_H_
+#endif // NSH_LINE_BUFFER_HPP_

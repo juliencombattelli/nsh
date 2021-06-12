@@ -1,7 +1,7 @@
-#include <nsh/nsh_common_defs.h>
-#include <nsh/nsh_config.h>
-#include <nsh/nsh_io_plugin_default.h>
-#include <nsh/nsh_io_plugin_default_impl.h>
+#include <nsh/nsh_common_defs.hpp>
+#include <nsh/nsh_config.hpp>
+#include <nsh/nsh_io_plugin_default.hpp>
+#include <nsh/nsh_io_plugin_default_impl.hpp>
 
 #include <stdio.h>
 #include <string.h>

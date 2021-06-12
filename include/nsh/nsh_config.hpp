@@ -1,5 +1,5 @@
-#ifndef NSH_CONFIG_H_
-#define NSH_CONFIG_H_
+#ifndef NSH_CONFIG_HPP_
+#define NSH_CONFIG_HPP_
 
 /******************************************************************************
  *** User configuration section
@@ -113,4 +113,4 @@
 #undef NSH_CMD_HISTORY_SIZE
 #endif
 
-#endif // NSH_CONFIG_H_
+#endif // NSH_CONFIG_HPP_

@@ -1,5 +1,5 @@
-#ifndef NSH_COMMON_DEFS_H_
-#define NSH_COMMON_DEFS_H_
+#ifndef NSH_COMMON_DEFS_HPP_
+#define NSH_COMMON_DEFS_HPP_
 
 /**
  * @def NSH_UNUSED(<var-name>)
@@ -66,4 +66,4 @@ typedef enum nsh_status {
     NSH_STATUS_MAX_ARGS_NB_REACH,
 } nsh_status_t;
 
-#endif // NSH_COMMON_DEFS_H_
+#endif // NSH_COMMON_DEFS_HPP_

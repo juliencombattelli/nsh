@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <nsh/nsh_cmd.h>
+#include <nsh/nsh_cmd.hpp>
 
 using testing::ElementsAreArray;
 

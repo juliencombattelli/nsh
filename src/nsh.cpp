@@ -1,7 +1,7 @@
-#include <nsh/nsh.h>
-#include <nsh/nsh_cmd_builtins.h>
-#include <nsh/nsh_common_defs.h>
-#include <nsh/nsh_io_plugin_default.h>
+#include <nsh/nsh.hpp>
+#include <nsh/nsh_cmd_builtins.hpp>
+#include <nsh/nsh_common_defs.hpp>
+#include <nsh/nsh_io_plugin_default.hpp>
 
 #include <ctype.h>
 #include <stdbool.h>

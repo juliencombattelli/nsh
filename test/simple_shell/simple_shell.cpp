@@ -16,8 +16,8 @@ void enableRawMode()
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 
-#include <nsh/nsh.h>
-#include <nsh/nsh_io_plugin_default.h>
+#include <nsh/nsh.hpp>
+#include <nsh/nsh_io_plugin_default.hpp>
 
 #include <stdio.h>
 

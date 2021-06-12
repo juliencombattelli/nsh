@@ -1,7 +1,7 @@
-#ifndef NSH_IO_PLUGIN_H_
-#define NSH_IO_PLUGIN_H_
+#ifndef NSH_IO_PLUGIN_HPP_
+#define NSH_IO_PLUGIN_HPP_
 
-#include <nsh/nsh_config.h>
+#include <nsh/nsh_config.hpp>
 
 typedef char nsh_io_get_char_t(void);
 typedef void nsh_io_put_char_t(char c);
@@ -29,4 +29,4 @@ typedef struct nsh_io_plugin {
 #endif
 } nsh_io_plugin_t;
 
-#endif // NSH_IO_PLUGIN_H_
+#endif // NSH_IO_PLUGIN_HPP_

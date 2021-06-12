@@ -1,4 +1,4 @@
-#include <nsh/nsh_cmd_array.h>
+#include <nsh/nsh_cmd_array.hpp>
 
 #include <string.h>
 

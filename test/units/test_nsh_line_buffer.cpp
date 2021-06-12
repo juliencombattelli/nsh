@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <nsh/nsh_line_buffer.h>
+#include <nsh/nsh_line_buffer.hpp>
 
 TEST(NshLineBufferReset, Success)
 {

@@ -1,4 +1,4 @@
-#include <nsh/nsh_line_buffer.h>
+#include <nsh/nsh_line_buffer.hpp>
 
 #include <stdio.h>
 

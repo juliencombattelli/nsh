@@ -1,8 +1,8 @@
-#ifndef NSH_HISTORY_H_
-#define NSH_HISTORY_H_
+#ifndef NSH_HISTORY_HPP_
+#define NSH_HISTORY_HPP_
 
-#include <nsh/nsh_common_defs.h>
-#include <nsh/nsh_config.h>
+#include <nsh/nsh_common_defs.hpp>
+#include <nsh/nsh_config.hpp>
 
 #if NSH_FEATURE_USE_HISTORY == 1
 
@@ -32,4 +32,4 @@ nsh_status_t nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* 
 
 #endif // NSH_FEATURE_USE_HISTORY == 1
 
-#endif // NSH_HISTORY_H_
+#endif // NSH_HISTORY_HPP_
