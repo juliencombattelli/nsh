@@ -9,10 +9,6 @@
 #include <limits.h>
 #include <stdbool.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define NSH_HISTORY_INVALID_ENTRY UINT_MAX
 
 typedef struct nsh_history {
@@ -33,10 +29,6 @@ bool nsh_history_is_empty(const nsh_history_t* hist) NSH_NON_NULL(1);
 void nsh_history_add_entry(nsh_history_t* hist, const char* entry) NSH_NON_NULL(1, 2);
 
 nsh_status_t nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry) NSH_NON_NULL(1, 3);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // NSH_FEATURE_USE_HISTORY == 1
 

@@ -53,10 +53,6 @@
 #define NSH_RESTRICT restrict
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef enum nsh_status {
     NSH_STATUS_OK,
     NSH_STATUS_QUIT,
@@ -69,9 +65,5 @@ typedef enum nsh_status {
     NSH_STATUS_MAX_CMD_NB_REACH,
     NSH_STATUS_MAX_ARGS_NB_REACH,
 } nsh_status_t;
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // NSH_COMMON_DEFS_H_

@@ -3,10 +3,6 @@
 
 #include <nsh/nsh_config.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef char nsh_io_get_char_t(void);
 typedef void nsh_io_put_char_t(char c);
 typedef void nsh_io_put_newline_t(void);
@@ -32,9 +28,5 @@ typedef struct nsh_io_plugin {
     nsh_io_printf_t* const printf;
 #endif
 } nsh_io_plugin_t;
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // NSH_IO_PLUGIN_H_
