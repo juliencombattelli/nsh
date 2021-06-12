@@ -12,7 +12,7 @@ void enableRawMode()
     tcgetattr(STDIN_FILENO, &orig_termios);
     atexit(disableRawMode);
     struct termios raw = orig_termios;
-    raw.c_lflag &= (tcflag_t)(~(ECHO | ICANON));
+    raw.c_lflag &= static_cast<tcflag_t>(~(ECHO | ICANON));
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 

@@ -1,4 +1,4 @@
-nsh_add_executable(simple_shell simple_shell.c)
+nsh_add_executable(simple_shell simple_shell.cpp)
 target_link_libraries(simple_shell
     PRIVATE
         nsh
