@@ -17,13 +17,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Main library with sources and platform specific options
 nsh_add_library(nsh
-    ${CMAKE_CURRENT_LIST_DIR}/src/nsh.c
-    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_cmd.c
-    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_cmd_array.c
-    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_cmd_builtins.c
-    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_history.c
-    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_io_plugin_default.c
-    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_line_buffer.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/nsh.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_cmd.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_cmd_array.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_cmd_builtins.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_history.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_io_plugin_default.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_line_buffer.cpp
 )
 target_include_directories(nsh
     PUBLIC
@@ -34,7 +34,7 @@ target_include_directories(nsh
 )
 target_compile_features(nsh
     PUBLIC
-        c_std_11
+        cxx_std_20
 )
 
 add_library(Nsh::Nsh ALIAS nsh)

@@ -8,7 +8,7 @@
 
 nsh_io_plugin_t nsh_io_make_default_plugin()
 {
-    return (nsh_io_plugin_t)
+    return
     {
         .get_char = &nsh_io_get_char,
         .put_char = &nsh_io_put_char,
@@ -34,7 +34,7 @@ char nsh_io_get_char(void)
     int c;
     while ((c = getchar()) == EOF)
         ;
-    return (char)c;
+    return static_cast<char>(c);
 }
 
 void nsh_io_put_char(char c)
@@ -54,7 +54,7 @@ void nsh_io_put_string(const char* str)
     // one by strlen, one by nsh_io_put_buffer...
     // Migrating from null-terminated strings to mcsl's string_view could
     // solve this issue.
-    nsh_io_put_buffer(str, (unsigned int)strlen(str));
+    nsh_io_put_buffer(str, static_cast<unsigned int>(strlen(str)));
 }
 
 void nsh_io_put_buffer(const char* str, unsigned int size)
