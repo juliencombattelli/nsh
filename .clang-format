@@ -5,3 +5,4 @@ AlignConsecutiveMacros: true
 AllowShortFunctionsOnASingleLine: None
 FixNamespaceComments: true
 NamespaceIndentation: None
+IndentRequires: true

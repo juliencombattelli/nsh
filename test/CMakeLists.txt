@@ -1,3 +1,5 @@
+add_subdirectory(nshpp)
+
 add_subdirectory(units)
 
 if(UNIX)
