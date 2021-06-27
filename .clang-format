@@ -1,8 +1,19 @@
+# Nsh formatting style
+# Compatible with clang-format 13
+
 BasedOnStyle: WebKit
 
-AlignTrailingComments: true
-AlignConsecutiveMacros: true
-AllowShortFunctionsOnASingleLine: None
+Standard: c++20
+
+AlwaysBreakTemplateDeclarations: true
+BreakBeforeBraces: Mozilla
+BreakBeforeConceptDeclarations: true
+ColumnLimit: 100
 FixNamespaceComments: true
-NamespaceIndentation: None
 IndentRequires: true
+NamespaceIndentation: None
+SortIncludes: CaseInsensitive
+SortUsingDeclarations: true
+SpaceAfterTemplateKeyword: false
+SpaceBeforeCpp11BracedList : false
+SpaceInEmptyBlock: false
