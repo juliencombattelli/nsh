@@ -8,12 +8,12 @@
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c17",
-            "cppStandard": "c++17",
+            "cppStandard": "c++20",
             "intelliSenseMode": "gcc-x64",
-            "compileCommands": "${workspaceFolder}/../nsh-build-native/compile_commands.json",
+            "compileCommands": "${workspaceFolder}/../nsh-build/native-release/compile_commands.json",
             "customConfigurationVariables": {
-                "binaryDir": "build-native",
-                "cmakeArgs": "-DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=On"
+                "binaryDir": "../nsh-build/native-release",
+                "cmakeArgs": "-DCMAKE_BUILD_TYPE=MinSizeRel"
             }
         },
         {
