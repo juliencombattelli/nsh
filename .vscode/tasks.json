@@ -4,28 +4,28 @@
         {
             "label": "Configure",
             "type": "shell",
-            "command": "cmake -S ${workspaceFolder} -B ${workspaceFolder}/../nsh-${input:configBinaryDir} ${input:configCmakeArgs}",
+            "command": "rm -rf ${workspaceFolder}/${input:configBinaryDir} ; cmake -S ${workspaceFolder} -B ${workspaceFolder}/${input:configBinaryDir} ${input:configCmakeArgs}",
             "group": "build",
             "problemMatcher": []
         },
         {
             "label": "Build",
             "type": "shell",
-            "command": "cmake --build ${workspaceFolder}/../nsh-${input:configBinaryDir}",
+            "command": "cmake --build ${workspaceFolder}/${input:configBinaryDir}",
             "group": "build",
             "problemMatcher": []
         },
         {
             "label": "Clean",
             "type": "shell",
-            "command": "cmake --build ${workspaceFolder}/../nsh-${input:configBinaryDir} --target clean",
+            "command": "cmake --build ${workspaceFolder}/${input:configBinaryDir} --target clean",
             "group": "build",
             "problemMatcher": []
         },
         {
             "label": "Clean Build",
             "type": "shell",
-            "command": "cmake --build ${workspaceFolder}/../nsh-${input:configBinaryDir} --clean-first",
+            "command": "cmake --build ${workspaceFolder}/${input:configBinaryDir} --clean-first",
             "group": "build",
             "problemMatcher": [],
             "presentation": {
@@ -40,14 +40,14 @@
         {
             "label": "Run tests",
             "type": "shell",
-            "command": "cmake --build ${workspaceFolder}/../nsh-${input:configBinaryDir} --target test",
+            "command": "cmake --build ${workspaceFolder}/${input:configBinaryDir} --target test",
             "group": "build",
             "problemMatcher": []
         },
         {
             "label": "Generate coverage report",
             "type": "shell",
-            "command": "cmake --build ${workspaceFolder}/../nsh-${input:configBinaryDir} --target coverage",
+            "command": "cmake --build ${workspaceFolder}/${input:configBinaryDir} --target coverage",
             "group": "build",
             "problemMatcher": []
         },
@@ -55,7 +55,7 @@
             "label": "View coverage report",
             "detail": "Open the test coverage report in the default browser",
             "type": "shell",
-            "command": "sensible-browser ../nsh-${input:configBinaryDir}/coverage/index.html",
+            "command": "sensible-browser ${input:configBinaryDir}/coverage/index.html",
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
@@ -71,7 +71,7 @@
             "label": "Run unit tests",
             "detail": "Run the GTest unit test suite",
             "type": "shell",
-            "command": "../nsh-${input:configBinaryDir}/test/units/utests",
+            "command": "${input:configBinaryDir}/test/units/utests",
             "group": "build",
             "problemMatcher": []
         }
