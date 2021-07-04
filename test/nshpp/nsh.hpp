@@ -11,6 +11,7 @@
 #include <ranges>
 #include <span>
 #include <string_view>
+#include <vector>
 
 namespace nsh {
 
@@ -101,7 +102,10 @@ concept Suggester = requires(T t, TCmds cmds, std::string_view str)
     { t.suggest(cmds, str) } /*-> std::same_as<std::span<typename TCmds::CmdType>>*/;
 };
 
-struct DefaultAutocompleter
+struct NoAutocompleter
+{};
+
+struct BasicAutocompleter
 {
     template<typename TCmdList>
     static constexpr auto autocomplete(TCmdList&& cmds, std::string_view str) noexcept
@@ -145,7 +149,10 @@ constexpr std::size_t levenshteinDistance(
     return distances[size_b];
 }
 
-struct DefaultSuggester
+struct NoSuggester
+{};
+
+struct BasicSuggester
 {
     template<typename TCmdList>
     static constexpr auto suggest(TCmdList&& cmds, std::string_view str) noexcept
@@ -164,13 +171,10 @@ struct DefaultSuggester
     }
 };
 
-template<typename THandler, typename TAutocompleter = DefaultAutocompleter,
-    typename TSuggester = DefaultSuggester>
-struct Settings
+template<typename THandler>
+struct BaseSettings
 {
     using Handler = THandler;
-    using Autocompleter = TAutocompleter;
-    using Suggester = TSuggester;
     std::size_t LineBufferSize = 128;
     std::size_t MaxArgumentCount = 32;
     std::size_t CmdNameSize = 16;
@@ -178,13 +182,22 @@ struct Settings
     std::size_t HistorySize = 16;
 };
 
-template<auto settings>
+template<auto settings, typename TAutocompleter = NoAutocompleter,
+    typename TSuggester = NoSuggester>
+struct DefaultAddOns
+{
+    [[no_unique_address]] TAutocompleter autocompleter;
+    [[no_unique_address]] TSuggester suggester;
+};
+
+template<auto settings, typename TAddOns = DefaultAddOns<settings>>
 class Nsh
 {
 public:
     using Settings = decltype(settings);
-    Settings::Autocompleter autocompleter;
-    Settings::Suggester suggester;
+    using AddOns = TAddOns;
+
+    AddOns addons;
     CmdList<Cmd<typename Settings::Handler>, settings.CmdCount> cmds;
 };
 
