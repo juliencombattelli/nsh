@@ -13,14 +13,14 @@ jobs:
           - os: ubuntu-latest
             name: Ubuntu GCC
             artifact: ubuntu-gcc
-            compiler-c: gcc
-            compiler-cxx: g++
+            compiler-c: gcc-11
+            compiler-cxx: g++-11
             extra_cmake_args: -DENABLE_COVERAGE=ON
           - os: ubuntu-latest
             name: Ubuntu Clang
             artifact: ubuntu-clang
-            compiler-c: clang
-            compiler-cxx: clang++
+            compiler-c: clang-12
+            compiler-cxx: clang++-12
           - os: macos-latest
             name: MacOS Clang
             artifact: macos-clang
