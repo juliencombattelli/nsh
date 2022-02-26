@@ -33,6 +33,10 @@ target_include_directories(nsh
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/src/include
 )
+target_compile_features(nsh
+    PRIVATE
+        cxx_std_20
+)
 
 add_library(Nsh::Nsh ALIAS nsh)
 
