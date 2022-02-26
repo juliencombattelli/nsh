@@ -12,18 +12,22 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(stm32-cmake)
 
-# Problem: CMake runs toolchain files multiple times, but can't read cache variables on some runs (especialy during compiler checking from toolchain files).
-# Workaround: On first run (in which cache variables are always accessible), set an intermediary environment variable, which are always preserved.
-if (STM32_TOOLCHAIN_PATH)
+# Problem:
+#   CMake runs toolchain files multiple times, but can't read cache variables on some runs (especialy during compiler
+#   checking from toolchain files).
+# Workaround:
+#   On first run (in which cache variables are always accessible), set an intermediary environment variable, which are
+#   always preserved.
+if(STM32_TOOLCHAIN_PATH)
     set(ENV{NSH_STM32_TOOLCHAIN_PATH} "${STM32_TOOLCHAIN_PATH}")
-else ()
+else()
     set(STM32_TOOLCHAIN_PATH "$ENV{NSH_STM32_TOOLCHAIN_PATH}")
-endif ()
-if (STM32_TARGET_TRIPLET)
+endif()
+if(STM32_TARGET_TRIPLET)
     set(ENV{NSH_STM32_TARGET_TRIPLET} "${STM32_TARGET_TRIPLET}")
-else ()
+else()
     set(STM32_TARGET_TRIPLET "$ENV{NSH_STM32_TARGET_TRIPLET}")
-endif ()
+endif()
 
 include(${stm32-cmake_SOURCE_DIR}/cmake/stm32_gcc.cmake)
 
@@ -56,7 +60,7 @@ function(stm32_target_add_bin TARGET)
         DEPENDS ${TARGET} ${TARGET}-size
         VERBATIM
     )
-    add_custom_target(${TARGET}-bin ALL 
+    add_custom_target(${TARGET}-bin ALL
         DEPENDS ${TARGET}.bin
     )
 endfunction()
