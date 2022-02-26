@@ -94,6 +94,15 @@
             }
         }
     ],
-    "buildPresets": [],
+    "buildPresets": [
+        {
+            "name": "native-debug",
+            "configurePreset": "native-debug"
+        },
+        {
+            "name": "native-release",
+            "configurePreset": "native-release"
+        }
+    ],
     "testPresets": []
 }
