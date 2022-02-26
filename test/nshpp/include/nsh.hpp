@@ -86,21 +86,23 @@ explicit CmdList(TCmdFirst, TCmds...) -> CmdList<TCmdFirst, 1 + sizeof...(TCmds)
  * TODO remove dependency to TCmds
  */
 template<typename T, typename TCmds>
-concept Autocompleter = requires(T t, TCmds cmds, std::string_view str)
-{
-    // add default constructability
-    { t.autocomplete(cmds, str) } /*-> std::same_as<std::span<typename TCmds::CmdType>>*/;
-};
+concept Autocompleter = requires(T t, TCmds cmds, std::string_view str) {
+                            // add default constructability
+                            {
+                                t.autocomplete(cmds, str)
+                            } /*-> std::same_as<std::span<typename TCmds::CmdType>>*/;
+                        };
 
 /**
  * @brief Concept specifying that a type can be used as a command suggester for nsh.
  */
 template<typename T, typename TCmds>
-concept Suggester = requires(T t, TCmds cmds, std::string_view str)
-{
-    // add default constructability
-    { t.suggest(cmds, str) } /*-> std::same_as<std::span<typename TCmds::CmdType>>*/;
-};
+concept Suggester = requires(T t, TCmds cmds, std::string_view str) {
+                        // add default constructability
+                        {
+                            t.suggest(cmds, str)
+                        } /*-> std::same_as<std::span<typename TCmds::CmdType>>*/;
+                    };
 
 struct NoAutocompleter
 {};
