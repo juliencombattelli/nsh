@@ -4,6 +4,10 @@ function(_nsh_append_option_to_list OPTION_NAME)
     set(NSH_OPTION_LIST "${NSH_OPTION_LIST};${OPTION_NAME}" CACHE INTERNAL "Nsh option list")
 endfunction()
 
+function(nsh_clear_option_list)
+    set(NSH_OPTION_LIST "" CACHE INTERNAL "Nsh option list")
+endfunction()
+
 function(nsh_add_option NAME DESCRIPTION VALUE)
     option(${NAME} ${DESCRIPTION} ${VALUE})
     _nsh_append_option_to_list(${NAME})

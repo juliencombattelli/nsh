@@ -5,6 +5,7 @@ project(nsh LANGUAGES C CXX ASM)
 # set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake/Modules ${CMAKE_MODULE_PATH})
 
 include(cmake/Modules/Option.cmake)
+nsh_clear_option_list()
 
 nsh_add_option(NSH_ENABLE_TESTS "Download GTest and build the Nsh test suite" ON)
 nsh_add_dependent_option(NSH_ENABLE_COVERAGE "Enable test coverage report generation" OFF "NSH_ENABLE_TESTS" OFF)
@@ -49,14 +50,14 @@ install(
     ARCHIVE DESTINATION lib
 )
 
-if(ENABLE_TESTS)
+if(NSH_ENABLE_TESTS)
     enable_testing()
     include(GoogleTest)
     include(Coverage)
     add_subdirectory(test)
 endif()
 
-if(ENABLE_SIZE_REPORT)
+if(NSH_ENABLE_SIZE_REPORT)
     if(
         (CMAKE_HOST_UNIX)
             AND

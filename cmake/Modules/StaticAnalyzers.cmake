@@ -1,12 +1,12 @@
 # Cppcheck was supported in CMake 3.10 but Clang-tidy make it only in 3.12
 cmake_minimum_required(VERSION 3.12)
 
-if(ENABLE_CPPCHECK)
+if(NSH_ENABLE_CPPCHECK)
     find_program(CPPCHECK cppcheck)
     if(CPPCHECK)
-        set(CMAKE_CXX_CPPCHECK 
-            ${CPPCHECK} 
-                --suppress=missingInclude 
+        set(CMAKE_CXX_CPPCHECK
+            ${CPPCHECK}
+                --suppress=missingInclude
                 --enable=all
                 --inconclusive
         )
@@ -15,9 +15,9 @@ if(ENABLE_CPPCHECK)
     endif()
 endif()
 
-if(ENABLE_CLANG_TIDY)
-    find_program(CLANGTIDY 
-        NAMES 
+if(NSH_ENABLE_CLANG_TIDY)
+    find_program(CLANGTIDY
+        NAMES
             clang-tidy clang-tidy-12 clang-tidy-11 clang-tidy-10 clang-tidy-9 clang-tidy-8 clang-tidy-7 clang-tidy-6.0
     )
     if(CLANGTIDY)
@@ -28,7 +28,7 @@ if(ENABLE_CLANG_TIDY)
     endif()
 endif()
 
-if(ENABLE_INCLUDE_WHAT_YOU_USE)
+if(NSH_ENABLE_INCLUDE_WHAT_YOU_USE)
     find_program(INCLUDE_WHAT_YOU_USE include-what-you-use)
     if(INCLUDE_WHAT_YOU_USE)
         set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${INCLUDE_WHAT_YOU_USE})

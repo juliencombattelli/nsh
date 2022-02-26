@@ -12,7 +12,7 @@ platform file used.
 The ``nsh_check_platform`` function checks if the following targets exist:
 
 ``Nsh::Platform``
-  Alias or imported target providing all compile options, link options, and library 
+  Alias or imported target providing all compile options, link options, and library
   dependencies every executable and library must use to be built for the considered platform.
 
 ``Nsh::Platform::ToolsMain``
@@ -39,7 +39,7 @@ The ``nsh_check_platform`` function checks if the following targets exist:
   <https://cmake.org/cmake/help/latest/command/add_library.html>`_.
 
 ``nsh_platform_add_test``
-  Function registering a test to be run by ctest. Its signature is the same as 
+  Function registering a test to be run by ctest. Its signature is the same as
   CMake's `add_test <https://cmake.org/cmake/help/latest/command/add_test.html>`_.
 
 ``CACHE{NSH_GTEST_PATCH_COMMAND}``
@@ -91,12 +91,12 @@ function(nsh_check_platform)
     list(APPEND CMAKE_MESSAGE_INDENT "  ")
     unset(checks_failed)
 
-    if(ENABLE_TESTS)
+    if(NSH_ENABLE_TESTS)
         _nsh_assert_variable_exists(NSH_GTEST_PATCH_COMMAND)
     endif()
     _nsh_assert_target_exists(Nsh::Platform)
     _nsh_assert_target_exists(Nsh::Platform::ToolsMain)
-    if(ENABLE_TESTS)
+    if(NSH_ENABLE_TESTS)
         _nsh_assert_target_exists(Nsh::Platform::GTest)
         _nsh_assert_target_exists(Nsh::Platform::GTestMain)
     endif()

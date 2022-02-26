@@ -6,7 +6,7 @@ function(_nsh_assert_valid_build_type_for_coverage)
             " Current: ${CMAKE_BUILD_TYPE},  Supported: ${_supported_coverage_build_types}.\n"
             " Coverage will be disabled."
         )
-        set(ENABLE_COVERAGE OFF CACHE BOOL "" FORCE)
+        set(NSH_ENABLE_COVERAGE OFF CACHE BOOL "" FORCE)
     endif()
     unset(_supported_coverage_build_types)
 endfunction()
