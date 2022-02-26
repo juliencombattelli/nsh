@@ -66,7 +66,7 @@
             "displayName": "STM32F411RE Config",
             "description": "Configuration for STM32F411RE cross-compilation",
             "cacheVariables": {
-                "NSH_STM32_TARGET": "Stm32NucleoF411RE"
+                "NSH_PLATFORM_NAME": "Stm32NucleoF411RE"
             }
         },
         {
@@ -76,10 +76,7 @@
                 "base-debug"
             ],
             "displayName": "STM32F411RE Debug Config",
-            "description": "Debug configuration for STM32F411RE cross-compilation",
-            "cacheVariables": {
-                "NSH_STM32_TARGET": "Stm32NucleoF411RE"
-            }
+            "description": "Debug configuration for STM32F411RE cross-compilation"
         },
         {
             "name": "stm32f411re-release",
@@ -88,10 +85,7 @@
                 "base-release"
             ],
             "displayName": "STM32F411RE Release Config",
-            "description": "Release configuration for STM32F411RE cross-compilation",
-            "cacheVariables": {
-                "NSH_STM32_TARGET": "Stm32NucleoF411RE"
-            }
+            "description": "Release configuration for STM32F411RE cross-compilation"
         }
     ],
     "buildPresets": [
