@@ -64,6 +64,8 @@ void suggest(auto shell, auto cmds, std::string_view str)
     }
 }
 
+namespace nsh::tools {
+
 int main(int argc, char** argv)
 {
     using namespace my_shell;
@@ -75,4 +77,6 @@ int main(int argc, char** argv)
     autocomplete(nsh, cmds, ctx, argc, argv, "t");
 
     suggest(nsh, cmds, "toot");
+}
+
 }

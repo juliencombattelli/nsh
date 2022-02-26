@@ -44,7 +44,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}
 
     steps:
-      
+
       - name: Checkout project
         uses: actions/checkout@v2
 
@@ -61,9 +61,9 @@ jobs:
       - name: Install arm-none-eabi-gcc
         if: ${{ matrix.config.name == 'STM32 GCC' }}
         run: |
-          wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+          wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
           mkdir -p /tmp/gcc-arm-none-eabi
-          tar  --strip-components=1 -C /tmp/gcc-arm-none-eabi -xf gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+          tar  --strip-components=1 -C /tmp/gcc-arm-none-eabi -xf gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
 
       - name: Configure
         env:
@@ -71,15 +71,15 @@ jobs:
           CXX: ${{ matrix.config.compiler-cxx }}
         run: |
           cmake ${{ matrix.config.extra_cmake_args }} -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-      
+
       - name: Build
         run: |
           cmake --build build --config ${{ matrix.build_type }}
-      
+
       - name: Run tests
         working-directory: build
         run: ctest -V
-        
+
       - name: Coverage
         if: ${{ matrix.config.name == 'Ubuntu GCC' && matrix.build_type == 'Debug' }}
         run: |
@@ -93,7 +93,7 @@ jobs:
       - name: Install Strip
         run: |
           cmake --install build --prefix instdir --strip
-      
+
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
