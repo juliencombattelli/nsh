@@ -16,16 +16,16 @@ jobs:
             compiler-c: gcc-10
             compiler-cxx: g++-10
             extra_cmake_args: -DENABLE_COVERAGE=ON
-          - os: ubuntu-latest
-            name: Ubuntu Clang
-            artifact: ubuntu-clang
-            compiler-c: clang-12
-            compiler-cxx: clang++-12
-          - os: macos-latest
-            name: MacOS Clang
-            artifact: macos-clang
-            compiler-c: clang
-            compiler-cxx: clang++
+          # - os: ubuntu-latest
+          #   name: Ubuntu Clang
+          #   artifact: ubuntu-clang
+          #   compiler-c: clang-12
+          #   compiler-cxx: clang++-12
+          # - os: macos-latest
+          #   name: MacOS Clang
+          #   artifact: macos-clang
+          #   compiler-c: clang
+          #   compiler-cxx: clang++
           # - os: windows-latest
           #   name: Windows MinGW
           #   artifact: windows-mingw
