@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 function(target_enable_sanitizers TARGET_NAME)
-    
+
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         set(SUPPORTED_SANITIZERS "address" "memory" "undefined" "thread")
     else()
@@ -16,12 +16,12 @@ function(target_enable_sanitizers TARGET_NAME)
     set(SANITIZERS "")
 
     foreach(sanitizer IN LISTS SUPPORTED_SANITIZERS)
-        option(${TARGET_NAME}_SANITIZE_${sanitizer} "Enable sanitizer '${sanitizer}' for target ${TARGET_NAME}" OFF)
-        if (${TARGET_NAME}_SANITIZE_${sanitizer})
+        nsh_add_option(NSH_SANITIZE_${TARGET_NAME}_${sanitizer} "Enable sanitizer '${sanitizer}' for target ${TARGET_NAME}" OFF)
+        if (NSH_SANITIZE_${TARGET_NAME}_${sanitizer})
             list(APPEND SANITIZERS "${sanitizer}")
         endif()
     endforeach()
-    
+
     list(JOIN SANITIZERS "," LIST_OF_SANITIZERS)
 
     if(LIST_OF_SANITIZERS)

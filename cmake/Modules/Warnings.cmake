@@ -3,11 +3,11 @@
 
 function(target_project_warnings TARGET_NAME)
 
-    option(${TARGET_NAME}_WARNINGS_GCC_EXTRA "Add extra GCC warnings not supported by Clang" ON)
-    option(${TARGET_NAME}_WARNINGS_ALL "Add a large set of compiler warnings" ON)
-    option(${TARGET_NAME}_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
+    nsh_add_option(NSH_WARNINGS_GCC_EXTRA_${TARGET_NAME} "Add extra GCC warnings not supported by Clang" ON)
+    nsh_add_option(NSH_WARNINGS_ALL_${TARGET_NAME} "Add a large set of compiler warnings" ON)
+    nsh_add_option(NSH_WARNINGS_AS_ERRORS_${TARGET_NAME} "Treat compiler warnings as errors" OFF)
 
-    if (${TARGET_NAME}_WARNINGS_ALL)
+    if (NSH_WARNINGS_ALL_${TARGET_NAME})
         set(MSVC_WARNINGS
             /W4          # Baseline reasonable warnings
             /permissive- # Specify standards conformance mode to the compiler
@@ -60,14 +60,14 @@ function(target_project_warnings TARGET_NAME)
         )
     endif()
 
-    if (${TARGET_NAME}_WARNINGS_AS_ERRORS)
+    if (NSH_WARNINGS_AS_ERRORS_${TARGET_NAME})
         set(CLANG_WARNINGS ${CLANG_WARNINGS} -Werror)
         set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
     endif()
 
     set(GCC_WARNINGS ${CLANG_WARNINGS})
 
-    if (${TARGET_NAME}_EXTRA_GCC_WARNINGS)
+    if (NSH_EXTRA_GCC_WARNINGS_${TARGET_NAME})
         set(GCC_WARNINGS ${GCC_WARNINGS}
             -Wmisleading-indentation # warn if identation implies blocks where blocks do not exist
             -Wduplicated-cond # warn if if / else chain has duplicated conditions

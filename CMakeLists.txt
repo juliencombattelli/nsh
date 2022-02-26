@@ -1,14 +1,17 @@
 cmake_minimum_required(VERSION 3.17)
 project(nsh LANGUAGES C CXX ASM)
 
-include(CMakeDependentOption)
+# Prepend Modules folder to CMAKE_MODULE_PATH
+# set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake/Modules ${CMAKE_MODULE_PATH})
 
-option(ENABLE_TESTS "Download GTest and build the Nsh test suite" ON)
-cmake_dependent_option(ENABLE_COVERAGE "Enable test coverage report generation" OFF "ENABLE_TESTS" OFF)
-option(ENABLE_CPPCHECK "Enable static analysis with cppcheck" OFF)
-option(ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy" OFF)
-option(ENABLE_INCLUDE_WHAT_YOU_USE "Enable static analysis with include-what-you-use" OFF)
-option(ENABLE_SIZE_REPORT "Generate a report of the binary size with and without the supported features" OFF)
+include(cmake/Modules/Option.cmake)
+
+nsh_add_option(NSH_ENABLE_TESTS "Download GTest and build the Nsh test suite" ON)
+nsh_add_dependent_option(NSH_ENABLE_COVERAGE "Enable test coverage report generation" OFF "NSH_ENABLE_TESTS" OFF)
+nsh_add_option(NSH_ENABLE_CPPCHECK "Enable static analysis with cppcheck" OFF)
+nsh_add_option(NSH_ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy" OFF)
+nsh_add_option(NSH_ENABLE_INCLUDE_WHAT_YOU_USE "Enable static analysis with include-what-you-use" OFF)
+nsh_add_option(NSH_ENABLE_SIZE_REPORT "Generate a report of the binary size with and without the supported features" OFF)
 
 # Include setup script defining and verifying the targeted platform
 include(cmake/Scripts/NshSetup.cmake)
@@ -70,3 +73,8 @@ if(ENABLE_SIZE_REPORT)
         )
     endif()
 endif()
+
+# Print the current NSH configuration.
+# Useful to let the user know the configuration variables without reading the code or using third-party tools.
+# Must be done last to ensure the function catches all options that may be defined in the project.
+nsh_print_options()
