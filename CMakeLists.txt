@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.17)
 project(nsh LANGUAGES C CXX ASM)
 
-# Prepend Modules folder to CMAKE_MODULE_PATH
-# set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake/Modules ${CMAKE_MODULE_PATH})
-
 include(cmake/Modules/Option.cmake)
 nsh_clear_option_list()
 
