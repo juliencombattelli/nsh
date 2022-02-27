@@ -1,19 +1,37 @@
 # Nsh formatting style
-# Compatible with clang-format 13
-
+# This clang-format configuration is compatible with clang-format 13
 BasedOnStyle: WebKit
-
+Language: Cpp
 Standard: c++20
-
-AlwaysBreakTemplateDeclarations: true
+ColumnLimit: 120
 BreakBeforeBraces: Mozilla
-BreakBeforeConceptDeclarations: true
-ColumnLimit: 100
-FixNamespaceComments: true
+AlignOperands: AlignAfterOperator
+
+# Disable short blocks on single line
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+
+# Concept/require clause settings
 IndentRequires: true
-NamespaceIndentation: None
-SortIncludes: CaseInsensitive
-SortUsingDeclarations: true
+
+# Template settings
+AlwaysBreakTemplateDeclarations: true
 SpaceAfterTemplateKeyword: false
-SpaceBeforeCpp11BracedList : false
-SpaceInEmptyBlock: false
+
+# Namespace settings
+CompactNamespaces: true
+FixNamespaceComments: true
+NamespaceIndentation: None
+
+# Parameter splitting
+# If parameters/arguments do not fit in a single line, break them one by line using
+# ContinuationIndentWidth as indentation.
+AlignAfterOpenBracket: AlwaysBreak
+BinPackArguments: false
+BinPackParameters: false
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+# Occasionally clang-format breaks lines between return type and function name. Disabling this.
+PenaltyReturnTypeOnItsOwnLine: 1000
+# Avoid breaking around assignment
+PenaltyBreakAssignment: 1000
