@@ -1,5 +1,20 @@
 include(FixedString)
 
-nsh_add_tool(nshpp src/main.cpp src/meta/TypeList.test.cpp src/StaticBinding.test.cpp)
-target_include_directories(nshpp PUBLIC include)
-target_compile_features(nshpp PUBLIC cxx_std_20)
+nsh_add_tool(nshpp
+    src/main.cpp
+    src/meta/TypeList.test.cpp
+    src/Stdio.cpp
+    src/StaticBinding.test.cpp
+)
+target_include_directories(nshpp
+    PUBLIC
+        include
+)
+target_compile_features(nshpp
+    PUBLIC
+        cxx_std_20
+)
+target_link_libraries(nshpp
+    PUBLIC
+        fixed_string
+)
