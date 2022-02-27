@@ -27,52 +27,52 @@ struct TypeList<T, Ts...>
     static constexpr size_t size = sizeof...(Ts) + 1;
 };
 
-template<typename List>
+template<typename TList>
 struct Front;
 
-template<typename Head, typename... Tail>
-struct Front<TypeList<Head, Tail...>>
+template<typename THead, typename... TTail>
+struct Front<TypeList<THead, TTail...>>
 {
-    using type = Head;
+    using type = THead;
 };
 
-template<typename List>
+template<typename TList>
 struct Back;
 
-template<typename... Head, typename Tail>
-struct Back<TypeList<Head..., Tail>>
+template<typename... THead, typename TTail>
+struct Back<TypeList<THead..., TTail>>
 {
-    using type = Tail;
+    using type = TTail;
 };
 
-template<typename List, typename Element>
+template<typename TList, typename TElement>
 struct PushFront;
 
-template<typename... Elements, typename Element>
-struct PushFront<TypeList<Elements...>, Element>
+template<typename... TElements, typename TElement>
+struct PushFront<TypeList<TElements...>, TElement>
 {
-    using type = TypeList<Element, Elements...>;
+    using type = TypeList<TElement, TElements...>;
 };
 
-template<typename List>
+template<typename TList>
 struct PopFront;
 
-template<typename Head, typename... Tail>
-struct PopFront<TypeList<Head, Tail...>>
+template<typename THead, typename... TTail>
+struct PopFront<TypeList<THead, TTail...>>
 {
-    using type = TypeList<Tail...>;
+    using type = TypeList<TTail...>;
 };
 
-template<typename List, unsigned Index>
+template<typename TList, unsigned Index>
 struct Get
 {
-    using type = typename Get<typename PopFront<List>::type, Index - 1>::type;
+    using type = typename Get<typename PopFront<TList>::type, Index - 1>::type;
 };
 
-template<typename List>
-struct Get<List, 0>
+template<typename TList>
+struct Get<TList, 0>
 {
-    using type = typename Front<List>::type;
+    using type = typename Front<TList>::type;
 };
 
 } // namespace nsh::meta
