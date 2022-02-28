@@ -4,25 +4,25 @@
 /**
  * @def NSH_UNUSED(<var-name>)
  * @brief Indicates that <var-name> is unused in the current scope.
- * 
+ *
  * This macro is used to prevent some compiler warnings about unused variables.
  */
 #define NSH_UNUSED(var) ((void)var)
 
-/** 
+/**
  * @def NSH_NON_NULL(<arg-index>...)
  * @brief Indicates that listed pointer arguments shall not be null.
- * 
+ *
  * This macro acts as a precondition for a function, indicating that arguments
  * whose index is present in the list must not be null. The precondition is meant
  * to be checkable by a compiler (GCC and Clang at least).
  * If a null pointer is passed to an argument marked as NSH_NON_NULL, and the function
  * does not check if this argument is null, then the behaviour is undefined.
- * 
+ *
  * @example
  * // When calling func, i and c arguments shall not be null
  * void func(int* i, float f, char* c, void* p) NSH_NON_NULL(1,3)
- * 
+ *
  * @note MSVC also implements something similar but the usage is not compatible with
  * GCC and Clang.
  */
@@ -35,7 +35,7 @@
 /**
  * @def NSH_RESTRICT
  * @brief Portable restrict keyword for both C and C++.
- * 
+ *
  * This macro allows the usage of restrict keyword when nsh is compiled as C, and
  * the usage of corresponding compilers extension when compiled as C++.
  * If a compiler does not provide an alternative restrict keyword for C++, this
@@ -53,6 +53,10 @@
 #define NSH_RESTRICT restrict
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum nsh_status {
     NSH_STATUS_OK,
     NSH_STATUS_QUIT,
@@ -65,5 +69,9 @@ typedef enum nsh_status {
     NSH_STATUS_MAX_CMD_NB_REACH,
     NSH_STATUS_MAX_ARGS_NB_REACH,
 } nsh_status_t;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // NSH_COMMON_DEFS_HPP_

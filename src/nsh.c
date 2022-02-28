@@ -1,7 +1,7 @@
-#include <nsh/nsh.hpp>
-#include <nsh/nsh_cmd_builtins.hpp>
-#include <nsh/nsh_common_defs.hpp>
-#include <nsh/nsh_io_plugin_default.hpp>
+#include <nsh/nsh.h>
+#include <nsh/nsh_cmd_builtins.h>
+#include <nsh/nsh_common_defs.h>
+#include <nsh/nsh_io_plugin_default.h>
 
 #include <ctype.h>
 #include <stdbool.h>
@@ -68,7 +68,7 @@ static nsh_status_t nsh_split_command_line(const char* str, char sep, char outpu
 {
     unsigned int beg = 0;
     unsigned int end = 0;
-    unsigned int input_size = static_cast<unsigned int>(strlen(str));
+    unsigned int input_size = (unsigned int)strlen(str);
 
     *token_count = 0;
 
@@ -168,7 +168,7 @@ static void nsh_display_history_entry(nsh_t* nsh)
             nsh->io.erase_line();
             nsh->io.print_prompt();
             nsh->io.put_string(nsh->line.buffer);
-            nsh->line.size = static_cast<unsigned int>(strlen(nsh->line.buffer));
+            nsh->line.size = (unsigned int)strlen(nsh->line.buffer);
         }
     }
 }
@@ -298,10 +298,7 @@ nsh_t nsh_init(nsh_io_plugin_t io, nsh_status_t* status)
 {
     nsh_t nsh = {
         .io = io,
-        .line = {},
-        .cmds = {},
 #if NSH_FEATURE_USE_HISTORY == 1
-        .history = {},
         .current_history_entry = 0,
 #endif
     };

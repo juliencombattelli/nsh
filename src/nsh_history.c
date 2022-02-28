@@ -1,10 +1,10 @@
-#include <nsh/nsh_config.hpp>
+#include <nsh/nsh_config.h>
 
-#include <nsh/nsh_common_defs.hpp>
+#include <nsh/nsh_common_defs.h>
 
 #if NSH_FEATURE_USE_HISTORY == 1
 
-#include <nsh/nsh_history.hpp>
+#include <nsh/nsh_history.h>
 #include <string.h>
 
 void nsh_history_reset(nsh_history_t* hist)

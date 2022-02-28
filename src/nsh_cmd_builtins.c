@@ -1,4 +1,4 @@
-#include <nsh/nsh_cmd_builtins.hpp>
+#include <nsh/nsh_cmd_builtins.h>
 
 #include <stdio.h>
 

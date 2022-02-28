@@ -1,4 +1,4 @@
-#include <nsh/nsh_cmd_array.hpp>
+#include <nsh/nsh_cmd_array.h>
 
 #include <string.h>
 
@@ -32,7 +32,7 @@ const nsh_cmd_t* nsh_cmd_array_find_matching(const nsh_cmd_array_t* cmds, const 
 
 const nsh_cmd_t* nsh_cmd_array_find(const nsh_cmd_array_t* cmds, const char* name)
 {
-    return nsh_cmd_array_find_matching(cmds, name, static_cast<unsigned int>(strlen(name)));
+    return nsh_cmd_array_find_matching(cmds, name, (unsigned int)strlen(name));
 }
 
 nsh_status_t nsh_cmd_array_register(nsh_cmd_array_t* cmds, const char* name, nsh_cmd_handler_t* handler)

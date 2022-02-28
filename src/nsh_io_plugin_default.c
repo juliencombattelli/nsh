@@ -1,15 +1,14 @@
-#include <nsh/nsh_common_defs.hpp>
-#include <nsh/nsh_config.hpp>
-#include <nsh/nsh_io_plugin_default.hpp>
-#include <nsh/nsh_io_plugin_default_impl.hpp>
+#include <nsh/nsh_common_defs.h>
+#include <nsh/nsh_config.h>
+#include <nsh/nsh_io_plugin_default.h>
+#include <nsh/nsh_io_plugin_default_impl.h>
 
 #include <stdio.h>
 #include <string.h>
 
 nsh_io_plugin_t nsh_io_make_default_plugin()
 {
-    return
-    {
+    return (nsh_io_plugin_t) {
         .get_char = &nsh_io_get_char,
         .put_char = &nsh_io_put_char,
         .put_newline = &nsh_io_put_newline,
@@ -34,7 +33,7 @@ char nsh_io_get_char(void)
     int c;
     while ((c = getchar()) == EOF)
         ;
-    return static_cast<char>(c);
+    return (char)c;
 }
 
 void nsh_io_put_char(char c)
@@ -54,7 +53,7 @@ void nsh_io_put_string(const char* str)
     // one by strlen, one by nsh_io_put_buffer...
     // Migrating from null-terminated strings to mcsl's string_view could
     // solve this issue.
-    nsh_io_put_buffer(str, static_cast<unsigned int>(strlen(str)));
+    nsh_io_put_buffer(str, (unsigned int)strlen(str));
 }
 
 void nsh_io_put_buffer(const char* str, unsigned int size)

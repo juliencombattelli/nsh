@@ -1,8 +1,8 @@
 #ifndef NSH_HISTORY_HPP_
 #define NSH_HISTORY_HPP_
 
-#include <nsh/nsh_common_defs.hpp>
-#include <nsh/nsh_config.hpp>
+#include <nsh/nsh_common_defs.h>
+#include <nsh/nsh_config.h>
 
 #if NSH_FEATURE_USE_HISTORY == 1
 
@@ -10,6 +10,10 @@
 #include <stdbool.h>
 
 #define NSH_HISTORY_INVALID_ENTRY UINT_MAX
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct nsh_history {
     char entries[NSH_CMD_HISTORY_SIZE][NSH_LINE_BUFFER_SIZE];
@@ -29,6 +33,10 @@ bool nsh_history_is_empty(const nsh_history_t* hist) NSH_NON_NULL(1);
 void nsh_history_add_entry(nsh_history_t* hist, const char* entry) NSH_NON_NULL(1, 2);
 
 nsh_status_t nsh_history_get_entry(nsh_history_t* hist, unsigned int age, char* entry) NSH_NON_NULL(1, 3);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // NSH_FEATURE_USE_HISTORY == 1
 

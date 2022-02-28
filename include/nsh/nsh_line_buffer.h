@@ -1,10 +1,14 @@
 #ifndef NSH_LINE_BUFFER_HPP_
 #define NSH_LINE_BUFFER_HPP_
 
-#include <nsh/nsh_common_defs.hpp>
-#include <nsh/nsh_config.hpp>
+#include <nsh/nsh_common_defs.h>
+#include <nsh/nsh_config.h>
 
 #include <stdbool.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct nsh_line_buffer {
     char buffer[NSH_LINE_BUFFER_SIZE];
@@ -22,5 +26,9 @@ void nsh_line_buffer_erase_last_char(nsh_line_buffer_t* linebuf) NSH_NON_NULL(1)
 bool nsh_line_buffer_is_full(nsh_line_buffer_t* linebuf) NSH_NON_NULL(1);
 
 bool nsh_line_buffer_is_empty(nsh_line_buffer_t* linebuf) NSH_NON_NULL(1);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // NSH_LINE_BUFFER_HPP_

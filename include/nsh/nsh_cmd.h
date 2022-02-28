@@ -1,8 +1,12 @@
 #ifndef NSH_CMD_HPP_
 #define NSH_CMD_HPP_
 
-#include <nsh/nsh_common_defs.hpp>
-#include <nsh/nsh_config.hpp>
+#include <nsh/nsh_common_defs.h>
+#include <nsh/nsh_config.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef nsh_status_t nsh_cmd_handler_t(unsigned int, char**);
 
@@ -18,5 +22,9 @@ nsh_status_t nsh_cmd_init(nsh_cmd_t* cmd, const char* name, nsh_cmd_handler_t* h
 void nsh_cmd_copy(nsh_cmd_t* dst, const nsh_cmd_t* src) NSH_NON_NULL(1, 2);
 
 void nsh_cmd_swap(nsh_cmd_t* cmd1, nsh_cmd_t* cmd2) NSH_NON_NULL(1, 2);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // NSH_CMD_HPP_

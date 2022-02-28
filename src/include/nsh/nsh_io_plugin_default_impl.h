@@ -1,7 +1,11 @@
 #ifndef NSH_IO_PLUGIN_DEFAULT_IMPL_HPP_
 #define NSH_IO_PLUGIN_DEFAULT_IMPL_HPP_
 
-#include <nsh/nsh_config.hpp>
+#include <nsh/nsh_config.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 char nsh_io_get_char(void);
 
@@ -21,6 +25,10 @@ void nsh_io_erase_line(void);
 
 #if NSH_FEATURE_USE_PRINTF == 1
 int nsh_io_printf(const char* NSH_RESTRICT format, ...);
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif // NSH_IO_PLUGIN_DEFAULT_IMPL_HPP_

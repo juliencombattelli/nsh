@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <nsh/nsh_cmd_array.hpp>
+#include <nsh/nsh_cmd_array.h>
 
 using testing::Each;
 using testing::FieldsAre;

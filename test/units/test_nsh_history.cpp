@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include <nsh/nsh_history.hpp>
+#include <nsh/nsh_history.h>
 
 TEST(NshHistoryReset, Success)
 {
