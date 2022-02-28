@@ -15,7 +15,7 @@ jobs:
             artifact: ubuntu-gcc
             compiler-c: gcc-10
             compiler-cxx: g++-10
-            extra_cmake_args: -DENABLE_COVERAGE=ON
+            extra_cmake_args: -DNSH_ENABLE_COVERAGE=ON
           # - os: ubuntu-latest
           #   name: Ubuntu Clang
           #   artifact: ubuntu-clang
