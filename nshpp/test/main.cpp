@@ -1,6 +1,6 @@
-#include "StaticBinding.hpp"
-#include "Stdio.hpp"
-#include "nsh.hpp"
+#include <nshpp/StaticBinding.hpp>
+#include <nshpp/Stdio.hpp>
+#include <nshpp/nsh.hpp>
 
 // namespace my_shell {
 

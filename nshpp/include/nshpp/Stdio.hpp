@@ -1,6 +1,6 @@
 #pragma once
 
-#include <meta/FixedString.hpp>
+#include <nshpp/meta/FixedString.hpp>
 
 namespace nsh {
 

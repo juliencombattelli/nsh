@@ -43,6 +43,11 @@ function(nsh_add_tool TARGET)
     target_link_libraries(${TARGET} PRIVATE Nsh::Platform::ToolsMain)
 endfunction()
 
+function(nsh_add_intermediate_tool TARGET)
+    nsh_add_library(${TARGET} ${ARGN})
+    target_link_libraries(${TARGET} PUBLIC Nsh::Platform::ToolsMain)
+endfunction()
+
 # Include platform file
 include(${CMAKE_CURRENT_LIST_DIR}/../../platform/${NSH_PLATFORM_NAME}/Platform.cmake)
 

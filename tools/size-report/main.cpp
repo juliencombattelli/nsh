@@ -14,9 +14,9 @@ int main(int /*argc*/, char* /*argv*/[])
 #include <nsh/nsh.h>
 #include <nsh/nsh_io_plugin_default.h>
 
-namespace nsh::tools {
+namespace nsh::termios {
 
-int main(int /*argc*/, char* /*argv*/[])
+int main(int, char**)
 {
     nsh_status_t status = NSH_STATUS_OK;
     nsh_t nsh = nsh_init(nsh_io_make_default_plugin(), &status);
@@ -24,6 +24,6 @@ int main(int /*argc*/, char* /*argv*/[])
     return 0;
 }
 
-} // namespace nsh::tools
+} // namespace nsh::termios
 
 #endif // NSH_SIZE_REPORT_BASELINE

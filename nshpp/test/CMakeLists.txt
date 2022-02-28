@@ -1,0 +1,9 @@
+nsh_add_tool(nshpp_static_tests
+    meta/TypeList.test.cpp
+    StaticBinding.test.cpp
+    main.cpp
+)
+target_link_libraries(nshpp_static_tests
+    PUBLIC
+        Nsh::Nshpp
+)

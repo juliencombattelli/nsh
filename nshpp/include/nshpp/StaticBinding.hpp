@@ -1,6 +1,6 @@
 #pragma once
 
-#include <meta/TypeList.hpp>
+#include <nshpp/meta/TypeList.hpp>
 
 #include <concepts>
 #include <type_traits>
@@ -61,7 +61,10 @@ struct GetFromInput
 template<typename THandlerType, typename TInputType, typename TDefaultBind>
 struct GetFromInput<THandlerType, TInputType, meta::TypeList<TDefaultBind>>
 {
-    static constexpr THandlerType value(TInputType) noexcept { return TDefaultBind::handler; }
+    static constexpr THandlerType value(TInputType) noexcept
+    {
+        return TDefaultBind::handler;
+    }
 };
 
 } // namespace detail
@@ -75,15 +78,20 @@ struct StaticBinding
 {
     using List = meta::TypeList<TBinds..., TDefaultBind>;
     using InputType = std::common_type_t<typename TBinds::InputType...>;
-    using HandlerType
-        = std::common_type_t<typename TDefaultBind::HandlerType, typename TBinds::HandlerType...>;
+    using HandlerType = std::common_type_t<typename TDefaultBind::HandlerType, typename TBinds::HandlerType...>;
 
-    static constexpr size_t size() noexcept { return List::size; }
+    static constexpr size_t size() noexcept
+    {
+        return List::size;
+    }
     static constexpr HandlerType at(InputType input) noexcept
     {
         return detail::GetFromInput<HandlerType, InputType, List>::value(input);
     }
-    constexpr HandlerType operator[](InputType input) noexcept { return at(input); }
+    constexpr HandlerType operator[](InputType input) noexcept
+    {
+        return at(input);
+    }
 };
 
 } // namespace nsh

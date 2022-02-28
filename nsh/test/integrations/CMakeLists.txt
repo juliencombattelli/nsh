@@ -1,8 +1,4 @@
-nsh_add_executable(simple_shell simple_shell.cpp)
-target_link_libraries(simple_shell
-    PRIVATE
-        nsh
-)
+if(UNIX)
 
 nsh_add_test(
     NAME simple_shell_test_default_cmds
@@ -64,3 +60,5 @@ nsh_add_test(
     # Expected: null command is NOT executed (because handled by a null pointer), then exit
     COMMAND bash -c "echo -e 'null\\nexit\\n' | $<TARGET_FILE:simple_shell>"
 )
+
+endif()

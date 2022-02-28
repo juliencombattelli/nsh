@@ -1,4 +1,4 @@
-#include "StaticBinding.hpp"
+#include <nshpp/StaticBinding.hpp>
 
 namespace nsh::test {
 
