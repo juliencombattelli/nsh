@@ -21,7 +21,7 @@ if(NSH_ENABLE_TESTS)
     include(GoogleTest)
     include(Coverage)
     if(UNIX)
-        add_subdirectory(tools/simple_shell)
+        add_subdirectory(tools/termios-test-app)
     endif()
 endif()
 

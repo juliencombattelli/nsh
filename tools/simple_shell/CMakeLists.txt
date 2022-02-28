@@ -1,1 +1,0 @@
-nsh_add_intermediate_tool(simple_shell simple_shell.cpp)
