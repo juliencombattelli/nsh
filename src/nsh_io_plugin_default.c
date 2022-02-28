@@ -8,6 +8,7 @@
 
 nsh_io_plugin_t nsh_io_make_default_plugin()
 {
+    // clang-format off
     return (nsh_io_plugin_t) {
         .get_char = &nsh_io_get_char,
         .put_char = &nsh_io_put_char,
@@ -21,11 +22,12 @@ nsh_io_plugin_t nsh_io_make_default_plugin()
         .printf = &nsh_io_printf,
 #endif
     };
+    // clang-format on
 }
 
-#define NSH_IO_ESC             "\x1B"
-#define NSH_IO_CSI             NSH_IO_ESC "["
-#define NSH_IO_ERASE_LINE      NSH_IO_CSI "2K"
+#define NSH_IO_ESC "\x1B"
+#define NSH_IO_CSI NSH_IO_ESC "["
+#define NSH_IO_ERASE_LINE NSH_IO_CSI "2K"
 #define NSH_IO_MOVE_BEGIN_LINE "\r"
 
 char nsh_io_get_char(void)

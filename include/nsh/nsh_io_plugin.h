@@ -19,7 +19,8 @@ typedef void nsh_io_erase_line_t(void);
 typedef int nsh_io_printf_t(const char* NSH_RESTRICT format, ...);
 #endif
 
-typedef struct nsh_io_plugin {
+typedef struct nsh_io_plugin
+{
     nsh_io_get_char_t* const get_char;
     nsh_io_put_char_t* const put_char;
     nsh_io_put_newline_t* const put_newline;

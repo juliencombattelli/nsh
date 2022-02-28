@@ -47,13 +47,12 @@ int main(void)
 
     BSP_LED2_DeInit();
 
-    while (1) {
-    }
+    while (1) {}
 }
 
 /**
-  * @brief  Configure LED2 GPIO.
-  */
+ * @brief  Configure LED2 GPIO.
+ */
 static void BSP_LED2_Init()
 {
     GPIO_InitTypeDef GPIO_InitStruct;
@@ -73,9 +72,9 @@ static void BSP_LED2_Init()
 }
 
 /**
-  * @brief  DeInit LED2.
-  * @note Led DeInit does not disable the GPIO clock nor disable the Mfx 
-  */
+ * @brief  DeInit LED2.
+ * @note Led DeInit does not disable the GPIO clock nor disable the Mfx
+ */
 static void BSP_LED2_DeInit()
 {
     GPIO_InitTypeDef gpio_init_structure;
@@ -88,16 +87,16 @@ static void BSP_LED2_DeInit()
 }
 
 /**
-  * @brief  Turn LED2 On.
-  */
+ * @brief  Turn LED2 On.
+ */
 static void BSP_LED2_On()
 {
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 }
 
 /**
-  * @brief  Turn LED2 Off.
-  */
+ * @brief  Turn LED2 Off.
+ */
 static void BSP_LED2_Off()
 {
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
@@ -106,30 +105,29 @@ static void BSP_LED2_Off()
 static void Error_Handler(void)
 {
     BSP_LED2_On();
-    while (1) {
-    }
+    while (1) {}
 }
 
 /**
-  * @brief  System Clock Configuration
-  *         The system Clock is configured as follow : 
-  *            System Clock source            = PLL (HSI)
-  *            SYSCLK(Hz)                     = 100000000
-  *            HCLK(Hz)                       = 100000000
-  *            AHB Prescaler                  = 1
-  *            APB1 Prescaler                 = 2
-  *            APB2 Prescaler                 = 1
-  *            HSI Frequency(Hz)              = 16000000
-  *            PLL_M                          = 16
-  *            PLL_N                          = 400
-  *            PLL_P                          = 4
-  *            PLL_Q                          = 7
-  *            VDD(V)                         = 3.3
-  *            Main regulator output voltage  = Scale2 mode
-  *            Flash Latency(WS)              = 3
-  * @param  None
-  * @retval None
-  */
+ * @brief  System Clock Configuration
+ *         The system Clock is configured as follow :
+ *            System Clock source            = PLL (HSI)
+ *            SYSCLK(Hz)                     = 100000000
+ *            HCLK(Hz)                       = 100000000
+ *            AHB Prescaler                  = 1
+ *            APB1 Prescaler                 = 2
+ *            APB2 Prescaler                 = 1
+ *            HSI Frequency(Hz)              = 16000000
+ *            PLL_M                          = 16
+ *            PLL_N                          = 400
+ *            PLL_P                          = 4
+ *            PLL_Q                          = 7
+ *            VDD(V)                         = 3.3
+ *            Main regulator output voltage  = Scale2 mode
+ *            Flash Latency(WS)              = 3
+ * @param  None
+ * @retval None
+ */
 static void SystemClock_Config(void)
 {
     RCC_ClkInitTypeDef RCC_ClkInitStruct;
@@ -138,8 +136,8 @@ static void SystemClock_Config(void)
     /* Enable Power Control clock */
     __HAL_RCC_PWR_CLK_ENABLE();
 
-    /* The voltage scaling allows optimizing the power consumption when the device is 
-     clocked below the maximum system frequency, to update the voltage scaling value 
+    /* The voltage scaling allows optimizing the power consumption when the device is
+     clocked below the maximum system frequency, to update the voltage scaling value
      regarding system frequency refer to product datasheet.  */
     __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
 
@@ -157,9 +155,10 @@ static void SystemClock_Config(void)
         Error_Handler();
     }
 
-    /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2 
+    /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2
      clocks dividers */
-    RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
+    RCC_ClkInitStruct.ClockType
+        = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
     RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
@@ -172,10 +171,10 @@ static void SystemClock_Config(void)
 extern "C" {
 
 /**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
+ * @brief  Retargets the C library printf function to the USART.
+ * @param  None
+ * @retval None
+ */
 int __io_putchar(int ch)
 {
     HAL_UART_Transmit(&UartHandle, (uint8_t*)&ch, 1, 0xFFFF);
@@ -183,10 +182,10 @@ int __io_putchar(int ch)
 }
 
 /**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
+ * @brief  Retargets the C library printf function to the USART.
+ * @param  None
+ * @retval None
+ */
 int __io_getchar(void)
 {
     HAL_StatusTypeDef status = HAL_BUSY;
@@ -198,13 +197,13 @@ int __io_getchar(void)
 }
 
 /**
-  * @brief UART MSP Initialization 
-  *        This function configures the hardware resources used in this example: 
-  *           - Peripheral's clock enable
-  *           - Peripheral's GPIO Configuration  
-  * @param huart: UART handle pointer
-  * @retval None
-  */
+ * @brief UART MSP Initialization
+ *        This function configures the hardware resources used in this example:
+ *           - Peripheral's clock enable
+ *           - Peripheral's GPIO Configuration
+ * @param huart: UART handle pointer
+ * @retval None
+ */
 void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 {
     GPIO_InitTypeDef GPIO_InitStruct;
@@ -234,13 +233,13 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 }
 
 /**
-  * @brief UART MSP De-Initialization 
-  *        This function frees the hardware resources used in this example:
-  *          - Disable the Peripheral's clock
-  *          - Revert GPIO and NVIC configuration to their default state
-  * @param huart: UART handle pointer
-  * @retval None
-  */
+ * @brief UART MSP De-Initialization
+ *        This function frees the hardware resources used in this example:
+ *          - Disable the Peripheral's clock
+ *          - Revert GPIO and NVIC configuration to their default state
+ * @param huart: UART handle pointer
+ * @retval None
+ */
 void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 {
     /*##-1- Reset peripherals ##################################################*/
@@ -255,86 +254,86 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 }
 
 /**
-  * @brief  This function handles NMI exception.
-  * @param  None
-  * @retval None
-  */
+ * @brief  This function handles NMI exception.
+ * @param  None
+ * @retval None
+ */
 void NMI_Handler(void)
 {
 }
 
 /**
-  * @brief  This function handles Hard Fault exception.
-  * @param  None
-  * @retval None
-  */
+ * @brief  This function handles Hard Fault exception.
+ * @param  None
+ * @retval None
+ */
 void HardFault_Handler(void)
 {
     Error_Handler();
 }
 
 /**
-  * @brief  This function handles Memory Manage exception.
-  * @param  None
-  * @retval None
-  */
+ * @brief  This function handles Memory Manage exception.
+ * @param  None
+ * @retval None
+ */
 void MemManage_Handler(void)
 {
     Error_Handler();
 }
 
 /**
-  * @brief  This function handles Bus Fault exception.
-  * @param  None
-  * @retval None
-  */
+ * @brief  This function handles Bus Fault exception.
+ * @param  None
+ * @retval None
+ */
 void BusFault_Handler(void)
 {
     Error_Handler();
 }
 
 /**
-  * @brief  This function handles Usage Fault exception.
-  * @param  None
-  * @retval None
-  */
+ * @brief  This function handles Usage Fault exception.
+ * @param  None
+ * @retval None
+ */
 void UsageFault_Handler(void)
 {
     Error_Handler();
 }
 
 /**
-  * @brief  This function handles SVCall exception.
-  * @param  None
-  * @retval None
-  */
+ * @brief  This function handles SVCall exception.
+ * @param  None
+ * @retval None
+ */
 void SVC_Handler(void)
 {
 }
 
 /**
-  * @brief  This function handles Debug Monitor exception.
-  * @param  None
-  * @retval None
-  */
+ * @brief  This function handles Debug Monitor exception.
+ * @param  None
+ * @retval None
+ */
 void DebugMon_Handler(void)
 {
 }
 
 /**
-  * @brief  This function handles PendSVC exception.
-  * @param  None
-  * @retval None
-  */
+ * @brief  This function handles PendSVC exception.
+ * @param  None
+ * @retval None
+ */
 void PendSV_Handler(void)
 {
 }
 
 /**
-  * @brief  This function handles SysTick Handler.
-  * @param  None
-  * @retval None
-  */
+ * @brief  This function handles SysTick Handler.
+ * @param  None
+ * @retval None
+ */
 void SysTick_Handler(void)
 {
     HAL_IncTick();
@@ -429,7 +428,7 @@ int _kill(int pid, int sig)
 void _exit(int status)
 {
     _kill(status, -1);
-    while (1) { }
+    while (1) {}
 }
 
 int _write(int file, char* ptr, int len)

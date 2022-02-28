@@ -12,7 +12,8 @@
 extern "C" {
 #endif
 
-typedef struct nsh_s {
+typedef struct nsh_s
+{
     nsh_io_plugin_t io;
     nsh_line_buffer_t line;
     nsh_cmd_array_t cmds;

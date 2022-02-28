@@ -1,29 +1,58 @@
 # Nsh formatting style
 # This clang-format configuration is compatible with clang-format 13
+
+# General options
 BasedOnStyle: WebKit
 Language: Cpp
 Standard: c++20
 ColumnLimit: 120
-BreakBeforeBraces: Mozilla
+
+# Identation options
+IndentRequires: true
+NamespaceIndentation: None
+
+# Spacing options
+SpaceInEmptyBlock: false
+
+# Brace wrapping options
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel:         false
+  AfterClass:             true
+  AfterControlStatement:  Never
+  AfterEnum:              true
+  AfterFunction:          true
+  AfterNamespace:         false
+  AfterObjCDeclaration:   false
+  AfterStruct:            true
+  AfterUnion:             true
+  AfterExternBlock:       false
+  BeforeCatch:            false
+  BeforeElse:             false
+  BeforeLambdaBody:       false
+  BeforeWhile:            false
+  IndentBraces:           false
+  SplitEmptyFunction:     true
+  SplitEmptyRecord:       false
+  SplitEmptyNamespace:    true
+CompactNamespaces: true
+
+# Alignment options
 AlignOperands: AlignAfterOperator
 
 # Disable short blocks on single line
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: false
+AllowShortLambdasOnASingleLine: All
 
-# Concept/require clause settings
-IndentRequires: true
-
-# Template settings
+# Template options
 AlwaysBreakTemplateDeclarations: true
 SpaceAfterTemplateKeyword: false
 
-# Namespace settings
-CompactNamespaces: true
+# Namespace options
 FixNamespaceComments: true
-NamespaceIndentation: None
 
-# Parameter splitting
+# Parameter splitting options
 # If parameters/arguments do not fit in a single line, break them one by line using
 # ContinuationIndentWidth as indentation.
 AlignAfterOpenBracket: AlwaysBreak
@@ -35,3 +64,5 @@ AllowAllParametersOfDeclarationOnNextLine: false
 PenaltyReturnTypeOnItsOwnLine: 1000
 # Avoid breaking around assignment
 PenaltyBreakAssignment: 1000
+
+

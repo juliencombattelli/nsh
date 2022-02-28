@@ -10,7 +10,8 @@ extern "C" {
 
 typedef nsh_status_t nsh_cmd_handler_t(unsigned int, char**);
 
-typedef struct nsh_cmd {
+typedef struct nsh_cmd
+{
     nsh_cmd_handler_t* handler;
     char name[NSH_MAX_STRING_SIZE];
 } nsh_cmd_t;

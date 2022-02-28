@@ -10,7 +10,8 @@
 extern "C" {
 #endif
 
-typedef struct nsh_line_buffer {
+typedef struct nsh_line_buffer
+{
     char buffer[NSH_LINE_BUFFER_SIZE];
     unsigned int size;
 } nsh_line_buffer_t;

@@ -8,62 +8,63 @@
 #include <stdlib.h>
 #include <string.h>
 
-static nsh_status_t nsh_copy_token(const char* str, char output[][NSH_MAX_STRING_SIZE], unsigned int* token_count,
-    unsigned int token_size)
-    NSH_NON_NULL(1, 2, 3);
+static nsh_status_t nsh_copy_token(
+    const char* str,
+    char output[][NSH_MAX_STRING_SIZE],
+    unsigned int* token_count,
+    unsigned int token_size) NSH_NON_NULL(1, 2, 3);
 
-static nsh_status_t nsh_split_command_line(const char* str, char sep, char output[][NSH_MAX_STRING_SIZE],
-    unsigned int* token_count)
-    NSH_NON_NULL(1, 3, 4);
+static nsh_status_t nsh_split_command_line(
+    const char* str,
+    char sep,
+    char output[][NSH_MAX_STRING_SIZE],
+    unsigned int* token_count) NSH_NON_NULL(1, 3, 4);
 
-static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv)
-    NSH_NON_NULL(1);
+static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv) NSH_NON_NULL(1);
 
-static nsh_status_t nsh_autocomplete(const nsh_t* nsh)
-    NSH_NON_NULL(1);
+static nsh_status_t nsh_autocomplete(const nsh_t* nsh) NSH_NON_NULL(1);
 
 #if NSH_FEATURE_USE_HISTORY == 1
-static void nsh_display_history_entry(nsh_t* nsh)
-    NSH_NON_NULL(1);
+static void nsh_display_history_entry(nsh_t* nsh) NSH_NON_NULL(1);
 #endif
 
-static nsh_status_t nsh_display_previous_entry(nsh_t* nsh)
-    NSH_NON_NULL(1);
+static nsh_status_t nsh_display_previous_entry(nsh_t* nsh) NSH_NON_NULL(1);
 
-static nsh_status_t nsh_display_next_entry(nsh_t* nsh)
-    NSH_NON_NULL(1);
+static nsh_status_t nsh_display_next_entry(nsh_t* nsh) NSH_NON_NULL(1);
 
-static nsh_status_t nsh_handle_escape_sequence(nsh_t* nsh)
-    NSH_NON_NULL(1);
+static nsh_status_t nsh_handle_escape_sequence(nsh_t* nsh) NSH_NON_NULL(1);
 
-static void nsh_validate_entry(nsh_t* nsh)
-    NSH_NON_NULL(1);
+static void nsh_validate_entry(nsh_t* nsh) NSH_NON_NULL(1);
 
-static void nsh_erase_last_char(nsh_t* nsh)
-    NSH_NON_NULL(1);
+static void nsh_erase_last_char(nsh_t* nsh) NSH_NON_NULL(1);
 
-static nsh_status_t nsh_read_line(nsh_t* nsh)
-    NSH_NON_NULL(1);
+static nsh_status_t nsh_read_line(nsh_t* nsh) NSH_NON_NULL(1);
 
-static nsh_status_t nsh_copy_token(const char* str, char output[][NSH_MAX_STRING_SIZE], unsigned int* token_count,
+static nsh_status_t nsh_copy_token(
+    const char* str,
+    char output[][NSH_MAX_STRING_SIZE],
+    unsigned int* token_count,
     unsigned int token_size)
 {
     if (token_size > NSH_MAX_STRING_SIZE - 1) // Keep one char for '\0'
     {
-        //nsh->io.put_string("WARNING: too long argument\r\n");
+        // nsh->io.put_string("WARNING: too long argument\r\n");
         return NSH_STATUS_BUFFER_OVERFLOW;
     }
     memcpy(output[*token_count], str, token_size);
     output[*token_count][token_size] = '\0';
     (*token_count)++;
     if (*token_count >= NSH_CMD_ARGS_MAX_COUNT) {
-        //nsh->io.put_string("WARNING: too many arguments\r\n");
+        // nsh->io.put_string("WARNING: too many arguments\r\n");
         return NSH_STATUS_MAX_ARGS_NB_REACH;
     }
     return NSH_STATUS_OK;
 }
 
-static nsh_status_t nsh_split_command_line(const char* str, char sep, char output[][NSH_MAX_STRING_SIZE],
+static nsh_status_t nsh_split_command_line(
+    const char* str,
+    char sep,
+    char output[][NSH_MAX_STRING_SIZE],
     unsigned int* token_count)
 {
     unsigned int beg = 0;

@@ -57,7 +57,8 @@
 extern "C" {
 #endif
 
-typedef enum nsh_status {
+typedef enum nsh_status
+{
     NSH_STATUS_OK,
     NSH_STATUS_QUIT,
     NSH_STATUS_FAILURE,

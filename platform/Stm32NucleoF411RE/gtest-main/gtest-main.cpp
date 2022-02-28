@@ -3,10 +3,12 @@
 #include <array>
 #include <cstdio>
 
-template <typename... Args>
+template<typename... Args>
 static auto to_argv(Args... str)
 {
-    static_assert(std::conjunction_v<std::is_convertible<Args, char*>...>, "Args must be convertible to non-const char*");
+    static_assert(
+        std::conjunction_v<std::is_convertible<Args, char*>...>,
+        "Args must be convertible to non-const char*");
     std::array argv { static_cast<char*>(str)..., static_cast<char*>(nullptr) };
     return argv;
 }
