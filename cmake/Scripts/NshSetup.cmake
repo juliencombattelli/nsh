@@ -22,6 +22,7 @@ function(nsh_add_library TARGET)
     target_link_libraries(${TARGET} PUBLIC Nsh::Platform)
     target_project_warnings(${TARGET})
     target_enable_sanitizers(${TARGET})
+    target_enable_coverage(${TARGET})
 endfunction()
 
 # Define Nsh specific add_executable wrapper
