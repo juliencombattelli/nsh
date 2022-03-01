@@ -1,5 +1,6 @@
 nsh_add_tool(nshpp_static_tests
     meta/TypeList.test.cpp
+    BindingConcept.test.cpp
     StaticBinding.test.cpp
     main.cpp
 )
