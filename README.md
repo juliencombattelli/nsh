@@ -44,11 +44,11 @@ cmake --build nsh-build-native-debug --target coverage
 
 ```bash
 # Configure the project
-cmake -S path-to-nsh -B nsh-build-f411re-release -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/Toolchains/Stm32Gcc.cmake -DSTM32_TOOLCHAIN_PATH=/tmp/gcc-arm-none-eabi -DNSH_STM32_TARGET=Stm32NucleoF411RE
+cmake -S path-to-nsh -B nsh-build-f411re-release -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/Toolchains/Stm32Gcc.cmake -DNSH_PLATFORM_NAME=Stm32NucleoF411RE
 # Build Nsh
 cmake --build nsh-build-f411re-release --parallel 4
 # Flash the target
-cmake --build nsh-build-f411re-release --target simple_shell-flash
+cmake --build nsh-build-f411re-release --target utests-flash
 ```
 
 ## Contributing
