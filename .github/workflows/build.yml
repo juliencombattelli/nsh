@@ -26,12 +26,11 @@ jobs:
             artifact: macos-clang
             compiler-c: clang
             compiler-cxx: clang++
-          # - os: windows-latest
-          #   name: Windows MinGW
-          #   artifact: windows-mingw
-          #   compiler-c: gcc
-          #   compiler-cxx: g++
-          #   extra_cmake_args: -G "MSYS Makefiles"
+          - os: windows-latest
+            name: Windows MSVC
+            artifact: windows-msvc
+            compiler-c: cl
+            compiler-cxx: cl
           - os: ubuntu-latest
             name: STM32 GCC
             artifact: stm32-gcc
@@ -78,7 +77,7 @@ jobs:
 
       - name: Run tests
         working-directory: build
-        run: ctest --verbose --output-on-failure
+        run: ctest --verbose --output-on-failure -C ${{ matrix.build_type }}
 
       - name: Coverage
         if: ${{ matrix.config.name == 'Ubuntu GCC' && matrix.build_type == 'Debug' }}
@@ -92,7 +91,7 @@ jobs:
 
       - name: Install Strip
         run: |
-          cmake --install build --prefix instdir --strip
+          cmake --install build --config ${{ matrix.build_type }} --prefix instdir --strip
 
       - name: Upload
         uses: actions/upload-artifact@v1
