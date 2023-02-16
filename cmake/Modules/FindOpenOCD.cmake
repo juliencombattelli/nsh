@@ -5,14 +5,14 @@ FindOpenOCD
 -----------
 
 This module checks if OpenOCD debugger is installed and determines where the
-executable is. The caller may set ``OPENOCD_HOME`` to specify a OpenOCD
+executable is. The caller may set ``OpenOCD_ROOT`` to specify a OpenOCD
 installation prefix explicitly.
 
 The module defines the following ``IMPORTED`` targets:
 
 ``OpenOCD::OpenOCD``
   Executable of the OpenOCD debugger
-  
+
 The module defines the following variables:
 
 ``OPENOCD_FOUND``
@@ -39,23 +39,9 @@ Example usage:
 
 #]=======================================================================]
 
-set(_openocd_names openocd)
-
-# If running on Windows, search for openocd.exe as well
-if(CMAKE_HOST_WIN32)
-  list(APPEND _openocd_names openocd.exe)
-endif()
-
-# Add user-provided OpenOCD installation directory to search paths
-set(_openocd_paths)
-if(OPENOCD_HOME)
-  list(APPEND _openocd_paths ${OPENOCD_HOME}/bin)
-endif()
-
 # First search the PATH and specific locations.
 find_program(OPENOCD_EXECUTABLE
-  NAMES ${_openocd_names}
-  PATHS ${_openocd_paths}
+  NAMES openocd.exe openocd
   DOC "Path to the OpenOCD executable"
 )
 
@@ -70,7 +56,7 @@ if(OPENOCD_EXECUTABLE)
     RESULT_VARIABLE _openocd_version_result
   )
   if(NOT _openocd_version_result)
-    string(REGEX MATCH "^Open On-Chip Debugger ([0-9]+.[0-9]+.[0-9]+)" _openocd_version_match "${_openocd_version}")
+    string(REGEX MATCH "Open On-Chip Debugger ([0-9]+.[0-9]+.[0-9]+)" _openocd_version_match "${_openocd_version}")
     set(OPENOCD_VERSION_STRING ${CMAKE_MATCH_1})
     string(REPLACE "." ";" _openocd_version_list "${OPENOCD_VERSION_STRING}")
     list(GET _openocd_version_list 0 OPENOCD_VERSION_MAJOR)
