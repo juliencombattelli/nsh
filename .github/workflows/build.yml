@@ -44,7 +44,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}
 
     steps:
-      
+
       - name: Checkout project
         uses: actions/checkout@v2
 
@@ -71,15 +71,15 @@ jobs:
           CXX: ${{ matrix.config.compiler-cxx }}
         run: |
           cmake ${{ matrix.config.extra_cmake_args }} -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-      
+
       - name: Build
         run: |
           cmake --build build --config ${{ matrix.build_type }}
-      
+
       - name: Run tests
         working-directory: build
-        run: ctest -V
-        
+        run: ctest --verbose --output-on-failure
+
       - name: Coverage
         if: ${{ matrix.config.name == 'Ubuntu GCC' && matrix.build_type == 'Debug' }}
         run: |
@@ -93,7 +93,7 @@ jobs:
       - name: Install Strip
         run: |
           cmake --install build --prefix instdir --strip
-      
+
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
