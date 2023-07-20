@@ -26,6 +26,13 @@
         },
         {
             "hidden": true,
+            "name": "base-minsizerel",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "MinSizeRel"
+            }
+        },
+        {
+            "hidden": true,
             "name": "base-native",
             "displayName": "Native Config",
             "description": "Configuration for native build",
@@ -79,16 +86,13 @@
             "description": "Debug configuration for STM32F411RE cross-compilation"
         },
         {
-            "name": "stm32f411re-release",
+            "name": "stm32f411re-minsizerel",
             "inherits": [
                 "base-stm32f411re",
-                "base-release"
+                "base-minsizerel"
             ],
-            "displayName": "STM32F411RE Release Config",
-            "description": "Release configuration for STM32F411RE cross-compilation",
-            "cacheVariables": {
-                "NSH_STM32_TARGET": "Stm32NucleoF411RE"
-            }
+            "displayName": "STM32F411RE Minimal Size Release Config",
+            "description": "Minimal Size Release configuration for STM32F411RE cross-compilation"
         }
     ],
     "buildPresets": [],
