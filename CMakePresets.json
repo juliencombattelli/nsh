@@ -1,5 +1,5 @@
 {
-    "version": 2,
+    "version": 6,
     "configurePresets": [
         {
             "hidden": true,
@@ -95,6 +95,44 @@
             "description": "Minimal Size Release configuration for STM32F411RE cross-compilation"
         }
     ],
-    "buildPresets": [],
-    "testPresets": []
+    "buildPresets": [
+        {
+            "name": "native-release",
+            "configurePreset": "native-release"
+        },
+        {
+            "name": "stm32f411re-minsizerel",
+            "configurePreset": "stm32f411re-minsizerel"
+        }
+    ],
+    "testPresets": [],
+    "packagePresets": [],
+    "workflowPresets": [
+        {
+            "name": "native-release",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "native-release"
+                },
+                {
+                    "type": "build",
+                    "name": "native-release"
+                }
+            ]
+        },
+        {
+            "name": "stm32f411re-minsizerel",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "stm32f411re-minsizerel"
+                },
+                {
+                    "type": "build",
+                    "name": "stm32f411re-minsizerel"
+                }
+            ]
+        }
+    ]
 }
