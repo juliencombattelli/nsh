@@ -78,20 +78,32 @@ function(nsh_platform_add_test)
 endfunction()
 
 add_library(Nsh::Platform::GTest INTERFACE IMPORTED GLOBAL)
-# No thread support on STM32F4. Using GTEST_HAS_THREAD=0 causes a "macro redefined" error...
+# No thread support on STM32F4. Using only GTEST_HAS_PTHREAD=0 causes compile errors...
 set(gtest_disable_pthreads ON CACHE INTERNAL "")
 target_compile_definitions(Nsh::Platform::GTest
     INTERFACE
         $<$<C_COMPILER_ID:GNU>:_GNU_SOURCE>
         PATH_MAX=256
+        # Environment related macros
         GTEST_HAS_CLONE=0
-        GTEST_HAS_POSIX_RE=0
         GTEST_HAS_EXCEPTIONS=0
+        GTEST_HAS_POSIX_RE=0
+        GTEST_HAS_PTHREAD=0
         GTEST_HAS_RTTI=0
-        GTEST_HAS_DEATH_TEST=0
+        GTEST_HAS_STD_WSTRING=0
+        GTEST_HAS_FILE_SYSTEM=0
+        GTEST_HAS_SEH=0
         GTEST_HAS_STREAM_REDIRECTION=0
-        GTEST_HAS_TR1_TUPLE=0
+        GTEST_LINKED_AS_SHARED_LIBRARY=0
+        GTEST_CREATE_SHARED_LIBRARY=0
+        # SrcDir and TempDir definition are not guarded by GTEST_HAS_FILE_SYSTEM...
+        # TODO should be place in customisation point headers
+        GTEST_CUSTOM_SRCDIR_FUNCTION_=std::string
+        GTEST_CUSTOM_TEMPDIR_FUNCTION_=std::string
 )
+# Remove a GCC warning about an ABI change from GCC7.1
+# See the GCC7 changelog https://gcc.gnu.org/gcc-7/changes.html and the
+# associated bug https://gcc.gnu.org/bugzilla/show_bug.cgi?id=77728 for details
 target_compile_options(Nsh::Platform::GTest
     INTERFACE
         "$<$<C_COMPILER_ID:GNU>:-Wno-psabi>"
