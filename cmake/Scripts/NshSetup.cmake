@@ -12,6 +12,7 @@ if (NOT CMAKE_CROSSCOMPILING)
 endif()
 
 # Include additional modules
+include(ForceColoredOutput)
 include(Sanitizers)
 include(StaticAnalyzers)
 include(Warnings)
