@@ -92,6 +92,14 @@
 #define NSH_FEATURE_USE_RETURN_CODE_PRINTING 1
 #endif
 
+#ifndef NSH_IO_PLUGIN_IS_STATIC
+#define NSH_IO_PLUGIN_IS_STATIC 1
+#endif
+
+#ifndef NSH_IO_PLUGIN_STATIC
+#define NSH_IO_PLUGIN_STATIC nsh_io_plugin_default
+#endif
+
 /******************************************************************************
  *** Internal configuration section (DO NOT TOUCH!)
  ******************************************************************************/

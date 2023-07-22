@@ -9,7 +9,7 @@ function(nsh_add_size_report_target TARGET)
     get_target_property(nsh_compile_features Nsh::Nsh COMPILE_FEATURES)
     target_sources(${TARGET}-lib PRIVATE ${nsh_sources})
     target_include_directories(${TARGET}-lib PUBLIC ${nsh_include_dirs})
-    target_compile_features(${TARGET}-lib PUBLIC ${nsh_compile_features})
+    target_compile_features(${TARGET}-lib PUBLIC ${nsh_compile_features} cxx_std_20)
     # Add compile definitions specific to this lib
     target_compile_definitions(${TARGET}-lib ${ARGN})
     # Add executable with a basic main file
