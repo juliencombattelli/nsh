@@ -1,12 +1,12 @@
 #include <nsh/nsh_cmd_builtins.h>
 
-#include <stdio.h>
+#include <nsh/nsh_io_plugin.h>
 
 nsh_status_t cmd_builtin_help(unsigned int argc, char** argv)
 {
     NSH_UNUSED(argc);
     NSH_UNUSED(argv);
-    puts("This is an helpful help message !");
+    nsh_io_put_string("This is an helpful help message !");
     return NSH_STATUS_OK;
 }
 
@@ -14,6 +14,6 @@ nsh_status_t cmd_builtin_exit(unsigned int argc, char** argv)
 {
     NSH_UNUSED(argc);
     NSH_UNUSED(argv);
-    puts("exit");
+    nsh_io_put_string("exit");
     return NSH_STATUS_QUIT;
 }
