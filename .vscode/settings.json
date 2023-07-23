@@ -1,6 +1,9 @@
 {
     "editor.detectIndentation": false,
     "editor.formatOnSave": true,
+    "[cmake]": {
+        "editor.formatOnSave": false
+    },
     "files.associations": {
         "array": "cpp",
         "atomic": "cpp",

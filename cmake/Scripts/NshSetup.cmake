@@ -7,7 +7,7 @@ function(nsh_set_platform PLATFORM)
 endfunction()
 
 # Set platform to "Native" if not cross-compiling
-if (NOT CMAKE_CROSSCOMPILING)
+if(NOT CMAKE_CROSSCOMPILING)
     nsh_set_platform(Native)
 endif()
 
