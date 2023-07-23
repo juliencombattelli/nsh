@@ -309,6 +309,7 @@ nsh_t nsh_init(nsh_status_t* status)
 
     nsh_register_command(&nsh, "help", cmd_builtin_help);
     nsh_register_command(&nsh, "exit", cmd_builtin_exit);
+    nsh_register_command(&nsh, "version", cmd_builtin_version);
 
     *status = NSH_STATUS_OK;
 

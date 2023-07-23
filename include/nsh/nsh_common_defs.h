@@ -1,28 +1,31 @@
 #ifndef NSH_COMMON_DEFS_H_
 #define NSH_COMMON_DEFS_H_
 
+#define NSH_VERSION_MAJOR 1
+#define NSH_VERSION_MINOR 4
+
 /**
  * @def NSH_UNUSED(<var-name>)
  * @brief Indicates that <var-name> is unused in the current scope.
- * 
+ *
  * This macro is used to prevent some compiler warnings about unused variables.
  */
 #define NSH_UNUSED(var) ((void)var)
 
-/** 
+/**
  * @def NSH_NON_NULL(<arg-index>...)
  * @brief Indicates that listed pointer arguments shall not be null.
- * 
+ *
  * This macro acts as a precondition for a function, indicating that arguments
  * whose index is present in the list must not be null. The precondition is meant
  * to be checkable by a compiler (GCC and Clang at least).
  * If a null pointer is passed to an argument marked as NSH_NON_NULL, and the function
  * does not check if this argument is null, then the behaviour is undefined.
- * 
+ *
  * @example
  * // When calling func, i and c arguments shall not be null
  * void func(int* i, float f, char* c, void* p) NSH_NON_NULL(1,3)
- * 
+ *
  * @note MSVC also implements something similar but the usage is not compatible with
  * GCC and Clang.
  */
@@ -35,7 +38,7 @@
 /**
  * @def NSH_RESTRICT
  * @brief Portable restrict keyword for both C and C++.
- * 
+ *
  * This macro allows the usage of restrict keyword when nsh is compiled as C, and
  * the usage of corresponding compilers extension when compiled as C++.
  * If a compiler does not provide an alternative restrict keyword for C++, this
