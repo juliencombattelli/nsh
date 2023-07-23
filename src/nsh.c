@@ -1,7 +1,7 @@
 #include <nsh/nsh.h>
 #include <nsh/nsh_cmd_builtins.h>
 #include <nsh/nsh_common_defs.h>
-#include <nsh/nsh_io_plugin_default.h>
+#include <nsh/nsh_io_plugin.h>
 
 #include <ctype.h>
 #include <stdbool.h>
@@ -50,14 +50,14 @@ static nsh_status_t nsh_copy_token(const char* str, char output[][NSH_MAX_STRING
 {
     if (token_size > NSH_MAX_STRING_SIZE - 1) // Keep one char for '\0'
     {
-        //nsh->io.put_string("WARNING: too long argument\r\n");
+        // nsh_io_put_string("WARNING: too long argument\r\n");
         return NSH_STATUS_BUFFER_OVERFLOW;
     }
     memcpy(output[*token_count], str, token_size);
     output[*token_count][token_size] = '\0';
     (*token_count)++;
     if (*token_count >= NSH_CMD_ARGS_MAX_COUNT) {
-        //nsh->io.put_string("WARNING: too many arguments\r\n");
+        // nsh_io_put_string("WARNING: too many arguments\r\n");
         return NSH_STATUS_MAX_ARGS_NB_REACH;
     }
     return NSH_STATUS_OK;
@@ -110,7 +110,7 @@ static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv
     // Execute matching command
     nsh_status_t status = matching_cmd->handler(argc, argv);
 #if NSH_FEATURE_USE_RETURN_CODE_PRINTING == 1
-    nsh->io.printf("command '%s' return %d\r\n", argv[0], status);
+    nsh_io_printf("command '%s' return %d\r\n", argv[0], status);
 #endif
     return status;
 }
@@ -137,19 +137,19 @@ static nsh_status_t nsh_autocomplete(const nsh_t* nsh)
         nsh_cmd_array_lexicographic_sort(&match);
 
         // Display the commands name
-        nsh->io.put_newline();
+        nsh_io_put_newline();
         for (unsigned int i = 0; i < match.count; i++) {
-            nsh->io.put_string(match.array[i].name);
-            nsh->io.put_char(' ');
+            nsh_io_put_string(match.array[i].name);
+            nsh_io_put_char(' ');
         }
     }
 
     // Print the prompt again
-    nsh->io.put_newline();
-    nsh->io.print_prompt();
+    nsh_io_put_newline();
+    nsh_io_print_prompt();
 
     // Reprint the current buffer
-    nsh->io.put_buffer(nsh->line.buffer, nsh->line.size);
+    nsh_io_put_buffer(nsh->line.buffer, nsh->line.size);
 
     return NSH_STATUS_OK;
 #endif
@@ -159,15 +159,15 @@ static nsh_status_t nsh_autocomplete(const nsh_t* nsh)
 static void nsh_display_history_entry(nsh_t* nsh)
 {
     if (nsh->current_history_entry == NSH_HISTORY_INVALID_ENTRY) {
-        nsh->io.erase_line();
-        nsh->io.print_prompt();
+        nsh_io_erase_line();
+        nsh_io_print_prompt();
         nsh_line_buffer_reset(&nsh->line);
     } else {
         nsh_status_t status = nsh_history_get_entry(&nsh->history, nsh->current_history_entry, nsh->line.buffer);
         if (status == NSH_STATUS_OK) {
-            nsh->io.erase_line();
-            nsh->io.print_prompt();
-            nsh->io.put_string(nsh->line.buffer);
+            nsh_io_erase_line();
+            nsh_io_print_prompt();
+            nsh_io_put_string(nsh->line.buffer);
             nsh->line.size = (unsigned int)strlen(nsh->line.buffer);
         }
     }
@@ -213,10 +213,10 @@ static nsh_status_t nsh_handle_escape_sequence(nsh_t* nsh)
     // Only VT100 escape sequences with the form "\e[<code>" are supported
 
     // We assume '\e' has been handled already, so we just ignore '['
-    nsh->io.get_char();
+    nsh_io_get_char();
 
     // Handle escaped code
-    char c = nsh->io.get_char();
+    char c = nsh_io_get_char();
     switch (c) {
     case 'A': // Arrow up
         return nsh_display_previous_entry(nsh);
@@ -244,13 +244,13 @@ static void nsh_validate_entry(nsh_t* nsh)
 #endif
 
     // print newline
-    nsh->io.put_newline();
+    nsh_io_put_newline();
 }
 
 static void nsh_erase_last_char(nsh_t* nsh)
 {
     if (!nsh_line_buffer_is_empty(&nsh->line)) {
-        nsh->io.erase_last_char();
+        nsh_io_erase_last_char();
         nsh_line_buffer_erase_last_char(&nsh->line);
     }
 }
@@ -264,7 +264,7 @@ static nsh_status_t nsh_read_line(nsh_t* nsh)
     nsh_line_buffer_reset(&nsh->line);
 
     while (true) {
-        char c = nsh->io.get_char();
+        char c = nsh_io_get_char();
         switch (c) {
         case '\r':
         case '\n':
@@ -280,13 +280,13 @@ static nsh_status_t nsh_read_line(nsh_t* nsh)
             nsh_handle_escape_sequence(nsh);
             continue;
         default:
-            nsh->io.put_char(c);
+            nsh_io_put_char(c);
             nsh_line_buffer_append_char(&nsh->line, c);
         }
 
         if (nsh_line_buffer_is_full(&nsh->line)) {
-            nsh->io.put_newline();
-            nsh->io.put_string("WARNING: line buffer reach its maximum capacity\r\n");
+            nsh_io_put_newline();
+            nsh_io_put_string("WARNING: line buffer reach its maximum capacity\r\n");
             break;
         }
     }
@@ -294,11 +294,9 @@ static nsh_status_t nsh_read_line(nsh_t* nsh)
     return NSH_STATUS_BUFFER_OVERFLOW;
 }
 
-nsh_t nsh_init(nsh_io_plugin_t io, nsh_status_t* status)
+nsh_t nsh_init(nsh_status_t* status)
 {
-    nsh_t nsh = {
-        .io = io
-    };
+    nsh_t nsh = { 0 };
 
     nsh_cmd_array_init(&nsh.cmds);
 
@@ -340,7 +338,7 @@ void nsh_run(nsh_t* nsh)
     while (true) {
         unsigned int argc = 0;
 
-        nsh->io.print_prompt();
+        nsh_io_print_prompt();
 
         // Read a command line and store it into 'nsh->line.buffer'
         nsh_status_t status = nsh_read_line(nsh);
@@ -361,9 +359,9 @@ void nsh_run(nsh_t* nsh)
             // Execute the command with 'argc' number of argument stored in 'argv'
             nsh_status_t cmd_status = nsh_execute(nsh, argc, argv);
             if (cmd_status == NSH_STATUS_CMD_NOT_FOUND) {
-                nsh->io.put_string("ERROR: command '");
-                nsh->io.put_string(argv[0]);
-                nsh->io.put_string("' not found\r\n");
+                nsh_io_put_string("ERROR: command '");
+                nsh_io_put_string(argv[0]);
+                nsh_io_put_string("' not found\r\n");
             } else if (cmd_status == NSH_STATUS_QUIT) {
                 break;
             }

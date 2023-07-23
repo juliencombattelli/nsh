@@ -22,7 +22,7 @@ nsh_add_library(nsh
     ${CMAKE_CURRENT_LIST_DIR}/src/nsh_cmd_array.c
     ${CMAKE_CURRENT_LIST_DIR}/src/nsh_cmd_builtins.c
     ${CMAKE_CURRENT_LIST_DIR}/src/nsh_history.c
-    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_io_plugin_default.c
+    ${CMAKE_CURRENT_LIST_DIR}/src/nsh_io_plugin.c
     ${CMAKE_CURRENT_LIST_DIR}/src/nsh_line_buffer.c
 )
 target_include_directories(nsh

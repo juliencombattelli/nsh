@@ -1,28 +1,9 @@
 #include <nsh/nsh_common_defs.h>
 #include <nsh/nsh_config.h>
-#include <nsh/nsh_io_plugin_default.h>
-#include <nsh/nsh_io_plugin_default_impl.h>
+#include <nsh/nsh_io_plugin.h>
 
 #include <stdio.h>
 #include <string.h>
-
-nsh_io_plugin_t nsh_io_make_default_plugin()
-{
-    return (nsh_io_plugin_t)
-    {
-        .get_char = &nsh_io_get_char,
-        .put_char = &nsh_io_put_char,
-        .put_newline = &nsh_io_put_newline,
-        .put_string = &nsh_io_put_string,
-        .put_buffer = &nsh_io_put_buffer,
-        .print_prompt = &nsh_io_print_prompt,
-        .erase_last_char = &nsh_io_erase_last_char,
-        .erase_line = &nsh_io_erase_line,
-#if NSH_FEATURE_USE_PRINTF == 1
-        .printf = &nsh_io_printf,
-#endif
-    };
-}
 
 #define NSH_IO_ESC             "\x1B"
 #define NSH_IO_CSI             NSH_IO_ESC "["
