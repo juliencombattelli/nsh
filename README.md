@@ -61,3 +61,15 @@ cmake --build nsh-build-f411re-release --target utests-flash
 If you want to get involved and suggest some additional features, signal a bug
 or submit a patch, please create a pull request or open an issue on the
 [Nsh Github repository](https://github.com/juliencombattelli/nsh).
+
+### Git hooks
+
+Nsh repository comes with git hooks useful during development.
+To use them, run the following command:
+```bash
+git config core.hooksPath .githooks
+```
+### Formatting
+
+Nsh uses automatic formatting using clang-format (version 12 at least).
+Please run it before submitting a patch.
