@@ -18,15 +18,14 @@ nsh_status_t cmd_builtin_exit(unsigned int argc, char** argv)
     return NSH_STATUS_QUIT;
 }
 
-#define xstr(s) str(s)
-#define str(s)  #s
-
 nsh_status_t cmd_builtin_version(unsigned int argc, char** argv)
 {
+    NSH_UNUSED(argc);
+    NSH_UNUSED(argv);
 #if NSH_FEATURE_USE_PRINTF == 1
-    nsh_io_printf("NSH version %u.%u", NSH_VERSION_MAJOR, NSH_VERSION_MINOR);
+    nsh_io_printf("Nsh version %u.%u.%u", NSH_VERSION_MAJOR, NSH_VERSION_MINOR, NSH_VERSION_PATCH);
 #else
-    nsh_io_put_string("NSH version " xstr(NSH_VERSION_MAJOR) "." xstr(NSH_VERSION_MINOR));
+    nsh_io_put_string("Nsh version " NSH_VERSION_STRING);
 #endif
     return NSH_STATUS_OK;
 }
