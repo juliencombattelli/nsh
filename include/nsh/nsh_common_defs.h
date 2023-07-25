@@ -66,17 +66,21 @@
 extern "C" {
 #endif
 
+/**
+ * @enum nsh_status_t
+ * @brief Status code uses in Nsh.
+ */
 typedef enum nsh_status {
-    NSH_STATUS_OK,
-    NSH_STATUS_QUIT,
-    NSH_STATUS_FAILURE,
-    NSH_STATUS_UNSUPPORTED,
-    NSH_STATUS_BUFFER_OVERFLOW,
-    NSH_STATUS_WRONG_ARG,
-    NSH_STATUS_EMPTY_CMD,
-    NSH_STATUS_CMD_NOT_FOUND,
-    NSH_STATUS_MAX_CMD_NB_REACH,
-    NSH_STATUS_MAX_ARGS_NB_REACH,
+    NSH_STATUS_OK,                ///< No error
+    NSH_STATUS_QUIT,              ///< No error, shall terminate
+    NSH_STATUS_FAILURE,           ///< General failure
+    NSH_STATUS_UNSUPPORTED,       ///< An unsupported operation was used
+    NSH_STATUS_BUFFER_OVERFLOW,   ///< A buffer overflow occurred
+    NSH_STATUS_WRONG_ARG,         ///< An argument value was not accepted
+    NSH_STATUS_EMPTY_CMD,         ///< An empty command has been entered
+    NSH_STATUS_CMD_NOT_FOUND,     ///< The entered command was not found
+    NSH_STATUS_MAX_CMD_NB_REACH,  ///< The maximum number of commands was registered
+    NSH_STATUS_MAX_ARGS_NB_REACH, ///< The maximum number of arguments was entered
 } nsh_status_t;
 
 #ifdef __cplusplus
