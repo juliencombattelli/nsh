@@ -105,7 +105,15 @@
             "configurePreset": "stm32f411re-minsizerel"
         }
     ],
-    "testPresets": [],
+    "testPresets": [
+        {
+            "name": "native-release",
+            "configurePreset": "native-release",
+            "output": {
+                "outputOnFailure": true
+            }
+        }
+    ],
     "packagePresets": [],
     "workflowPresets": [
         {
@@ -117,6 +125,10 @@
                 },
                 {
                     "type": "build",
+                    "name": "native-release"
+                },
+                {
+                    "type": "test",
                     "name": "native-release"
                 }
             ]
