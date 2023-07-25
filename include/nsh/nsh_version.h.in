@@ -1,0 +1,34 @@
+#ifndef NSH_VERSION_H_
+#define NSH_VERSION_H_
+
+// clang-format off
+// spaces may be inserted around @
+
+/**
+ * @def NSH_VERSION_MAJOR
+ * @brief Major version of Nsh.
+ */
+#define NSH_VERSION_MAJOR @Nsh_VERSION_MAJOR@
+
+/**
+ * @def NSH_VERSION_MINOR
+ * @brief Minor version of Nsh.
+ */
+#define NSH_VERSION_MINOR @Nsh_VERSION_MINOR@
+
+/**
+ * @def NSH_VERSION_PATCH
+ * @brief Patch version of Nsh.
+ */
+#define NSH_VERSION_PATCH @Nsh_VERSION_PATCH@
+
+// clang-format on
+
+/**
+ * @def NSH_VERSION_STRING
+ * @brief Full version number of Nsh.
+ */
+#define NSH_VERSION_STRING \
+    "@Nsh_VERSION_MAJOR@.@Nsh_VERSION_MINOR@.@Nsh_VERSION_PATCH@"
+
+#endif // NSH_VERSION_H_

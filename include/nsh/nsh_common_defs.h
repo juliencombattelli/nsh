@@ -1,8 +1,14 @@
 #ifndef NSH_COMMON_DEFS_H_
 #define NSH_COMMON_DEFS_H_
 
-#define NSH_VERSION_MAJOR 1
-#define NSH_VERSION_MINOR 4
+#include <nsh/nsh_version.h>
+
+/**
+ * @def NSH_TO_STRING(<token>)
+ * @brief Convert <token> into a string, expanding macro if needed.
+ */
+#define NSH_STRINGIFY_(x) #x
+#define NSH_TO_STRING(x)  NSH_STRINGIFY_(x)
 
 /**
  * @def NSH_UNUSED(<var-name>)
