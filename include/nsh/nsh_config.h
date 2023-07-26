@@ -49,7 +49,7 @@
  * ones.
  * NB: this history takes NSH_CMD_HISTORY_SIZE*NSH_LINE_BUFFER_SIZE bytes
  * in BSS region, which can be pretty huge...
- * Require: NSH_FEATURE_USE_HISTORY == 1
+ * Requires: NSH_FEATURE_USE_HISTORY == 1
  */
 #ifndef NSH_CMD_HISTORY_SIZE
 #define NSH_CMD_HISTORY_SIZE 16u
@@ -86,7 +86,7 @@
 
 /*
  * Allow command return code printing (for debug purpose).
- * Require: NSH_FEATURE_USE_PRINTF == 1
+ * Requires: NSH_FEATURE_USE_PRINTF == 1
  */
 #ifndef NSH_FEATURE_USE_RETURN_CODE_PRINTING
 #define NSH_FEATURE_USE_RETURN_CODE_PRINTING 1

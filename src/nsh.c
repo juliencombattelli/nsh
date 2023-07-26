@@ -19,19 +19,25 @@ static nsh_status_t nsh_split_command_line(const char* str, char sep, char outpu
 static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv)
     NSH_NON_NULL(1);
 
+#if NSH_FEATURE_USE_AUTOCOMPLETION == 1
+
 static nsh_status_t nsh_autocomplete(const nsh_t* nsh)
     NSH_NON_NULL(1);
 
+#endif
+
 #if NSH_FEATURE_USE_HISTORY == 1
+
 static void nsh_display_history_entry(nsh_t* nsh)
     NSH_NON_NULL(1);
-#endif
 
 static nsh_status_t nsh_display_previous_entry(nsh_t* nsh)
     NSH_NON_NULL(1);
 
 static nsh_status_t nsh_display_next_entry(nsh_t* nsh)
     NSH_NON_NULL(1);
+
+#endif
 
 static nsh_status_t nsh_handle_escape_sequence(nsh_t* nsh)
     NSH_NON_NULL(1);
@@ -115,13 +121,10 @@ static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv
     return status;
 }
 
+#if NSH_FEATURE_USE_AUTOCOMPLETION == 1
+
 static nsh_status_t nsh_autocomplete(const nsh_t* nsh)
 {
-#if NSH_FEATURE_USE_AUTOCOMPLETION == 0
-    NSH_UNUSED(nsh);
-    return NSH_STATUS_UNSUPPORTED;
-#else
-
     nsh_cmd_array_t match;
     nsh_cmd_array_init(&match);
 
@@ -152,10 +155,12 @@ static nsh_status_t nsh_autocomplete(const nsh_t* nsh)
     nsh_io_put_buffer(nsh->line.buffer, nsh->line.size);
 
     return NSH_STATUS_OK;
-#endif
 }
 
+#endif
+
 #if NSH_FEATURE_USE_HISTORY == 1
+
 static void nsh_display_history_entry(nsh_t* nsh)
 {
     if (nsh->current_history_entry == NSH_HISTORY_INVALID_ENTRY) {
@@ -172,14 +177,9 @@ static void nsh_display_history_entry(nsh_t* nsh)
         }
     }
 }
-#endif
 
 static nsh_status_t nsh_display_previous_entry(nsh_t* nsh)
 {
-#if NSH_FEATURE_USE_HISTORY == 0
-    NSH_UNUSED(nsh);
-    return NSH_STATUS_UNSUPPORTED;
-#else
     nsh->current_history_entry++;
     unsigned int entry_count = nsh_history_entry_count(&nsh->history);
     if (nsh->current_history_entry >= entry_count) {
@@ -189,15 +189,10 @@ static nsh_status_t nsh_display_previous_entry(nsh_t* nsh)
     nsh_display_history_entry(nsh);
 
     return NSH_STATUS_OK;
-#endif
 }
 
 static nsh_status_t nsh_display_next_entry(nsh_t* nsh)
 {
-#if NSH_FEATURE_USE_HISTORY == 0
-    NSH_UNUSED(nsh);
-    return NSH_STATUS_UNSUPPORTED;
-#else
     if (nsh->current_history_entry < NSH_CMD_HISTORY_SIZE) {
         nsh->current_history_entry--;
     }
@@ -205,11 +200,15 @@ static nsh_status_t nsh_display_next_entry(nsh_t* nsh)
     nsh_display_history_entry(nsh);
 
     return NSH_STATUS_OK;
-#endif
 }
+
+#endif
 
 static nsh_status_t nsh_handle_escape_sequence(nsh_t* nsh)
 {
+#if NSH_FEATURE_USE_HISTORY == 0
+    NSH_UNUSED(nsh);
+#endif
     // Only VT100 escape sequences with the form "\e[<code>" are supported
 
     // We assume '\e' has been handled already, so we just ignore '['
@@ -218,12 +217,12 @@ static nsh_status_t nsh_handle_escape_sequence(nsh_t* nsh)
     // Handle escaped code
     char c = nsh_io_get_char();
     switch (c) {
+#if NSH_FEATURE_USE_HISTORY == 1
     case 'A': // Arrow up
         return nsh_display_previous_entry(nsh);
-
     case 'B': // Arrow down
         return nsh_display_next_entry(nsh);
-
+#endif
     case 'C': // Arrow right
     case 'D': // Arrow left
     default:
@@ -270,9 +269,11 @@ static nsh_status_t nsh_read_line(nsh_t* nsh)
         case '\n':
             nsh_validate_entry(nsh);
             return NSH_STATUS_OK;
+#if NSH_FEATURE_USE_AUTOCOMPLETION == 1
         case '\t':
             nsh_autocomplete(nsh);
             continue;
+#endif
         case '\b':
             nsh_erase_last_char(nsh);
             continue;
