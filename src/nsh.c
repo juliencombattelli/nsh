@@ -288,11 +288,11 @@ static nsh_status_t nsh_read_line(nsh_t* nsh)
         if (nsh_line_buffer_is_full(&nsh->line)) {
             nsh_io_put_newline();
             nsh_io_put_string("WARNING: line buffer reach its maximum capacity\r\n");
-            break;
+            return NSH_STATUS_BUFFER_OVERFLOW;
         }
     }
 
-    return NSH_STATUS_BUFFER_OVERFLOW;
+    return NSH_STATUS_OK;
 }
 
 nsh_t nsh_init(nsh_status_t* status)
