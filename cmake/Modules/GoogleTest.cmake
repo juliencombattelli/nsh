@@ -6,9 +6,9 @@ include(FetchContent)
 FetchContent_Declare(
     googletest
     GIT_REPOSITORY  https://github.com/google/googletest.git
-    GIT_TAG         v1.13.0
+    GIT_TAG         40412d85124f7c6f3d88454583c4633e5e10fc8c # TODO Update to 1.14 when released
     GIT_SHALLOW     TRUE
-    PATCH_COMMAND   ${NSH_GTEST_PATCH_COMMAND}
+    PATCH_COMMAND   ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/GoogleTest/gtest_patch.cmake
 )
 
 FetchContent_MakeAvailable(googletest)
