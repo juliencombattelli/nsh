@@ -1,0 +1,25 @@
+From 9827fa3f7345c50ff19aa9c8743c269f494ace7f Mon Sep 17 00:00:00 2001
+From: Julien Combattelli <julien.combattelli@gmail.com>
+Date: Sat, 29 Jul 2023 15:32:34 +0200
+Subject: [PATCH] Use #if to check filesystem support
+
+---
+ googletest/src/gtest-internal-inl.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/googletest/src/gtest-internal-inl.h b/googletest/src/gtest-internal-inl.h
+index 1e9b5c26..5b7fcbd0 100644
+--- a/googletest/src/gtest-internal-inl.h
++++ b/googletest/src/gtest-internal-inl.h
+@@ -672,7 +672,7 @@ class GTEST_API_ UnitTestImpl {
+   void AddTestInfo(internal::SetUpTestSuiteFunc set_up_tc,
+                    internal::TearDownTestSuiteFunc tear_down_tc,
+                    TestInfo* test_info) {
+-#ifdef GTEST_HAS_FILE_SYSTEM
++#if GTEST_HAS_FILE_SYSTEM
+     // In order to support thread-safe death tests, we need to
+     // remember the original working directory when the test program
+     // was first invoked.  We cannot do this in RUN_ALL_TESTS(), as
+-- 
+2.37.1.windows.1
+
