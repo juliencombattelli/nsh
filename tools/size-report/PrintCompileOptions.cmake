@@ -44,22 +44,22 @@ foreach(index RANGE ${len})
 endforeach()
 
 # Remove the first word which should be the compiler executable
-string(REGEX REPLACE "^[a-zA-Z0-9_/.\"\\+-]+[ \t\r\n]*(.*)$" "\\1" cmdline ${cmdline})
+string(REGEX REPLACE "^[a-zA-Z0-9_/.\"\\+-]+(.*)$" "\\1" cmdline ${cmdline})
 
 # Remove spaces between one-letter options and values
-string(REGEX REPLACE "(-[Box])[ \t\r\n]+" "\\1" cmdline ${cmdline})
+string(REGEX REPLACE "[ \t\r\n](-[Box])[ \t\r\n]+" " \\1" cmdline ${cmdline})
 
 # Remove spaces between -isystem options and values
-string(REGEX REPLACE "(-isystem)[ \t\r\n]+" "\\1" cmdline ${cmdline})
+string(REGEX REPLACE "[ \t\r\n](-isystem)[ \t\r\n]+" " \\1" cmdline ${cmdline})
 
 # Remove any parameter not starting with - which should be files to build
-string(REGEX REPLACE "[ \t\r\n]+[^-][a-zA-Z0-9_/.\"\\=+-]+[ \t\r\n]*" "" cmdline ${cmdline})
+string(REGEX REPLACE "[ \t\r\n]+[^-][a-zA-Z0-9_/.\"\\=+-]+" "" cmdline ${cmdline})
 
 # Remove --sysroot option
-string(REGEX REPLACE "--sysroot(=|[ \t\r\n]+)[a-zA-Z0-9_/.\"\\+-]+[ \t\r\n]*" "" cmdline ${cmdline})
+string(REGEX REPLACE "[ \t\r\n]--sysroot(=|[ \t\r\n]+)[a-zA-Z0-9_/.\"\\+-]+" "" cmdline ${cmdline})
 
 # Remove -W, -I, -i, -L, -l, -o, -c, -g options
-string(REGEX REPLACE "-[WIiLlocg][a-zA-Z0-9_/.\"\\=+-]*[ \t\r\n]*" "" cmdline ${cmdline})
+string(REGEX REPLACE "[ \t\r\n]-[WIiLlocg][a-zA-Z0-9_./\\=+-]*" "" cmdline ${cmdline})
 
 # Print result
 message("\n\nCompile flags: ${cmdline}\n")
