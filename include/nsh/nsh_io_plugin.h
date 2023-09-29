@@ -7,25 +7,32 @@
 extern "C" {
 #endif
 
-char nsh_io_get_char(void);
-
-void nsh_io_put_char(char c);
-
-void nsh_io_put_newline(void);
-
-void nsh_io_put_string(const char* str);
-
-void nsh_io_put_buffer(const char* str, unsigned int size);
-
-void nsh_io_print_prompt(void);
-
-void nsh_io_erase_last_char(void);
-
-void nsh_io_erase_line(void);
+typedef char nsh_io_get_char_t(void);
+typedef void nsh_io_put_char_t(char c);
+typedef void nsh_io_put_newline_t(void);
+typedef void nsh_io_put_string_t(const char* str);
+typedef void nsh_io_put_buffer_t(const char* str, unsigned int size);
+typedef void nsh_io_print_prompt_t(void);
+typedef void nsh_io_erase_last_char_t(void);
+typedef void nsh_io_erase_line_t(void);
 
 #if NSH_FEATURE_USE_PRINTF == 1
-int nsh_io_printf(const char* NSH_RESTRICT format, ...);
+typedef int nsh_io_printf_t(const char* NSH_RESTRICT, ...);
 #endif
+
+typedef struct {
+    nsh_io_get_char_t* get_char;
+    nsh_io_put_char_t* put_char;
+    nsh_io_put_newline_t* put_newline;
+    nsh_io_put_string_t* put_string;
+    nsh_io_put_buffer_t* put_buffer;
+    nsh_io_print_prompt_t* print_prompt;
+    nsh_io_erase_last_char_t* erase_last_char;
+    nsh_io_erase_line_t* erase_line;
+#if NSH_FEATURE_USE_PRINTF == 1
+    nsh_io_printf_t* printf;
+#endif
+} nsh_io_plugin_t;
 
 #ifdef __cplusplus
 }

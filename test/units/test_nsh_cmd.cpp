@@ -6,7 +6,7 @@
 using testing::ElementsAreArray;
 
 static constexpr const char cmd_test_name[NSH_MAX_STRING_SIZE] = "test";
-static nsh_status_t cmd_test_handler(unsigned int, char**)
+static nsh_status_t cmd_test_handler(const nsh_t*, unsigned int, char**)
 {
     return NSH_STATUS_OK;
 }

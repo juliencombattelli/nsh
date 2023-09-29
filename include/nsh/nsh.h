@@ -5,6 +5,8 @@
 #include <nsh/nsh_cmd_array.h>
 #include <nsh/nsh_config.h>
 #include <nsh/nsh_history.h>
+#include <nsh/nsh_io_plugin.h>
+#include <nsh/nsh_io_plugin_default.h>
 #include <nsh/nsh_line_buffer.h>
 
 #ifdef __cplusplus
@@ -23,11 +25,11 @@ typedef struct nsh_s {
 #endif
 } nsh_t;
 
-nsh_t nsh_init(nsh_status_t* status) NSH_NON_NULL(1);
+// nsh_t nsh_init(nsh_status_t* status) NSH_NON_NULL(1);
 
-// nsh_status_t nsh_init(nsh_t* nsh) NSH_NON_NULL(1);
+nsh_status_t nsh_init(nsh_t* nsh) NSH_NON_NULL(1);
 
-// nsh_status_t nsh_init_with_plugin(nsh_t* nsh, nsh_io_plugin_t* io) NSH_NON_NULL(1, 2);
+nsh_status_t nsh_init_with_plugin(nsh_t* nsh, nsh_io_plugin_t* io) NSH_NON_NULL(1, 2);
 
 nsh_status_t nsh_register_command(nsh_t* nsh, const char* name, nsh_cmd_handler_t* handler);
 

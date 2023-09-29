@@ -93,7 +93,7 @@
 #endif
 
 #ifndef NSH_IO_PLUGIN_IS_STATIC
-#define NSH_IO_PLUGIN_IS_STATIC 1
+#define NSH_IO_PLUGIN_IS_STATIC 0
 #endif
 
 #ifndef NSH_IO_PLUGIN_STATIC

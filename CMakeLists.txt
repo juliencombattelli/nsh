@@ -31,8 +31,8 @@ nsh_add_library(nsh
     ${PROJECT_SOURCE_DIR}/src/nsh_cmd.c
     ${PROJECT_SOURCE_DIR}/src/nsh_cmd_array.c
     ${PROJECT_SOURCE_DIR}/src/nsh_cmd_builtins.c
+    ${PROJECT_SOURCE_DIR}/src/nsh_io_plugin_default.c
     ${PROJECT_SOURCE_DIR}/src/nsh_history.c
-    ${PROJECT_SOURCE_DIR}/src/nsh_io_plugin.c
     ${PROJECT_SOURCE_DIR}/src/nsh_line_buffer.c
 )
 target_include_directories(nsh

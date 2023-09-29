@@ -31,6 +31,16 @@ function(nsh_add_executable TARGET)
     target_link_libraries(${TARGET} PUBLIC Nsh::Platform)
     target_project_warnings(${TARGET})
     target_enable_sanitizers(${TARGET})
+    set_property(TARGET ${TARGET} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+
+    # include(CheckIPOSupported)
+    # check_ipo_supported(RESULT ipo_supported OUTPUT error)
+    # if(ipo_supported)
+    #     message(STATUS "IPO / LTO enabled")
+    #     set_property(TARGET example PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+    # else()
+    #     message(STATUS "IPO / LTO not supported: <${error}>")
+    # endif()
 endfunction()
 
 # Define Nsh specific add_test wrapper

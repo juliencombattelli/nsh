@@ -1,18 +1,20 @@
 {
     "configurations": [
         {
-            "name": "Native Release",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
+            "name": "Linux GCC Release",
             "compileCommands": "${workspaceFolder}/../nsh-build/native-release/compile_commands.json"
         },
         {
+            "name": "Linux GCC Debug",
+            "compileCommands": "${workspaceFolder}/../nsh-build/native-debug/compile_commands.json"
+        },
+        {
             "name": "STM32F411RE MinSizeRel",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
             "compileCommands": "${workspaceFolder}/../nsh-build/stm32f411re-minsizerel/compile_commands.json"
+        },
+        {
+            "name": "STM32F411RE RelWithDebInfo",
+            "compileCommands": "${workspaceFolder}/../nsh-build/stm32f411re-relwithdebinfo/compile_commands.json"
         }
     ],
     "version": 4

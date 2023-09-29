@@ -114,7 +114,7 @@ static nsh_status_t nsh_execute(const nsh_t* nsh, unsigned int argc, char** argv
     }
 
     // Execute matching command
-    nsh_status_t status = matching_cmd->handler(argc, argv);
+    nsh_status_t status = matching_cmd->handler(nsh, argc, argv);
 #if NSH_FEATURE_USE_RETURN_CODE_PRINTING == 1
     nsh_io_plugin(nsh).printf("command '%s' return %d\r\n", argv[0], status);
 #endif
@@ -295,13 +295,14 @@ static nsh_status_t nsh_read_line(nsh_t* nsh)
     return NSH_STATUS_OK;
 }
 
-nsh_t nsh_init(nsh_status_t* status)
+nsh_status_t _nsh_init_with_plugin_internal(nsh_t* nsh, nsh_io_plugin_t* io)
 {
 #if NSH_IO_PLUGIN_IS_STATIC == 1
     NSH_UNUSED(io);
 #endif
 
-    nsh_t nsh = {
+    *nsh = (nsh_t)
+    {
 #if NSH_IO_PLUGIN_IS_STATIC == 0
         .io = io,
 #else
@@ -309,22 +310,36 @@ nsh_t nsh_init(nsh_status_t* status)
 #endif
     };
 
-    nsh_cmd_array_init(&nsh.cmds);
+    nsh_cmd_array_init(&nsh->cmds);
 
-    nsh_line_buffer_reset(&nsh.line);
+    nsh_line_buffer_reset(&nsh->line);
 
 #if NSH_FEATURE_USE_HISTORY == 1
-    nsh_history_reset(&nsh.history);
-    nsh.current_history_entry = NSH_HISTORY_INVALID_ENTRY;
+    nsh_history_reset(&nsh->history);
+    nsh->current_history_entry = NSH_HISTORY_INVALID_ENTRY;
 #endif
 
-    nsh_register_command(&nsh, "help", cmd_builtin_help);
-    nsh_register_command(&nsh, "exit", cmd_builtin_exit);
-    nsh_register_command(&nsh, "version", cmd_builtin_version);
+    nsh_register_command(nsh, "help", cmd_builtin_help);
+    nsh_register_command(nsh, "exit", cmd_builtin_exit);
+    nsh_register_command(nsh, "version", cmd_builtin_version);
 
-    *status = NSH_STATUS_OK;
+    return NSH_STATUS_OK;
+}
 
-    return nsh;
+nsh_status_t nsh_init_with_plugin(nsh_t* nsh, nsh_io_plugin_t* io)
+{
+    return _nsh_init_with_plugin_internal(nsh, io);
+}
+
+nsh_status_t nsh_init(nsh_t* nsh)
+{
+#if NSH_IO_PLUGIN_IS_STATIC == 1
+    nsh_io_plugin_t* io = NULL;
+#else
+    nsh_io_plugin_t* io = nsh_io_make_default_plugin();
+#endif
+
+    return nsh_init_with_plugin(nsh, io);
 }
 
 nsh_status_t nsh_register_command(nsh_t* nsh, const char* name, nsh_cmd_handler_t* handler)
