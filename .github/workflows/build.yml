@@ -87,7 +87,9 @@ jobs:
           # Generate coverage report
           cmake --build build --target coverage
           # Uploading report to CodeCov
-          bash <(curl -s https://codecov.io/bash) -f build/coverage.info || echo "Codecov did not collect coverage reports"
+          curl -Os https://uploader.codecov.io/latest/linux/codecov
+          chmod +x codecov
+          ./codecov --nonzero --token ${CODECOV_TOKEN} --file build/coverage.info
 
       - name: Install Strip
         run: |
