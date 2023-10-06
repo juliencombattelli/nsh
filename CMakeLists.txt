@@ -65,7 +65,7 @@ if(ENABLE_SIZE_REPORT)
     else()
         message(WARNING
             " Size report requested but usable only on Unix-like platforms with GCC or Clang,\n"
-            "   when Ninja or a Makefile generator are used.\n"
+            "   when Ninja or a Makefile generator is used.\n"
             " Size report generation will be disabled."
         )
     endif()
