@@ -59,6 +59,14 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "typeinfo": "cpp",
-        "nsh_cmd_array.h": "c"
-    }
+        ".clang-format": "yaml",
+        ".clang-tidy": "yaml"
+    },
+    "cSpell.words": [
+        "nanoshell",
+        "nsh",
+        "nucleo",
+        "eabi",
+        "codecov"
+    ]
 }
