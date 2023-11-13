@@ -71,7 +71,7 @@ make
 
 Then run the Nsh unit-test binary using the freshly built qemu-system-arm:
 ```bash
-./qemu-system-arm -machine st-nucleo-f411 -kernel path/to/utests.bin -serial null -serial mon:stdio
+./qemu-system-arm -machine st-nucleo-f411 -kernel path/to/utests.bin -nographic -monitor none -serial null -serial stdio
 ```
 
 > **Note:** Nsh unit-test binary uses UART2 for serial communications, so we
