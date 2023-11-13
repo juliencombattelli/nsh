@@ -56,6 +56,28 @@ cmake --build nsh-build-f411re-release --parallel 4
 cmake --build nsh-build-f411re-release --target utests-flash
 ```
 
+### Testing in QEMU virtual device
+
+Nsh can run in a QEMU emulator supporting the ST Nucleo F411 board.
+Such port can be found at https://github.com/juliencombattelli/qemu-st-nucleo-f411.
+To use it, download and build QEMU:
+```bash
+git clone https://github.com/juliencombattelli/qemu-st-nucleo-f411
+mkdir qemu-st-nucleo-f411-build
+cd qemu-st-nucleo-f411-build
+../qemu-st-nucleo-f411/configure
+make
+```
+
+Then run the Nsh unit-test binary using the freshly built qemu-system-arm:
+```bash
+./qemu-system-arm -machine st-nucleo-f411 -kernel path/to/utests.bin -serial null -serial mon:stdio
+```
+
+> **Note:** Nsh unit-test binary uses UART2 for serial communications, so we
+> have to explicitly use mon:stdio on the second serial argument to redirect the
+> messages to the console.
+
 ## Contributing
 
 If you want to get involved and suggest some additional features, signal a bug
