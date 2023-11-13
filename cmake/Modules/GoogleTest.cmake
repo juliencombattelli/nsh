@@ -8,6 +8,7 @@ FetchContent_Declare(
     GIT_REPOSITORY  https://github.com/google/googletest.git
     GIT_TAG         v1.14.0
     GIT_SHALLOW     TRUE
+    PATCH_COMMAND   ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_LIST_DIR}/GoogleTest/gtest_patch.cmake
 )
 
 FetchContent_MakeAvailable(googletest)
