@@ -1,3 +1,5 @@
+mod sized_string;
+
 pub mod nsh {
     #[macro_export]
     macro_rules! nsh_static_dispatcher {
@@ -17,11 +19,19 @@ pub mod nsh {
         fn dispatch(&self, cmd: &str, args: &str);
     }
 
+    pub trait History {
+        fn reset(&mut self);
+        fn entry_count(&self) -> usize;
+        fn is_full(&self) -> bool;
+        fn is_empty(&self) -> bool;
+        fn push_entry(&mut self, entry: &str);
+    }
+
     pub struct Shell<D: Dispatcher> {
         dispatcher: D,
     }
     impl<D: Dispatcher> Shell<D> {
-        pub fn new(dispatcher: D) -> Shell<D> {
+        pub fn new(dispatcher: D) -> Self {
             Self { dispatcher }
         }
     }
@@ -36,8 +46,8 @@ pub mod nsh {
             callback: StaticDispatcherCallbackFn,
         }
         impl StaticDispatcherCallback {
-            pub fn new(callback: StaticDispatcherCallbackFn) -> StaticDispatcherCallback {
-                return Self { callback };
+            pub fn new(callback: StaticDispatcherCallbackFn) -> Self {
+                Self { callback }
             }
         }
         impl Dispatcher for StaticDispatcherCallback {
@@ -51,8 +61,8 @@ pub mod nsh {
             commands: CmdArrayRef,
         }
         impl StaticDispatcherArrayRef {
-            pub fn new(commands: CmdArrayRef) -> StaticDispatcherArrayRef {
-                return Self { commands };
+            pub fn new(commands: CmdArrayRef) -> Self {
+                Self { commands }
             }
         }
         impl Dispatcher for StaticDispatcherArrayRef {
@@ -70,8 +80,8 @@ pub mod nsh {
             commands: CmdArray<CAPACITY>,
         }
         impl<const CAPACITY: usize> StaticDispatcherArray<CAPACITY> {
-            pub fn new(commands: CmdArray<CAPACITY>) -> StaticDispatcherArray<CAPACITY> {
-                return Self { commands };
+            pub fn new(commands: CmdArray<CAPACITY>) -> Self {
+                Self { commands }
             }
         }
         impl<const CAPACITY: usize> Dispatcher for StaticDispatcherArray<CAPACITY> {
@@ -84,13 +94,23 @@ pub mod nsh {
             }
         }
     }
+
+    pub mod history {
+        use crate::sized_string::SizedString;
+
+        pub struct HistoryRing<const CAPACITY: usize, const STRING_SIZE: usize> {
+            head: usize,
+            len: usize,
+            buffer: [SizedString<STRING_SIZE>; CAPACITY],
+        }
+    }
 }
 
 pub fn main() {
-    use nsh::Shell;
     use nsh::static_dispatcher::StaticDispatcherArray;
     use nsh::static_dispatcher::StaticDispatcherArrayRef;
     use nsh::static_dispatcher::StaticDispatcherCallback;
+    use nsh::Shell;
 
     const COMMANDS: nsh::static_dispatcher::CmdArrayRef = &[
         ("help", |_: &str| {
