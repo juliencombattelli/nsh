@@ -1,0 +1,21 @@
+#!/bin/sh
+
+. .githooks/log.sh
+
+ERROR=0
+
+log "\n${blue}[hook] pre-commit: Building native-release\n"
+cmake --workflow --preset native-release || ERROR=1
+
+log "\n${blue}[hook] pre-commit: Building stm32f411re-minsizerel\n"
+cmake --workflow --preset stm32f411re-minsizerel || ERROR=1
+
+if [ $ERROR -ne 0 ]; then
+    summary="${red}Some tests failed"
+else
+    summary="${green}All tests passed"
+fi
+
+log "\n${blue}[hook] pre-commit: ${summary}\n"
+
+exit $ERROR

@@ -33,6 +33,13 @@
         },
         {
             "hidden": true,
+            "name": "base-relwithdebinfo",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+            }
+        },
+        {
+            "hidden": true,
             "name": "base-native",
             "displayName": "Native Config",
             "description": "Configuration for native build",
@@ -93,6 +100,15 @@
             ],
             "displayName": "STM32F411RE Minimal Size Release Config",
             "description": "Minimal Size Release configuration for STM32F411RE cross-compilation"
+        },
+        {
+            "name": "stm32f411re-relwithdebinfo",
+            "inherits": [
+                "base-stm32f411re",
+                "base-relwithdebinfo"
+            ],
+            "displayName": "STM32F411RE Release With Debug Info Config",
+            "description": "Release With Debug Info configuration for STM32F411RE cross-compilation"
         }
     ],
     "buildPresets": [
@@ -103,9 +119,21 @@
         {
             "name": "stm32f411re-minsizerel",
             "configurePreset": "stm32f411re-minsizerel"
+        },
+        {
+            "name": "stm32f411re-relwithdebinfo",
+            "configurePreset": "stm32f411re-relwithdebinfo"
         }
     ],
-    "testPresets": [],
+    "testPresets": [
+        {
+            "name": "native-release",
+            "configurePreset": "native-release",
+            "output": {
+                "outputOnFailure": true
+            }
+        }
+    ],
     "packagePresets": [],
     "workflowPresets": [
         {
@@ -117,6 +145,10 @@
                 },
                 {
                     "type": "build",
+                    "name": "native-release"
+                },
+                {
+                    "type": "test",
                     "name": "native-release"
                 }
             ]
@@ -131,6 +163,19 @@
                 {
                     "type": "build",
                     "name": "stm32f411re-minsizerel"
+                }
+            ]
+        },
+        {
+            "name": "stm32f411re-relwithdebinfo",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "stm32f411re-relwithdebinfo"
+                },
+                {
+                    "type": "build",
+                    "name": "stm32f411re-relwithdebinfo"
                 }
             ]
         }

@@ -65,7 +65,7 @@ nsh_add_size_report_target(nsh_size_report_return_code_printing
     PRIVATE
         NSH_FEATURE_USE_AUTOCOMPLETION=0
         NSH_FEATURE_USE_HISTORY=0
-        NSH_FEATURE_USE_PRINTF=0
+        NSH_FEATURE_USE_PRINTF=1
         NSH_FEATURE_USE_RETURN_CODE_PRINTING=1
 )
 

@@ -49,8 +49,6 @@ function(stm32_target_add_start_debug_server)
     endif()
 endfunction()
 
-set(NSH_GTEST_PATCH_COMMAND "" CACHE INTERNAL "")
-
 add_library(Nsh::Platform INTERFACE IMPORTED GLOBAL)
 target_link_libraries(Nsh::Platform
     INTERFACE
@@ -96,10 +94,6 @@ target_compile_definitions(Nsh::Platform::GTest
         GTEST_HAS_STREAM_REDIRECTION=0
         GTEST_LINKED_AS_SHARED_LIBRARY=0
         GTEST_CREATE_SHARED_LIBRARY=0
-        # SrcDir and TempDir definition are not guarded by GTEST_HAS_FILE_SYSTEM...
-        # TODO should be place in customisation point headers
-        GTEST_CUSTOM_SRCDIR_FUNCTION_=std::string
-        GTEST_CUSTOM_TEMPDIR_FUNCTION_=std::string
 )
 # Remove a GCC warning about an ABI change from GCC7.1
 # See the GCC7 changelog https://gcc.gnu.org/gcc-7/changes.html and the

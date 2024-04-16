@@ -1,0 +1,25 @@
+From 48b5ae9ed51f3ec87b1107eaf7f554ec1c4cd6a9 Mon Sep 17 00:00:00 2001
+From: Julien Combattelli <julien.combattelli@gmail.com>
+Date: Mon, 13 Nov 2023 10:39:52 +0100
+Subject: [PATCH] Always use colors if requested by user
+
+---
+ googletest/src/gtest.cc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/googletest/src/gtest.cc b/googletest/src/gtest.cc
+index 30a5cc3..17f79f2 100644
+--- a/googletest/src/gtest.cc
++++ b/googletest/src/gtest.cc
+@@ -3284,7 +3284,7 @@ static void ColoredPrintf(GTestColor color, const char* fmt, ...) {
+ #if GTEST_HAS_FILE_SYSTEM
+       ShouldUseColor(posix::IsATTY(posix::FileNo(stdout)) != 0);
+ #else
+-      false;
++      ShouldUseColor(false); // assume stdout is not a TTY if no filesystem support
+ #endif  // GTEST_HAS_FILE_SYSTEM
+ 
+   const bool use_color = in_color_mode && (color != GTestColor::kDefault);
+-- 
+2.34.1
+

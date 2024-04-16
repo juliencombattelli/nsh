@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "dan-c-underwood.arm",
+        "jeff-hykin.better-cpp-syntax",
+        "zixuanwang.linkerscript",
+        "ms-vscode.cpptools",
+        "josetr.cmake-language-support-vscode"
+    ]
+}

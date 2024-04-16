@@ -42,11 +42,6 @@ The ``nsh_check_platform`` function checks if the following targets exist:
   Function registering a test to be run by ctest. Its signature is the same as 
   CMake's `add_test <https://cmake.org/cmake/help/latest/command/add_test.html>`_.
 
-``CACHE{NSH_GTEST_PATCH_COMMAND}``
-  Command executed as the patch step of GTest installation. It must be compatible with
-  `FetchContent_Declare <https://cmake.org/cmake/help/latest/module/FetchContent.html#command:fetchcontent_declare>`_'s
-  ``PATCH_COMMAND`` option.
-
 #]=======================================================================]
 
 # message(CHECK_* is available since CMake 3.17
@@ -91,9 +86,6 @@ function(nsh_check_platform)
     list(APPEND CMAKE_MESSAGE_INDENT "  ")
     unset(checks_failed)
 
-    if(ENABLE_TESTS)
-        _nsh_assert_variable_exists(NSH_GTEST_PATCH_COMMAND)
-    endif()
     _nsh_assert_target_exists(Nsh::Platform)
     _nsh_assert_target_exists(Nsh::Platform::ToolsMain)
     if(ENABLE_TESTS)
