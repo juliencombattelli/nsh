@@ -1,5 +1,6 @@
 mod fixed_string;
-mod fixed_ring_buffer;
+
+use ringbuffer::GrowableAllocRingBuffer as FixedRingBuffer;
 
 pub mod nsh {
     #[macro_export]
