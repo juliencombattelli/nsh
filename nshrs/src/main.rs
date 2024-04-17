@@ -1,4 +1,5 @@
-mod sized_string;
+mod fixed_string;
+mod fixed_ring_buffer;
 
 pub mod nsh {
     #[macro_export]
@@ -75,16 +76,16 @@ pub mod nsh {
             }
         }
 
-        pub type CmdArray<const CAPACITY: usize> = [(&'static str, CmdFn); CAPACITY];
-        pub struct StaticDispatcherArray<const CAPACITY: usize> {
-            commands: CmdArray<CAPACITY>,
+        pub type CmdArray<const CAP: usize> = [(&'static str, CmdFn); CAP];
+        pub struct StaticDispatcherArray<const CAP: usize> {
+            commands: CmdArray<CAP>,
         }
-        impl<const CAPACITY: usize> StaticDispatcherArray<CAPACITY> {
-            pub fn new(commands: CmdArray<CAPACITY>) -> Self {
+        impl<const CAP: usize> StaticDispatcherArray<CAP> {
+            pub fn new(commands: CmdArray<CAP>) -> Self {
                 Self { commands }
             }
         }
-        impl<const CAPACITY: usize> Dispatcher for StaticDispatcherArray<CAPACITY> {
+        impl<const CAP: usize> Dispatcher for StaticDispatcherArray<CAP> {
             fn dispatch(&self, cmd: &str, args: &str) {
                 for (cmd_name, cmd_fn) in self.commands {
                     if cmd_name == cmd {
@@ -96,12 +97,12 @@ pub mod nsh {
     }
 
     pub mod history {
-        use crate::sized_string::SizedString;
+        use crate::fixed_string::FixedString;
 
-        pub struct HistoryRing<const CAPACITY: usize, const STRING_SIZE: usize> {
+        pub struct HistoryRing<const CAP: usize, const STRING_SIZE: usize> {
             head: usize,
             len: usize,
-            buffer: [SizedString<STRING_SIZE>; CAPACITY],
+            buffer: [FixedString<STRING_SIZE>; CAP],
         }
     }
 }

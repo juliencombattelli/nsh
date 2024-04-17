@@ -16,11 +16,11 @@ trait AsStr {
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
-pub(crate) struct SizedString<const N: usize> {
+pub(crate) struct FixedString<const N: usize> {
     bytes: [u8; N],
     len: u16, // makes struct grow in steps of 2, unlike usize, which starts at 16 bytes and grows by 8
 }
-impl<const N: usize> AsStr for SizedString<N> {
+impl<const N: usize> AsStr for FixedString<N> {
     #[inline(always)]
     fn as_bytes(&self) -> &[u8] {
         &self.bytes[..self.len as usize]
@@ -41,7 +41,7 @@ impl<const N: usize> AsStr for SizedString<N> {
         N
     }
 }
-impl<const N: usize> From<&str> for SizedString<N> {
+impl<const N: usize> From<&str> for FixedString<N> {
     fn from(str: &str) -> Self {
         let mut new = Self {
             // This should be SAFE, as long as all methods extend contiguously and never index beyond len
@@ -53,14 +53,14 @@ impl<const N: usize> From<&str> for SizedString<N> {
         new
     }
 }
-impl<const N: usize> AsRef<str> for SizedString<N> {
+impl<const N: usize> AsRef<str> for FixedString<N> {
     // why is this not considered when assigning to &str?
     fn as_ref(&self) -> &str {
         // How to do this better? Clippy warns: deref on an immutable reference
         std::str::from_utf8(&(*self.as_bytes())).expect("bad string")
     }
 }
-impl<const N: usize> fmt::Display for SizedString<N> {
+impl<const N: usize> fmt::Display for FixedString<N> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.as_ref())
     }
