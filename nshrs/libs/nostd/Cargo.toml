@@ -1,16 +1,8 @@
-
-
 [package]
-name = "nshrs"
+name = "nostd"
 version = "0.1.0"
 edition = "2021"
-
-[workspace]
-members = [
-    "libs/nostd"
-]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-nostd = { path = "./libs/nostd" }

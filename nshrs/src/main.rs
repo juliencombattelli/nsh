@@ -1,7 +1,3 @@
-mod fixed_string;
-
-use ringbuffer::GrowableAllocRingBuffer as FixedRingBuffer;
-
 pub mod nsh {
     #[macro_export]
     macro_rules! nsh_static_dispatcher {
@@ -98,7 +94,7 @@ pub mod nsh {
     }
 
     pub mod history {
-        use crate::fixed_string::FixedString;
+        use nostd::collections::FixedString;
 
         pub struct HistoryRing<const CAP: usize, const STRING_SIZE: usize> {
             head: usize,
