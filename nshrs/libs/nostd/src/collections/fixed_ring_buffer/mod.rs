@@ -9,6 +9,8 @@ pub trait RingBuffer<T>:
 {
     fn len(&self) -> usize;
 
+    fn capacity(&self) -> usize;
+
     fn is_empty(&self) -> bool {
         self.len() == 0
     }
@@ -17,18 +19,36 @@ pub trait RingBuffer<T>:
         self.len() == self.capacity()
     }
 
-    fn capacity(&self) -> usize;
+    fn get(&self, index: usize) -> Option<&T>;
+
+    fn get_mut(&mut self, index: usize) -> Option<&mut T>;
+
+    fn front(&self) -> Option<&T>;
+
+    fn front_mut(&mut self) -> Option<&mut T>;
+
+    fn back(&self) -> Option<&T>;
+
+    fn back_mut(&mut self) -> Option<&mut T>;
+
+    fn contains(&self, elem: &T) -> bool
+    where
+        T: PartialEq,
+    {
+        self.iter().any(|i| i == elem)
+    }
 
     fn push_back(&mut self, value: T);
 
     fn pop_front(&mut self) -> Option<T>;
 
-    fn skip(&mut self) {
-        let _ = self.pop_front();
-    }
+    fn clear(&mut self);
 
-    fn drain(&mut self) -> RingBufferDrainingIterator<T, Self> {
-        RingBufferDrainingIterator::new(self)
+    fn fill(&mut self, value: T)
+    where
+        T: Clone,
+    {
+        self.fill_with(|| value.clone());
     }
 
     fn fill_with<F: FnMut() -> T>(&mut self, f: F);
@@ -40,45 +60,20 @@ pub trait RingBuffer<T>:
         self.fill_with(Default::default);
     }
 
-    fn fill(&mut self, value: T)
-    where
-        T: Clone,
-    {
-        self.fill_with(|| value.clone());
+    fn iter(&self) -> RingBufferIterator<T, Self> {
+        RingBufferIterator::new(self)
     }
-
-    fn clear(&mut self);
-
-
-    fn get(&self, index: usize) -> Option<&T>;
-
-    fn get_mut(&mut self, index: usize) -> Option<&mut T>;
-
-    fn peek(&self) -> Option<&T> {
-        self.front()
-    }
-
-    fn front(&self) -> Option<&T>;
-
-    fn front_mut(&mut self) -> Option<&mut T>;
-
-    fn back(&self) -> Option<&T>;
-
-    fn back_mut(&mut self) -> Option<&mut T>;
 
     fn iter_mut(&mut self) -> RingBufferMutIterator<T, Self> {
         RingBufferMutIterator::new(self)
     }
 
-    fn iter(&self) -> RingBufferIterator<T, Self> {
-        RingBufferIterator::new(self)
+    fn skip(&mut self) {
+        let _ = self.pop_front();
     }
 
-    fn contains(&self, elem: &T) -> bool
-    where
-        T: PartialEq,
-    {
-        self.iter().any(|i| i == elem)
+    fn drain(&mut self) -> RingBufferDrainingIterator<T, Self> {
+        RingBufferDrainingIterator::new(self)
     }
 }
 
@@ -86,20 +81,17 @@ mod iter {
     use super::RingBuffer;
     use core::iter::FusedIterator;
     use core::marker::PhantomData;
-    use core::ptr::NonNull;
 
     pub struct RingBufferIterator<'rb, T, RB: RingBuffer<T>> {
-        obj: &'rb RB,
-        len: usize,
+        ring_buffer: &'rb RB,
         index: usize,
         phantom: PhantomData<T>,
     }
 
     impl<'rb, T, RB: RingBuffer<T>> RingBufferIterator<'rb, T, RB> {
-        pub fn new(obj: &'rb RB) -> Self {
+        pub fn new(ring_buffer: &'rb RB) -> Self {
             Self {
-                obj,
-                len: obj.len(),
+                ring_buffer,
                 index: 0,
                 phantom: PhantomData,
             }
@@ -110,17 +102,13 @@ mod iter {
         type Item = &'rb T;
 
         fn next(&mut self) -> Option<Self::Item> {
-            if self.index < self.len {
-                let res = self.obj.get(self.index);
+            if self.index < self.ring_buffer.len() {
+                let res = self.ring_buffer.get(self.index);
                 self.index += 1;
                 res
             } else {
                 None
             }
-        }
-
-        fn size_hint(&self) -> (usize, Option<usize>) {
-            (self.len, Some(self.len))
         }
     }
 
@@ -128,35 +116,16 @@ mod iter {
 
     impl<'rb, T: 'rb, RB: RingBuffer<T>> ExactSizeIterator for RingBufferIterator<'rb, T, RB> {}
 
-    impl<'rb, T: 'rb, RB: RingBuffer<T>> DoubleEndedIterator for RingBufferIterator<'rb, T, RB> {
-        fn next_back(&mut self) -> Option<Self::Item> {
-            if self.len > 0 && self.index < self.len {
-                let res = self.obj.get(self.len - 1);
-                self.len -= 1;
-                res
-            } else {
-                None
-            }
-        }
-    }
-
-    /// `RingBufferMutIterator` holds a reference to a `RingBuffer` and iterates over it. `index` is the
-    /// current iterator position.
-    ///
-    /// WARNING: NEVER ACCESS THE `obj` FIELD OUTSIDE OF NEXT. It's private on purpose, and
-    /// can technically be accessed in the same module. However, this breaks the safety of `next()`
     pub struct RingBufferMutIterator<'rb, T, RB: RingBuffer<T>> {
-        obj: NonNull<RB>,
+        ring_buffer: &'rb mut RB,
         index: usize,
-        len: usize,
         phantom: PhantomData<&'rb mut T>,
     }
 
     impl<'rb, T, RB: RingBuffer<T>> RingBufferMutIterator<'rb, T, RB> {
-        pub fn new(obj: &'rb mut RB) -> Self {
+        pub fn new(ring_buffer: &'rb mut RB) -> Self {
             Self {
-                len: obj.len(),
-                obj: NonNull::from(obj),
+                ring_buffer,
                 index: 0,
                 phantom: PhantomData,
             }
@@ -167,48 +136,29 @@ mod iter {
 
     impl<'rb, T: 'rb, RB: RingBuffer<T> + 'rb> ExactSizeIterator for RingBufferMutIterator<'rb, T, RB> {}
 
-    impl<'rb, T: 'rb, RB: RingBuffer<T> + 'rb> DoubleEndedIterator
-        for RingBufferMutIterator<'rb, T, RB>
-    {
-        fn next_back(&mut self) -> Option<Self::Item> {
-            if self.len > 0 && self.index < self.len {
-                self.len -= 1;
-                let res = unsafe { RB::ptr_get_mut(self.obj.as_ptr(), self.len) };
-                res.map(|i| unsafe { &mut *i })
-            } else {
-                None
-            }
-        }
-    }
-
     impl<'rb, T, RB: RingBuffer<T> + 'rb> Iterator for RingBufferMutIterator<'rb, T, RB> {
         type Item = &'rb mut T;
 
         fn next(&mut self) -> Option<Self::Item> {
-            if self.index < self.len {
-                let res = unsafe { RB::ptr_get_mut(self.obj.as_ptr(), self.index) };
+            if self.index < self.ring_buffer.len() {
+                let res = self.ring_buffer.get_mut(self.index);
                 self.index += 1;
-                // Safety: ptr_get_mut always returns a valid pointer
-                res.map(|i| unsafe { &mut *i })
+                res
             } else {
                 None
             }
         }
-
-        fn size_hint(&self) -> (usize, Option<usize>) {
-            (self.len, Some(self.len))
-        }
     }
 
     pub struct RingBufferDrainingIterator<'rb, T, RB: RingBuffer<T>> {
-        obj: &'rb mut RB,
+        ring_buffer: &'rb mut RB,
         phantom: PhantomData<T>,
     }
 
     impl<'rb, T, RB: RingBuffer<T>> RingBufferDrainingIterator<'rb, T, RB> {
-        pub fn new(obj: &'rb mut RB) -> Self {
+        pub fn new(ring_buffer: &'rb mut RB) -> Self {
             Self {
-                obj,
+                ring_buffer,
                 phantom: PhantomData,
             }
         }
@@ -218,23 +168,19 @@ mod iter {
         type Item = T;
 
         fn next(&mut self) -> Option<T> {
-            self.obj.pop_front()
-        }
-
-        fn size_hint(&self) -> (usize, Option<usize>) {
-            (self.obj.len(), Some(self.obj.len()))
+            self.ring_buffer.pop_front()
         }
     }
 
     pub struct RingBufferIntoIterator<T, RB: RingBuffer<T>> {
-        obj: RB,
+        ring_buffer: RB,
         phantom: PhantomData<T>,
     }
 
     impl<T, RB: RingBuffer<T>> RingBufferIntoIterator<T, RB> {
-        pub fn new(obj: RB) -> Self {
+        pub fn new(ring_buffer: RB) -> Self {
             Self {
-                obj,
+                ring_buffer,
                 phantom: PhantomData,
             }
         }
@@ -244,11 +190,7 @@ mod iter {
         type Item = T;
 
         fn next(&mut self) -> Option<Self::Item> {
-            self.obj.pop_front()
-        }
-
-        fn size_hint(&self) -> (usize, Option<usize>) {
-            (self.obj.len(), Some(self.obj.len()))
+            self.ring_buffer.pop_front()
         }
     }
 }
@@ -256,95 +198,6 @@ mod iter {
 pub use iter::{
     RingBufferDrainingIterator, RingBufferIntoIterator, RingBufferIterator, RingBufferMutIterator,
 };
-
-macro_rules! impl_ringbuffer {
-    ($readptr: ident, $writeptr: ident) => {
-        unsafe fn ptr_len(rb: *const Self) -> usize {
-            (*rb).$writeptr - (*rb).$readptr
-        }
-    };
-}
-
-macro_rules! impl_ringbuffer_ext {
-    ($get_unchecked: ident, $get_unchecked_mut: ident, $readptr: ident, $writeptr: ident, $mask: expr) => {
-        fn get_signed(&self, index: isize) -> Option<&T> {
-            use core::ops::Not;
-            self.is_empty().not().then(move || {
-                let index_from_readptr = if index >= 0 {
-                    index
-                } else {
-                    self.len() as isize + index
-                };
-
-                let normalized_index =
-                    self.$readptr as isize + index_from_readptr.rem_euclid(self.len() as isize);
-
-                unsafe {
-                    // SAFETY: index has been modulo-ed to be within range
-                    // to be within bounds
-                    $get_unchecked(self, $mask(self.buffer_size(), normalized_index as usize))
-                }
-            })
-        }
-
-        fn get(&self, index: usize) -> Option<&T> {
-            use core::ops::Not;
-            self.is_empty().not().then(move || {
-                let normalized_index = self.$readptr + index.rem_euclid(self.len());
-                unsafe {
-                    // SAFETY: index has been modulo-ed to be within range
-                    // to be within bounds
-                    $get_unchecked(self, $mask(self.buffer_size(), normalized_index))
-                }
-            })
-        }
-
-        #[doc(hidden)]
-        unsafe fn ptr_get_mut_signed(rb: *mut Self, index: isize) -> Option<*mut T> {
-            (Self::ptr_len(rb) != 0).then(move || {
-                let index_from_readptr = if index >= 0 {
-                    index
-                } else {
-                    Self::ptr_len(rb) as isize + index
-                };
-
-                let normalized_index = (*rb).$readptr as isize
-                    + index_from_readptr.rem_euclid(Self::ptr_len(rb) as isize);
-
-                unsafe {
-                    // SAFETY: index has been modulo-ed to be within range
-                    // to be within bounds
-                    $get_unchecked_mut(
-                        rb,
-                        $mask(Self::ptr_buffer_size(rb), normalized_index as usize),
-                    )
-                }
-            })
-        }
-
-        #[doc(hidden)]
-        unsafe fn ptr_get_mut(rb: *mut Self, index: usize) -> Option<*mut T> {
-            (Self::ptr_len(rb) != 0).then(move || {
-                let normalized_index = (*rb).$readptr + index.rem_euclid(Self::ptr_len(rb));
-
-                unsafe {
-                    // SAFETY: index has been modulo-ed to be within range
-                    // to be within bounds
-                    $get_unchecked_mut(rb, $mask(Self::ptr_buffer_size(rb), normalized_index))
-                }
-            })
-        }
-
-        fn clear(&mut self) {
-            for i in self.drain() {
-                drop(i);
-            }
-
-            self.$readptr = 0;
-            self.$writeptr = 0;
-        }
-    };
-}
 
 use core::iter::FromIterator;
 use core::mem;
@@ -433,7 +286,7 @@ impl<T: PartialEq, const CAP: usize> Eq for FixedRingBuffer<T, CAP> {}
 impl<T, const CAP: usize> FixedRingBuffer<T, CAP> {
     const ERROR_CAPACITY_MUST_NOT_BE_ZERO: () = assert!(CAP != 0, "Capacity must not be zero");
 
-    pub fn new<const N: usize>() -> Self {
+    pub fn new() -> Self {
         let _ = Self::ERROR_CAPACITY_MUST_NOT_BE_ZERO;
 
         Self {
@@ -482,6 +335,70 @@ impl<T, const CAP: usize> Extend<T> for FixedRingBuffer<T, CAP> {
 }
 
 impl<T, const CAP: usize> RingBuffer<T> for FixedRingBuffer<T, CAP> {
+    fn len(&self) -> usize {
+        self.write_index - self.read_index
+    }
+
+    fn capacity(&self) -> usize {
+        CAP
+    }
+
+    fn get(&self, index: usize) -> Option<&T> {
+        if index < self.len() {
+            // Safety: elements in buffer are always initialized when inserted
+            // and the length of the ring buffer is updated accordingly, so if
+            // we index the buffer in its valid range then the referenced
+            // element is guaranteed to be initialized
+            Some(unsafe { &self.buffer[index].assume_init() })
+        } else {
+            None
+        }
+    }
+
+    fn get_mut(&mut self, index: usize) -> Option<&mut T> {
+        if index < self.len() {
+            // Safety: elements in buffer are always initialized when inserted
+            // and the length of the ring buffer is updated accordingly, so if
+            // we index the buffer in its valid range then the referenced
+            // element is guaranteed to be initialized
+            Some(unsafe { &mut self.buffer[index].assume_init() })
+        } else {
+            None
+        }
+    }
+
+    fn front(&self) -> Option<&T> {
+        if self.is_empty() {
+            None
+        } else {
+            Some(unsafe { &self.buffer[self.read_index].assume_init() })
+        }
+    }
+
+    fn front_mut(&mut self) -> Option<&mut T> {
+        if self.is_empty() {
+            None
+        } else {
+            Some(unsafe { &mut self.buffer[self.read_index].assume_init() })
+        }
+    }
+
+    fn back(&self) -> Option<&T> {
+        if self.is_empty() {
+            None
+        } else {
+            Some(unsafe { &self.buffer[self.write_index].assume_init() })
+        }
+    }
+
+    fn back_mut(&mut self) -> Option<&mut T> {
+        if self.is_empty() {
+            None
+        } else {
+            Some(unsafe { &mut self.buffer[self.write_index].assume_init() })
+        }
+    }
+
     fn push_back(&mut self, value: T) {
         if self.is_full() {
             let previous_value = mem::replace(
@@ -509,10 +426,19 @@ impl<T, const CAP: usize> RingBuffer<T> for FixedRingBuffer<T, CAP> {
             self.read_index += 1;
 
             // Safety: elements in buffer are always initialized when inserted,
-            // so if the buffer is not empty then the poped element are garanted
+            // so if the buffer is not empty then the popped element is guaranteed
             // to be initialized
             unsafe { Some(res.assume_init()) }
         }
+    }
+
+    fn clear(&mut self) {
+        for i in self.drain() {
+            drop(i);
+        }
+
+        self.read_index = 0;
+        self.write_index = 0;
     }
 
     fn fill_with<F: FnMut() -> T>(&mut self, mut f: F) {
@@ -550,5 +476,80 @@ impl<T, const CAP: usize> Index<usize> for FixedRingBuffer<T, CAP> {
 impl<T, const CAP: usize> IndexMut<usize> for FixedRingBuffer<T, CAP> {
     fn index_mut(&mut self, index: usize) -> &mut Self::Output {
         self.get_mut(index).expect("index out of bounds")
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn new() {
+        let rb = FixedRingBuffer::<i32, 16>::new();
+        assert_eq!(rb.capacity(), 16);
+        assert_eq!(rb.len(), 0);
+        assert_eq!(rb.is_empty(), true);
+        assert_eq!(rb.is_full(), false);
+    }
+
+    #[test]
+    fn pop_empty() {
+        let mut rb = FixedRingBuffer::<i32, 16>::new();
+        let i = rb.pop();
+        assert_eq!(i, None);
+    }
+
+    #[test]
+    fn push_single() {
+        let mut rb = FixedRingBuffer::<i32, 16>::new();
+        rb.push(42);
+        assert_eq!(rb.len(), 1);
+        assert_eq!(rb.is_empty(), false);
+        assert_eq!(rb.is_full(), false);
+    }
+
+    #[test]
+    fn push_n() {
+        let mut rb = FixedRingBuffer::<i32, 16>::new();
+        for i in 1..=10 {
+            rb.push(i);
+            assert_eq!(rb.len(), i as usize);
+            assert_eq!(rb.is_empty(), false);
+            assert_eq!(rb.is_full(), false);
+        }
+    }
+    #[test]
+    fn push_n_full() {
+        let mut rb = FixedRingBuffer::<i32, 16>::new();
+        for i in 1..=16 {
+            rb.push(i);
+            assert_eq!(rb.len(), i as usize);
+            assert_eq!(rb.is_empty(), false);
+            if i == 16 {
+                assert_eq!(rb.is_full(), true);
+            } else {
+                assert_eq!(rb.is_full(), false);
+            }
+        }
+    }
+    #[test]
+    fn push_n_full_wrap_around() {
+        let mut rb = FixedRingBuffer::<i32, 16>::new();
+        for i in 1..=(rb.capacity() as i32) {
+            rb.push(i);
+            assert_eq!(rb.len(), i as usize);
+            assert_eq!(rb.is_empty(), false);
+            if i == 16 {
+                assert_eq!(rb.is_full(), true);
+            } else {
+                assert_eq!(rb.is_full(), false);
+            }
+        }
+        for i in 17..=22 {
+            rb.push(i);
+            assert_eq!(rb.len(), rb.capacity());
+            assert_eq!(rb.is_empty(), false);
+            assert_eq!(rb.is_full(), true);
+        }
     }
 }
