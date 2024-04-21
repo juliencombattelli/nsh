@@ -552,10 +552,23 @@ mod test {
             }
         }
         for i in 17..=22 {
-            rb.push(i);
+            rb.push_back(i);
             assert_eq!(rb.len(), rb.capacity());
             assert_eq!(rb.is_empty(), false);
             assert_eq!(rb.is_full(), true);
+        }
+    }
+
+    #[test]
+    fn iter_n() {
+        let mut rb = FixedRingBuffer::<i32, 16>::new();
+        for i in 1..=8 {
+            rb.push_back(i);
+            assert_eq!(rb.len(), i as usize);
+            assert_eq!(rb.is_empty(), false);
+        }
+        for (i, element) in rb.iter().enumerate() {
+            assert_eq!(*element, (i + 1) as i32);
         }
     }
 }
