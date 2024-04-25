@@ -60,8 +60,9 @@ pub trait RingBuffer<T>:
         self.fill_with(Default::default);
     }
 
-    fn iter(&self) -> RingBufferIterator<T, Self> {
-        RingBufferIterator::new(self)
+    fn iter(&self) -> Iter<T> {
+        let (start, end) = self.as_slices();
+        Iter::new(start.iter(), end.iter())
     }
 
     // fn iter_mut(&mut self) -> RingBufferMutIterator<T, Self> {
@@ -75,46 +76,53 @@ pub trait RingBuffer<T>:
     fn drain(&mut self) -> RingBufferDrainingIterator<T, Self> {
         RingBufferDrainingIterator::new(self)
     }
+
+    fn as_slices(&self) -> (&[T], &[T]);
+
+    fn as_mut_slices(&mut self) -> (&mut [T], &mut [T]) {
+        (&mut [], &mut [])
+    }
+
+    fn make_contiguous(&mut self) -> &mut [T] {
+        &mut []
+    }
 }
 
 mod iter {
     use super::RingBuffer;
     use core::iter::FusedIterator;
     use core::marker::PhantomData;
+    use core::mem;
+    use core::slice;
 
-    pub struct RingBufferIterator<'rb, T, RB: RingBuffer<T>> {
-        ring_buffer: &'rb RB,
-        index: usize,
-        phantom: PhantomData<T>,
+    pub struct Iter<'rb, T: 'rb> {
+        start: slice::Iter<'rb, T>,
+        end: slice::Iter<'rb, T>,
     }
 
-    impl<'rb, T, RB: RingBuffer<T>> RingBufferIterator<'rb, T, RB> {
-        pub fn new(ring_buffer: &'rb RB) -> Self {
-            Self {
-                ring_buffer,
-                index: 0,
-                phantom: PhantomData,
-            }
+    impl<'rb, T> Iter<'rb, T> {
+        pub fn new(start: slice::Iter<'rb, T>, end: slice::Iter<'rb, T>) -> Self {
+            Self { start, end }
         }
     }
 
-    impl<'rb, T: 'rb, RB: RingBuffer<T>> Iterator for RingBufferIterator<'rb, T, RB> {
+    impl<'rb, T: 'rb> Iterator for Iter<'rb, T> {
         type Item = &'rb T;
 
         fn next(&mut self) -> Option<Self::Item> {
-            if self.index < self.ring_buffer.len() {
-                let res = self.ring_buffer.get(self.index);
-                self.index += 1;
-                res
-            } else {
-                None
+            match self.start.next() {
+                Some(val) => Some(val),
+                None => {
+                    mem::swap(&mut self.start, &mut self.end);
+                    self.start.next()
+                }
             }
         }
     }
 
-    impl<'rb, T: 'rb, RB: RingBuffer<T>> FusedIterator for RingBufferIterator<'rb, T, RB> {}
+    impl<'rb, T: 'rb> FusedIterator for Iter<'rb, T> {}
 
-    impl<'rb, T: 'rb, RB: RingBuffer<T>> ExactSizeIterator for RingBufferIterator<'rb, T, RB> {}
+    impl<'rb, T: 'rb> ExactSizeIterator for Iter<'rb, T> {}
 
     // pub struct RingBufferMutIterator<'rb, T, RB: RingBuffer<T>> {
     //     ring_buffer: &'rb mut RB,
@@ -198,10 +206,10 @@ mod iter {
 }
 
 pub use iter::{
+    Iter,
+    //RingBufferMutIterator,
     RingBufferDrainingIterator,
     RingBufferIntoIterator,
-    RingBufferIterator,
-    // RingBufferMutIterator,
 };
 
 use core::iter::FromIterator;
@@ -295,12 +303,17 @@ impl<T, const CAP: usize> FixedRingBuffer<T, CAP> {
         let _ = Self::ERROR_CAPACITY_MUST_NOT_BE_ZERO;
 
         Self {
-            // Can be replaced with uninit_array once the feature is stabilized
+            // TODO Replace with uninit_array once the feature is stabilized
             buffer: unsafe { MaybeUninit::<[MaybeUninit<T>; CAP]>::uninit().assume_init() },
             read_index: 0,
             write_index: 0,
         }
     }
+}
+
+// TODO Replace with MaybeUninit<T>::slice_assume_init_ref once the feature is stabilized
+const unsafe fn maybe_uninit_slice_assume_init_ref<T>(slice: &[MaybeUninit<T>]) -> &[T] {
+    unsafe { &*(slice as *const [MaybeUninit<T>] as *const [T]) }
 }
 
 impl<T, const CAP: usize> IntoIterator for FixedRingBuffer<T, CAP> {
@@ -314,7 +327,7 @@ impl<T, const CAP: usize> IntoIterator for FixedRingBuffer<T, CAP> {
 
 impl<'a, T, const CAP: usize> IntoIterator for &'a FixedRingBuffer<T, CAP> {
     type Item = &'a T;
-    type IntoIter = RingBufferIterator<'a, T, FixedRingBuffer<T, CAP>>;
+    type IntoIter = Iter<'a, T>;
 
     fn into_iter(self) -> Self::IntoIter {
         self.iter()
@@ -323,7 +336,7 @@ impl<'a, T, const CAP: usize> IntoIterator for &'a FixedRingBuffer<T, CAP> {
 
 // impl<'a, T, const CAP: usize> IntoIterator for &'a mut FixedRingBuffer<T, CAP> {
 //     type Item = &'a mut T;
-//     type IntoIter = RingBufferMutIterator<'a, T, FixedRingBuffer<T, CAP>>;
+//     type IntoIter = RingBufferMutIterator<'a, T>;
 
 //     fn into_iter(self) -> Self::IntoIter {
 //         self.iter_mut()
@@ -452,6 +465,22 @@ impl<T, const CAP: usize> RingBuffer<T> for FixedRingBuffer<T, CAP> {
         self.read_index = 0;
         self.write_index = CAP;
         self.buffer.fill_with(|| MaybeUninit::new(f()));
+    }
+
+    fn as_slices(&self) -> (&[T], &[T]) {
+        if self.len() == 0 {
+            (&[], &[])
+        } else if self.write_index > self.read_index {
+            let slice_a = &self.buffer[self.write_index..self.len()];
+            (unsafe { maybe_uninit_slice_assume_init_ref(slice_a) }, &[])
+        } else {
+            let slice_a = &self.buffer[self.write_index..self.len()];
+            let slice_b = &self.buffer[0..self.read_index];
+            (
+                unsafe { maybe_uninit_slice_assume_init_ref(slice_a) },
+                unsafe { maybe_uninit_slice_assume_init_ref(slice_b) },
+            )
+        }
     }
 }
 
