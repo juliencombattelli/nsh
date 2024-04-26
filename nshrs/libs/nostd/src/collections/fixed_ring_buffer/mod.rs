@@ -221,6 +221,7 @@ pub struct FixedRingBuffer<T, const CAP: usize> {
     buffer: [MaybeUninit<T>; CAP],
     read_index: usize,
     write_index: usize,
+    length: usize,
 }
 
 impl<T, const CAP: usize> From<[T; CAP]> for FixedRingBuffer<T, CAP> {
@@ -231,6 +232,7 @@ impl<T, const CAP: usize> From<[T; CAP]> for FixedRingBuffer<T, CAP> {
             buffer: unsafe { mem::transmute_copy(&value) },
             read_index: 0,
             write_index: CAP,
+            length: 0,
         }
     }
 }
@@ -307,6 +309,7 @@ impl<T, const CAP: usize> FixedRingBuffer<T, CAP> {
             buffer: unsafe { MaybeUninit::<[MaybeUninit<T>; CAP]>::uninit().assume_init() },
             read_index: 0,
             write_index: 0,
+            length: 0,
         }
     }
 }
@@ -355,7 +358,7 @@ impl<T, const CAP: usize> Extend<T> for FixedRingBuffer<T, CAP> {
 
 impl<T, const CAP: usize> RingBuffer<T> for FixedRingBuffer<T, CAP> {
     fn len(&self) -> usize {
-        self.write_index - self.read_index
+        self.length
     }
 
     fn capacity(&self) -> usize {
@@ -429,11 +432,13 @@ impl<T, const CAP: usize> RingBuffer<T> for FixedRingBuffer<T, CAP> {
             unsafe {
                 drop(previous_value.assume_init());
             }
-            self.read_index += 1;
+            self.read_index = (self.read_index + 1) % CAP;
+        } else {
+            self.length += 1;
         }
         let index = self.write_index % CAP;
         self.buffer[index] = MaybeUninit::new(value);
-        self.write_index += 1;
+        self.write_index = (self.write_index + 1) % CAP;
     }
 
     fn pop_front(&mut self) -> Option<T> {
@@ -442,8 +447,8 @@ impl<T, const CAP: usize> RingBuffer<T> for FixedRingBuffer<T, CAP> {
         } else {
             let index = self.read_index % CAP;
             let res = mem::replace(&mut self.buffer[index], MaybeUninit::uninit());
-            self.read_index += 1;
-
+            self.read_index = (self.read_index + 1) % CAP;
+            self.length -= 1;
             // Safety: elements in buffer are always initialized when inserted,
             // so if the buffer is not empty then the popped element is guaranteed
             // to be initialized
@@ -458,6 +463,7 @@ impl<T, const CAP: usize> RingBuffer<T> for FixedRingBuffer<T, CAP> {
 
         self.read_index = 0;
         self.write_index = 0;
+        self.length = 0;
     }
 
     fn fill_with<F: FnMut() -> T>(&mut self, mut f: F) {
@@ -599,5 +605,41 @@ mod test {
         for (i, element) in rb.iter().enumerate() {
             assert_eq!(*element, (i + 1) as i32);
         }
+    }
+
+    #[test]
+    fn iter_n_full() {
+        let mut rb = FixedRingBuffer::<i32, 16>::new();
+        for i in 1..=16 {
+            rb.push_back(i);
+            assert_eq!(rb.len(), i as usize);
+            assert_eq!(rb.is_empty(), false);
+        }
+        for (i, element) in rb.iter().enumerate() {
+            assert_eq!(*element, (i + 1) as i32);
+        }
+    }
+
+    #[test]
+    fn iter_n_full_wrap_around() {
+        let mut rb = FixedRingBuffer::<i32, 16>::new();
+        for i in 1..=(rb.capacity() as i32) {
+            rb.push_back(i);
+            assert_eq!(rb.len(), i as usize);
+            assert_eq!(rb.is_empty(), false);
+        }
+        for i in (rb.capacity() as i32)..=24 {
+            rb.push_back(i);
+            // assert_eq!(rb.len(), i as usize);
+            // assert_eq!(rb.is_empty(), false);
+        }
+        println!("{:?}", unsafe {
+            maybe_uninit_slice_assume_init_ref(&rb.buffer)
+        });
+        println!("read@{}, write@{}", rb.read_index, rb.write_index);
+        // for (i, element) in rb.iter().enumerate() {
+        //     println!("{} == {} ?", *element, (i + 1));
+        //     assert_eq!(*element, (i + 1) as i32);
+        // }
     }
 }
