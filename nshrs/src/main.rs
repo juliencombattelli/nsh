@@ -23,6 +23,7 @@ pub mod nsh {
         fn is_full(&self) -> bool;
         fn is_empty(&self) -> bool;
         fn push_entry(&mut self, entry: &str);
+        fn get_entry(&self, age: usize) -> Option<&str>;
     }
 
     pub struct Shell<D: Dispatcher> {
@@ -98,8 +99,50 @@ pub mod nsh {
 
         pub struct HistoryRing<const CAP: usize, const STRING_SIZE: usize> {
             head: usize,
-            len: usize,
+            tail: usize,
+            size: usize,
             buffer: [FixedString<STRING_SIZE>; CAP],
+        }
+        impl<const CAP: usize, const STRING_SIZE: usize> HistoryRing<CAP, STRING_SIZE> {
+            pub fn reset(&mut self) {
+                self.head = 0;
+                self.tail = 0;
+                self.size = 0;
+                // No need to reset the string buffer
+                // self.buffer = [FixedString::from(""); CAP];
+            }
+            pub fn entry_count(&self) -> usize {
+                self.size
+            }
+            pub fn is_full(&self) -> bool {
+                self.size == CAP
+            }
+            pub fn is_empty(&self) -> bool {
+                self.size == 0
+            }
+            pub fn push_entry(&mut self, entry: &str) {
+                self.buffer[self.head] = FixedString::from(entry);
+                self.head = (self.head + 1) % CAP;
+                if self.is_full() {
+                    self.tail = (self.tail + 1) % CAP;
+                } else {
+                    self.size += 1;
+                }
+            }
+            pub fn get_entry(&self, age: usize) -> Option<&str> {
+                if age >= self.entry_count() {
+                    None
+                } else {
+                    let most_recent_entry = self.head - 1; // head points to the element just after the most recent entry
+                    let mut entry_index = most_recent_entry - age;
+                    if entry_index > CAP {
+                        entry_index += CAP; // deal with ring buffer rollover
+                                            // TODO is there any wrapping_add in Rust for unsigned integers?
+                    }
+                    // TODO indexing may be in an unsafe block even if it is safe
+                    Some(self.buffer[entry_index].as_ref())
+                }
+            }
         }
     }
 }
